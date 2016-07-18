@@ -1,18 +1,18 @@
 /*******************************************************************************
  * Copyright (c) quickfixengine.org  All rights reserved.
- *
+ * <p>
  * This file is part of the QuickFIX FIX Engine
- *
+ * <p>
  * This file may be distributed under the terms of the quickfixengine.org
  * license as defined by quickfixengine.org and appearing in the file
  * LICENSE included in the packaging of this file.
- *
+ * <p>
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
  * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.
- *
+ * <p>
  * See http://www.quickfixengine.org/LICENSE for licensing information.
- *
+ * <p>
  * Contact ask@quickfixengine.org if any conditions of this licensing
  * are not clear to you.
  ******************************************************************************/
@@ -20,6 +20,11 @@
 package quickfix.examples.banzai;
 
 import quickfix.SessionID;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class Order implements Cloneable {
     private SessionID sessionID = null;
@@ -41,6 +46,7 @@ public class Order implements Cloneable {
     private String originalID = null;
     private static int nextID = 1;
 
+
     public Order() {
         ID = generateID();
     }
@@ -55,7 +61,9 @@ public class Order implements Cloneable {
             order.setOriginalID(getID());
             order.setID(order.generateID());
             return order;
-        } catch (CloneNotSupportedException e) {}
+        } catch (CloneNotSupportedException e) {
+            // ignore
+        }
         return null;
     }
 
@@ -213,5 +221,35 @@ public class Order implements Cloneable {
 
     public String getOriginalID() {
         return originalID;
+    }
+
+    public List<TagValue> tagValuePairs() {
+        List<TagValue> list = new ArrayList<>();
+        if (!isEmpty(ID)) {
+            list.add(TagValue.of(11, ID));
+        }
+        if (!isEmpty(originalID)) {
+            list.add(TagValue.of(41, originalID));
+        }
+        list.add(TagValue.of(55, this.symbol));
+        list.add(TagValue.of(54, side.getValue()));
+        list.add(TagValue.of(38, quantity));
+        list.add(TagValue.of(40, type.getValue()));
+        if (limit != null) {
+            list.add(TagValue.of(44, limit));
+        }
+        if (stop != null) {
+            list.add(TagValue.of(99, stop));
+        }
+        list.add(TagValue.of(151, open));
+        list.add(TagValue.of(14, executed));
+        list.add(TagValue.of(6, avgPx));
+        if (tif != null) {
+            list.add(TagValue.of(59, tif.getValue()));
+        }
+        if (!isEmpty(message)) {
+            list.add(TagValue.of(58, this.message));
+        }
+        return list;
     }
 }

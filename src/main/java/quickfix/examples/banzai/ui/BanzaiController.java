@@ -59,6 +59,8 @@ public class BanzaiController implements Initializable {
     private TableView<Order> orderTable;
     @FXML
     private TableView<Execution> executionTable;
+    @FXML
+    private TableView<TagValue> tagValueTable;
 
     private ChangeListener<OrderType> orderTypeChangeListener = (observable, oldValue, newValue) -> {
         switch (newValue) {
@@ -231,5 +233,12 @@ public class BanzaiController implements Initializable {
         this.tifComboBox.getSelectionModel().select(order.getTIF());
         this.replaceButton.setDisable(false);
         this.cancelButton.setDisable(false);
+
+        this.tagValueTable.setItems(FXCollections.observableArrayList(order.tagValuePairs()));
+    }
+
+    public void onExecutionSelected(Event event) {
+        Execution execution = this.executionTable.getSelectionModel().getSelectedItem();
+        this.tagValueTable.setItems(FXCollections.observableArrayList(execution.tagValuePairs()));
     }
 }

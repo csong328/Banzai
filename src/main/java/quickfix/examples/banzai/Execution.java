@@ -1,23 +1,28 @@
 /*******************************************************************************
  * Copyright (c) quickfixengine.org  All rights reserved.
- *
+ * <p>
  * This file is part of the QuickFIX FIX Engine
- *
+ * <p>
  * This file may be distributed under the terms of the quickfixengine.org
  * license as defined by quickfixengine.org and appearing in the file
  * LICENSE included in the packaging of this file.
- *
+ * <p>
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING
  * THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A
  * PARTICULAR PURPOSE.
- *
+ * <p>
  * See http://www.quickfixengine.org/LICENSE for licensing information.
- *
+ * <p>
  * Contact ask@quickfixengine.org if any conditions of this licensing
  * are not clear to you.
  ******************************************************************************/
 
 package quickfix.examples.banzai;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class Execution {
     private String symbol = null;
@@ -78,5 +83,19 @@ public class Execution {
 
     public String getExchangeID() {
         return exchangeID;
+    }
+
+    public List<TagValue> tagValuePairs() {
+        List<TagValue> list = new ArrayList<>();
+        if (!isEmpty(exchangeID)) {
+            list.add(TagValue.of(17, exchangeID));
+        }
+        if (!isEmpty(symbol)) {
+            list.add(TagValue.of(55, symbol));
+        }
+        list.add(TagValue.of(54, side.getValue()));
+        list.add(TagValue.of(32, quantity));
+        list.add(TagValue.of(31, price));
+        return list;
     }
 }
