@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <GridPane prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           stylesheets="/quickfix/examples/banzai/ui/banzi.css"
           fx:controller="quickfix.examples.banzai.ui.BanzaiController">
@@ -65,14 +66,87 @@
                  GridPane.rowIndex="1">
             <tabs>
                 <Tab text="Orders">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="286.0" prefWidth="600.0"/>
-                    </content>
+                        <TableView fx:id="orderTable" onMouseClicked="#onOrderSelected">
+                            <columns>
+                            <TableColumn text="Symbol">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="symbol"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Qty">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="quantity"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Open">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="open"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Executed">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="executed"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Side">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="side"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Type">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="type"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Limit">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="limit"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Stop">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="stop"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="AvgPx">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="avgPx"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Target">
+                            </TableColumn>
+                            </columns>
+                            <items>
+                            </items>
+                        </TableView>
                 </Tab>
                 <Tab text="Executions">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
-                    </content>
+                    <TableView fx:id="executionTable">
+                        <columns>
+                            <TableColumn text="Symbol">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="symbol"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Qty">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="quantity"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Side">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="side"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Price">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="price"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                        </columns>
+                        <items>
+                        </items>
+                    </TableView>
                 </Tab>
             </tabs>
         </TabPane>

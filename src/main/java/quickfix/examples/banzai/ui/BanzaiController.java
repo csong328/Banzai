@@ -2,17 +2,17 @@ package quickfix.examples.banzai.ui;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import quickfix.SessionID;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderTIF;
-import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -55,6 +55,10 @@ public class BanzaiController implements Initializable {
     private Button cancelButton;
     @FXML
     private Button replaceButton;
+    @FXML
+    private TableView<Order> orderTable;
+    @FXML
+    private TableView<Execution> executionTable;
 
     private ChangeListener<OrderType> orderTypeChangeListener = (observable, oldValue, newValue) -> {
         switch (newValue) {
@@ -81,9 +85,6 @@ public class BanzaiController implements Initializable {
         boolean valid = isValidOrderEntry();
         this.newButton.setDisable(!valid);
     };
-
-    public BanzaiController() {
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -120,10 +121,14 @@ public class BanzaiController implements Initializable {
             boolean valid = isValidOrderEntry();
             this.newButton.setDisable(!valid);
         });
+
+        this.orderTable.setItems(FXCollections.observableArrayList(sampleOrder()));
+        this.executionTable.setItems(FXCollections.observableArrayList(sampleExecution()));
     }
 
     public void onNewOrder(ActionEvent actionEvent) {
-        orderEntry();
+        Order order = orderEntry();
+        this.orderTable.getItems().add(order);
     }
 
     private Order orderEntry() {
@@ -165,6 +170,7 @@ public class BanzaiController implements Initializable {
     }
 
     public void onReplaceOrder(ActionEvent actionEvent) {
+        this.replaceButton.setDisable(true);
     }
 
     private boolean isValidOrderEntry() {
@@ -189,5 +195,41 @@ public class BanzaiController implements Initializable {
             default:
                 return false;
         }
+    }
+
+    private Order sampleOrder() {
+        Order order = new Order();
+        order.setSymbol("MSFT");
+        order.setQuantity(100);
+        order.setOpen(order.getQuantity());
+        return order;
+    }
+
+    private Execution sampleExecution() {
+        Execution execution = new Execution();
+        execution.setSymbol("MSFT");
+        execution.setQuantity(100);
+        execution.setPrice(10.02);
+        execution.setSide(OrderSide.BUY);
+        return execution;
+    }
+
+    public void onOrderSelected(Event event) {
+        Order order = this.orderTable.getSelectionModel().getSelectedItem();
+        this.symbolTextField.setText(order.getSymbol());
+        this.quantityTextField.setText(Integer.toString(order.getQuantity()));
+        this.sideComboBox.getSelectionModel().select(order.getSide());
+        this.typeComboBox.getSelectionModel().select(order.getType());
+
+        if (order.getLimit() != null) {
+            this.limitPriceTextField.setText(Double.toString(order.getLimit()));
+        }
+        if (order.getStop() != null) {
+            this.stopPriceTextField.setText(Double.toString(order.getStop()));
+        }
+
+        this.tifComboBox.getSelectionModel().select(order.getTIF());
+        this.replaceButton.setDisable(false);
+        this.cancelButton.setDisable(false);
     }
 }
