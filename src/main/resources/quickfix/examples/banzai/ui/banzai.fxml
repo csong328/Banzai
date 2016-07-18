@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<?import quickfix.examples.banzai.ui.FormattedTableCellFactory?>
 <GridPane prefHeight="400" prefWidth="900" stylesheets="/quickfix/examples/banzai/ui/banzi.css"
           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="quickfix.examples.banzai.ui.BanzaiController">
@@ -170,19 +169,11 @@
                             <cellValueFactory>
                                 <PropertyValueFactory property="tag"/>
                             </cellValueFactory>
-                            <cellFactory>
-                                <FormattedTableCellFactory alignment="right">
-                                </FormattedTableCellFactory>
-                            </cellFactory>
                         </TableColumn>
                         <TableColumn prefWidth="125" text="Value">
                             <cellValueFactory>
                                 <PropertyValueFactory property="value"/>
                             </cellValueFactory>
-                            <cellFactory>
-                                <FormattedTableCellFactory alignment="right">
-                                </FormattedTableCellFactory>
-                            </cellFactory>
                         </TableColumn>
                     </columns>
                 </TableView>
