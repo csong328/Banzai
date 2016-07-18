@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane prefHeight="400" prefWidth="600" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          stylesheets="/quickfix/examples/banzai/ui/banzi.css"
+          fx:controller="quickfix.examples.banzai.ui.BanzaiController">
+    <children>
+        <Pane prefHeight="100.0" prefWidth="600" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <children>
+                <GridPane hgap="5" layoutY="5.0" prefHeight="68.0" prefWidth="600.0" vgap="5">
+                    <children>
+                        <Label text="Symbol" GridPane.columnIndex="0"/>
+                        <Label text="Quantity" GridPane.columnIndex="1"/>
+                        <Label text="Side" GridPane.columnIndex="2"/>
+                        <Label text="Type" GridPane.columnIndex="3"/>
+                        <Label text="Limit" GridPane.columnIndex="4"/>
+                        <Label text="Stop" GridPane.columnIndex="5"/>
+                        <Label text="TIF" GridPane.columnIndex="6"/>
+                        <TextField fx:id="symbolTextField" prefHeight="25.0" prefWidth="88.0" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="2"/>
+                        <TextField fx:id="quantityTextField" prefHeight="25.0" prefWidth="75.0" GridPane.columnIndex="1"
+                                   GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="sideComboBox" prefHeight="25.0" prefWidth="69.0" GridPane.columnIndex="2"
+                                  GridPane.rowIndex="2" editable="false"/>
+                        <ComboBox fx:id="typeComboBox" prefHeight="25.0" prefWidth="87.0" GridPane.columnIndex="3"
+                                  GridPane.rowIndex="2" editable="false"/>
+                        <TextField fx:id="limitPriceTextField" prefHeight="25.0" prefWidth="59.0"
+                                   GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+                        <TextField fx:id="stopPriceTextField" prefHeight="25.0" prefWidth="80.0"
+                                   GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="tifComboBox" prefHeight="25.0" prefWidth="78.0" promptText="Day"
+                                  GridPane.columnIndex="6" GridPane.rowIndex="2" editable="false"/>
+                        <ComboBox fx:id="sessionComboBox" prefHeight="25.0" prefWidth="550.0" GridPane.columnIndex="0"
+                                  GridPane.columnSpan="4" GridPane.rowIndex="3" editable="false"/>
+                        <Button fx:id="newButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="New"
+                                GridPane.columnIndex="4" GridPane.rowIndex="3"
+                                onAction="#onNewOrder"/>
+                        <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" GridPane.columnIndex="5"
+                                GridPane.rowIndex="3"
+                                onAction="#onCancelOrder"/>
+                        <Button fx:id="replaceButton" mnemonicParsing="false" text="Replace" GridPane.columnIndex="6"
+                                GridPane.rowIndex="3"
+                                onAction="#onReplaceOrder"/>
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                        <ColumnConstraints/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                    </rowConstraints>
+                </GridPane>
+            </children>
+        </Pane>
+        <TabPane prefHeight="285.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0"
+                 GridPane.rowIndex="1">
+            <tabs>
+                <Tab text="Orders">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="286.0" prefWidth="600.0"/>
+                    </content>
+                </Tab>
+                <Tab text="Executions">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+</GridPane>
