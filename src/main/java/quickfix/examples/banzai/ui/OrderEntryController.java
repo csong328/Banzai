@@ -60,6 +60,7 @@ public class OrderEntryController implements Initializable {
     private Button replaceButton;
 
     private BooleanBinding newDisabled;
+    private BooleanBinding cancelDisabled;
 
     @Autowired
     private Model model;
@@ -111,6 +112,9 @@ public class OrderEntryController implements Initializable {
                 typeComboBox.valueProperty(), limitPriceTextField.textProperty(), stopPriceTextField.textProperty(), tifComboBox.valueProperty());
 
         newButton.disableProperty().bind(newDisabled);
+
+        cancelDisabled = Bindings.createBooleanBinding(() -> model.getSelectedOrder() == null, model.selectedOrderProperty());
+        cancelButton.disableProperty().bind(cancelDisabled);
 
         model.selectedOrderProperty().addListener((observable, oldOrder, newOrder) -> {
                     if (newOrder == null) {
