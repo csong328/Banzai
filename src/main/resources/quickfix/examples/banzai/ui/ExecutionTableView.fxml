@@ -1,0 +1,29 @@
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.*?>
+<TableView fx:id="executionTable" onMouseClicked="#onExecutionSelected"
+           stylesheets="/quickfix/examples/banzai/ui/banzi.css"
+           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="quickfix.examples.banzai.ui.ExecutionTableController">
+    <columns>
+        <TableColumn text="Symbol">
+            <cellValueFactory>
+                <PropertyValueFactory property="symbol"/>
+            </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Qty">
+            <cellValueFactory>
+                <PropertyValueFactory property="quantity"/>
+            </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Side">
+            <cellValueFactory>
+                <PropertyValueFactory property="side"/>
+            </cellValueFactory>
+        </TableColumn>
+        <TableColumn text="Price">
+            <cellValueFactory>
+                <PropertyValueFactory property="price"/>
+            </cellValueFactory>
+        </TableColumn>
+    </columns>
+</TableView>

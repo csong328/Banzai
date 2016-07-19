@@ -1,196 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.control.cell.*?>
-<?import javafx.scene.layout.*?>
-<GridPane prefHeight="400" prefWidth="900" stylesheets="/quickfix/examples/banzai/ui/banzi.css"
-          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="quickfix.examples.banzai.ui.BanzaiController">
-    <children>
-        <GridPane prefWidth="600" GridPane.columnIndex="0" GridPane.rowIndex="0">
-            <children>
-                <Pane prefHeight="100.0" prefWidth="600" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <children>
-                        <GridPane hgap="5" layoutY="5.0" prefHeight="68.0" prefWidth="600.0" vgap="5">
-                            <children>
-                                <Label text="Symbol" GridPane.columnIndex="0"/>
-                                <Label text="Quantity" GridPane.columnIndex="1"/>
-                                <Label text="Side" GridPane.columnIndex="2"/>
-                                <Label text="Type" GridPane.columnIndex="3"/>
-                                <Label text="Limit" GridPane.columnIndex="4"/>
-                                <Label text="Stop" GridPane.columnIndex="5"/>
-                                <Label text="TIF" GridPane.columnIndex="6"/>
-                                <TextField fx:id="symbolTextField" prefHeight="25.0" prefWidth="88.0"
-                                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                <TextField fx:id="quantityTextField" prefHeight="25.0" prefWidth="75.0"
-                                           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                                <ComboBox fx:id="sideComboBox" editable="false" prefHeight="25.0" prefWidth="69.0"
-                                          GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                                <ComboBox fx:id="typeComboBox" editable="false" prefHeight="25.0" prefWidth="87.0"
-                                          GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-                                <TextField fx:id="limitPriceTextField" prefHeight="25.0" prefWidth="59.0"
-                                           GridPane.columnIndex="4" GridPane.rowIndex="2"/>
-                                <TextField fx:id="stopPriceTextField" prefHeight="25.0" prefWidth="80.0"
-                                           GridPane.columnIndex="5" GridPane.rowIndex="2"/>
-                                <ComboBox fx:id="tifComboBox" editable="false" prefHeight="25.0" prefWidth="78.0"
-                                          promptText="Day" GridPane.columnIndex="6" GridPane.rowIndex="2"/>
-                                <ComboBox fx:id="sessionComboBox" editable="false" prefHeight="25.0" prefWidth="550.0"
-                                          GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3"/>
-                                <Button fx:id="newButton" mnemonicParsing="false" onAction="#onNewOrder"
-                                        prefHeight="25.0" prefWidth="80.0" text="New" GridPane.columnIndex="4"
-                                        GridPane.rowIndex="3"/>
-                                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelOrder"
-                                        text="Cancel" GridPane.columnIndex="5" GridPane.rowIndex="3"/>
-                                <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#onReplaceOrder"
-                                        text="Replace" GridPane.columnIndex="6" GridPane.rowIndex="3"/>
-                            </children>
-                            <columnConstraints>
-                                <ColumnConstraints/>
-                                <ColumnConstraints/>
-                                <ColumnConstraints/>
-                                <ColumnConstraints/>
-                                <ColumnConstraints/>
-                                <ColumnConstraints/>
-                                <ColumnConstraints/>
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints/>
-                                <RowConstraints/>
-                                <RowConstraints/>
-                                <RowConstraints/>
-                            </rowConstraints>
-                        </GridPane>
-                    </children>
-                </Pane>
-                <TabPane prefHeight="285.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="0"
-                         GridPane.rowIndex="1">
-                    <tabs>
-                        <Tab text="Orders">
-                            <content>
-                                <TableView fx:id="orderTable" onMouseClicked="#onOrderSelected">
-                                    <columns>
-                                        <TableColumn text="Symbol">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="symbol"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Qty">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="quantity"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Open">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="open"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Executed">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="executed"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Side">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="side"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Type">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="type"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Limit">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="limit"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Stop">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="stop"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="AvgPx">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="avgPx"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Target">
-                                        </TableColumn>
-                                    </columns>
-                                    <items>
-                                    </items>
-                                </TableView>
-                            </content>
-                        </Tab>
-                        <Tab text="Executions">
-                            <content>
-                                <TableView fx:id="executionTable" onMouseClicked="#onExecutionSelected">
-                                    <columns>
-                                        <TableColumn text="Symbol">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="symbol"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Qty">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="quantity"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Side">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="side"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                        <TableColumn text="Price">
-                                            <cellValueFactory>
-                                                <PropertyValueFactory property="price"/>
-                                            </cellValueFactory>
-                                        </TableColumn>
-                                    </columns>
-                                </TableView>
-                            </content>
-                        </Tab>
-                    </tabs>
-                </TabPane>
-            </children>
-            <columnConstraints>
-                <ColumnConstraints/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
-        </GridPane>
-        <GridPane prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="0">
-            <children>
-                <TableView fx:id="tagValueTable">
-                    <columns>
-                        <TableColumn prefWidth="40" text="Tag">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="tag"/>
-                            </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn prefWidth="125" text="Value">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="value"/>
-                            </cellValueFactory>
-                        </TableColumn>
-                    </columns>
-                </TableView>
-            </children>
-            <columnConstraints>
-                <ColumnConstraints/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints/>
-            </rowConstraints>
-        </GridPane>
-    </children>
-    <columnConstraints>
-        <ColumnConstraints/>
-        <ColumnConstraints/>
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints/>
-    </rowConstraints>
-</GridPane>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<HBox prefHeight="400" prefWidth="900" stylesheets="/quickfix/examples/banzai/ui/banzi.css"
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="quickfix.examples.banzai.ui.BanzaiController">
+    <VBox prefWidth="600">
+        <fx:include source="/quickfix/examples/banzai/ui/OrderEntryView.fxml"/>
+        <TabPane>
+            <tabs>
+                <Tab text="Orders">
+                    <fx:include source="/quickfix/examples/banzai/ui/OrderTableView.fxml"/>
+                </Tab>
+                <Tab text="Executions">
+                    <fx:include source="/quickfix/examples/banzai/ui/ExecutionTableView.fxml"/>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </VBox>
+    <Pane prefWidth="200">
+        <fx:include source="/quickfix/examples/banzai/ui/FixTagValueTableView.fxml"/>
+    </Pane>
+</HBox>
