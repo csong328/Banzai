@@ -31,7 +31,7 @@ public class Banzai extends Application {
                 .load();
 
         primaryStage.setTitle("Banzai!");
-        Scene scene = new Scene(root, 800, 400);
+        Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
 

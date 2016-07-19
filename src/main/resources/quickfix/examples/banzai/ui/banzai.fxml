@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<HBox prefHeight="400" prefWidth="900" stylesheets="/quickfix/examples/banzai/ui/banzi.css"
+<HBox stylesheets="/quickfix/examples/banzai/ui/banzi.css"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="quickfix.examples.banzai.ui.BanzaiController">
     <VBox prefWidth="600">
@@ -21,7 +21,9 @@
             </tabs>
         </TabPane>
     </VBox>
+    <!--
     <Pane prefWidth="200">
         <fx:include source="/quickfix/examples/banzai/ui/FixTagValueTableView.fxml"/>
     </Pane>
+    -->
 </HBox>
