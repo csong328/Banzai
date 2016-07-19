@@ -1,7 +1,7 @@
 package quickfix.examples.banzai.ui;
 
-/**
- * Created by chensong on 7/19/16.
- */
+import org.springframework.stereotype.Component;
+
+@Component("tagValueTableController")
 public class TagValueTableController {
 }

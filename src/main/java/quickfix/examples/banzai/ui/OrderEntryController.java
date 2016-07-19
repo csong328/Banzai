@@ -8,11 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import quickfix.SessionID;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderTIF;
-import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,7 +19,9 @@ import java.util.ResourceBundle;
 import static javafx.collections.FXCollections.observableArrayList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+@Component("orderEntryController")
 public class OrderEntryController implements Initializable {
+
     public static final String INTEGER_PATTERN = "\\d*";
     public static final String DOUBLE_PATTERN = "\\d*(\\.\\d*)?";
 
@@ -55,6 +56,9 @@ public class OrderEntryController implements Initializable {
     private Button cancelButton;
     @FXML
     private Button replaceButton;
+
+    @Autowired
+    private Model model;
 
     private ChangeListener<OrderType> orderTypeChangeListener = (observable, oldValue, newValue) -> {
         switch (newValue) {

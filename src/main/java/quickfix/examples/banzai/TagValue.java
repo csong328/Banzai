@@ -53,4 +53,9 @@ public class TagValue {
     public void setValue(String value) {
         this.valueProperty().set(value);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%d=%s", getTag(), getValue());
+    }
 }
