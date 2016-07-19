@@ -62,6 +62,8 @@ public class BanzaiController implements Initializable {
     @FXML
     private TableView<TagValue> tagValueTable;
 
+    private Order selectedOrder = null;
+
     private ChangeListener<OrderType> orderTypeChangeListener = (observable, oldValue, newValue) -> {
         switch (newValue) {
             case MARKET:
@@ -218,6 +220,7 @@ public class BanzaiController implements Initializable {
 
     public void onOrderSelected(Event event) {
         Order order = this.orderTable.getSelectionModel().getSelectedItem();
+        this.selectedOrder = order;
         this.symbolTextField.setText(order.getSymbol());
         this.quantityTextField.setText(Integer.toString(order.getQuantity()));
         this.sideComboBox.getSelectionModel().select(order.getSide());

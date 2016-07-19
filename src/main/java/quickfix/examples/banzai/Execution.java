@@ -19,6 +19,8 @@
 
 package quickfix.examples.banzai;
 
+import quickfix.field.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,14 +90,14 @@ public class Execution {
     public List<TagValue> tagValuePairs() {
         List<TagValue> list = new ArrayList<>();
         if (!isEmpty(exchangeID)) {
-            list.add(TagValue.of(17, exchangeID));
+            list.add(TagValue.of(ExecID.FIELD, exchangeID));
         }
         if (!isEmpty(symbol)) {
-            list.add(TagValue.of(55, symbol));
+            list.add(TagValue.of(Symbol.FIELD, symbol));
         }
-        list.add(TagValue.of(54, side.getValue()));
-        list.add(TagValue.of(32, quantity));
-        list.add(TagValue.of(31, price));
+        list.add(TagValue.of(Side.FIELD, side.getValue()));
+        list.add(TagValue.of(LastShares.FIELD, quantity));
+        list.add(TagValue.of(LastPx.FIELD, price));
         return list;
     }
 }

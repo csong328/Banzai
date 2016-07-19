@@ -20,6 +20,7 @@
 package quickfix.examples.banzai;
 
 import quickfix.SessionID;
+import quickfix.field.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,6 @@ public class Order implements Cloneable {
     private String ID = null;
     private String originalID = null;
     private static int nextID = 1;
-
 
     public Order() {
         ID = generateID();
@@ -226,29 +226,29 @@ public class Order implements Cloneable {
     public List<TagValue> tagValuePairs() {
         List<TagValue> list = new ArrayList<>();
         if (!isEmpty(ID)) {
-            list.add(TagValue.of(11, ID));
+            list.add(TagValue.of(ClOrdID.FIELD, ID));
         }
         if (!isEmpty(originalID)) {
-            list.add(TagValue.of(41, originalID));
+            list.add(TagValue.of(OrigClOrdID.FIELD, originalID));
         }
-        list.add(TagValue.of(55, this.symbol));
-        list.add(TagValue.of(54, side.getValue()));
-        list.add(TagValue.of(38, quantity));
-        list.add(TagValue.of(40, type.getValue()));
+        list.add(TagValue.of(Symbol.FIELD, this.symbol));
+        list.add(TagValue.of(Side.FIELD, side.getValue()));
+        list.add(TagValue.of(Quantity.FIELD, quantity));
+        list.add(TagValue.of(OrdType.FIELD, type.getValue()));
         if (limit != null) {
-            list.add(TagValue.of(44, limit));
+            list.add(TagValue.of(Price.FIELD, limit));
         }
         if (stop != null) {
-            list.add(TagValue.of(99, stop));
+            list.add(TagValue.of(StopPx.FIELD, stop));
         }
-        list.add(TagValue.of(151, open));
-        list.add(TagValue.of(14, executed));
-        list.add(TagValue.of(6, avgPx));
+        list.add(TagValue.of(LeavesQty.FIELD, open));
+        list.add(TagValue.of(CumQty.FIELD, executed));
+        list.add(TagValue.of(AvgPx.FIELD, avgPx));
         if (tif != null) {
-            list.add(TagValue.of(59, tif.getValue()));
+            list.add(TagValue.of(TimeInForce.FIELD, tif.getValue()));
         }
         if (!isEmpty(message)) {
-            list.add(TagValue.of(58, this.message));
+            list.add(TagValue.of(Text.FIELD, this.message));
         }
         return list;
     }
