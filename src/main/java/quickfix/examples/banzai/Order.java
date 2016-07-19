@@ -19,6 +19,7 @@
 
 package quickfix.examples.banzai;
 
+import javafx.beans.property.*;
 import quickfix.SessionID;
 import quickfix.field.*;
 
@@ -28,31 +29,31 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class Order implements Cloneable {
-    private SessionID sessionID = null;
-    private String symbol = null;
-    private int quantity = 0;
-    private int open = 0;
-    private int executed = 0;
-    private OrderSide side = OrderSide.BUY;
-    private OrderType type = OrderType.MARKET;
-    private OrderTIF tif = OrderTIF.DAY;
-    private Double limit = null;
-    private Double stop = null;
-    private double avgPx = 0.0;
-    private boolean rejected = false;
-    private boolean canceled = false;
-    private boolean isNew = true;
-    private String message = null;
-    private String ID = null;
-    private String originalID = null;
+    private ObjectProperty<SessionID> sessionID = new SimpleObjectProperty<>();
+    private StringProperty symbol = new SimpleStringProperty();
+    private IntegerProperty quantity = new SimpleIntegerProperty(0);
+    private IntegerProperty open = new SimpleIntegerProperty(0);
+    private IntegerProperty executed = new SimpleIntegerProperty(0);
+    private ObjectProperty<OrderSide> side = new SimpleObjectProperty<>(OrderSide.BUY);
+    private ObjectProperty<OrderType> type = new SimpleObjectProperty<>(OrderType.MARKET);
+    private ObjectProperty<OrderTIF> tif = new SimpleObjectProperty<>(OrderTIF.DAY);
+    private ObjectProperty<Double> limit = new SimpleObjectProperty<>();
+    private ObjectProperty<Double> stop = new SimpleObjectProperty<>();
+    private DoubleProperty avgPx = new SimpleDoubleProperty(0.0);
+    private BooleanProperty rejected = new SimpleBooleanProperty(false);
+    private BooleanProperty canceled = new SimpleBooleanProperty(false);
+    private BooleanProperty isNew = new SimpleBooleanProperty(true);
+    private StringProperty message = new SimpleStringProperty();
+    private StringProperty ID = new SimpleStringProperty();
+    private StringProperty originalID = new SimpleStringProperty();
     private static int nextID = 1;
 
     public Order() {
-        ID = generateID();
+        ID.set(generateID());
     }
 
     public Order(String ID) {
-        this.ID = ID;
+        this.ID.set(ID);
     }
 
     public Object clone() {
@@ -71,184 +72,252 @@ public class Order implements Cloneable {
         return Long.toString(System.currentTimeMillis() + (nextID++));
     }
 
+    public ObjectProperty<SessionID> sessionIDProperty() {
+        return this.sessionID;
+    }
+
     public SessionID getSessionID() {
-        return sessionID;
+        return sessionIDProperty().get();
     }
 
     public void setSessionID(SessionID sessionID) {
-        this.sessionID = sessionID;
+        sessionIDProperty().set(sessionID);
+    }
+
+    public StringProperty symbolProperty() {
+        return this.symbol;
     }
 
     public String getSymbol() {
-        return symbol;
+        return symbolProperty().get();
     }
 
     public void setSymbol(String symbol) {
-        this.symbol = symbol;
+        symbolProperty().set(symbol);
+    }
+
+    public IntegerProperty quantityProperty() {
+        return this.quantity;
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantityProperty().get();
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        quantityProperty().set(quantity);
+    }
+
+    public IntegerProperty openProperty() {
+        return this.open;
     }
 
     public int getOpen() {
-        return open;
+        return openProperty().get();
     }
 
     public void setOpen(int open) {
-        this.open = open;
+        openProperty().set(open);
+    }
+
+    public IntegerProperty executedProperty() {
+        return this.executed;
     }
 
     public int getExecuted() {
-        return executed;
+        return executedProperty().get();
     }
 
     public void setExecuted(int executed) {
-        this.executed = executed;
+        executedProperty().set(executed);
+    }
+
+    public ObjectProperty<OrderSide> sideProperty() {
+        return this.side;
     }
 
     public OrderSide getSide() {
-        return side;
+        return sideProperty().get();
     }
 
     public void setSide(OrderSide side) {
-        this.side = side;
+        sideProperty().set(side);
+    }
+
+    public ObjectProperty<OrderType> typeProperty() {
+        return this.type;
     }
 
     public OrderType getType() {
-        return type;
+        return typeProperty().get();
     }
 
     public void setType(OrderType type) {
-        this.type = type;
+        typeProperty().set(type);
+    }
+
+    public ObjectProperty<OrderTIF> tifProperty() {
+        return this.tif;
     }
 
     public OrderTIF getTIF() {
-        return tif;
+        return tifProperty().get();
     }
 
     public void setTIF(OrderTIF tif) {
-        this.tif = tif;
+        tifProperty().set(tif);
+    }
+
+    public ObjectProperty<Double> limitProperty() {
+        return this.limit;
     }
 
     public Double getLimit() {
-        return limit;
+        return limitProperty().get();
     }
 
     public void setLimit(Double limit) {
-        this.limit = limit;
+        limitProperty().set(limit);
     }
 
     public void setLimit(String limit) {
         if (limit == null || limit.equals("")) {
-            this.limit = null;
+            limitProperty().set(null);
         } else {
-            this.limit = Double.parseDouble(limit);
+            setLimit(Double.parseDouble(limit));
         }
     }
 
+    public ObjectProperty<Double> stopProperty() {
+        return this.stop;
+    }
+
     public Double getStop() {
-        return stop;
+        return stopProperty().get();
     }
 
     public void setStop(Double stop) {
-        this.stop = stop;
+        stopProperty().set(stop);
     }
 
     public void setStop(String stop) {
         if (stop == null || stop.equals("")) {
-            this.stop = null;
+            stopProperty().set(null);
         } else {
-            this.stop = Double.parseDouble(stop);
+            setStop(Double.parseDouble(stop));
         }
     }
 
+    public DoubleProperty avgPxProperty() {
+        return this.avgPx;
+    }
+
     public void setAvgPx(double avgPx) {
-        this.avgPx = avgPx;
+        avgPxProperty().set(avgPx);
     }
 
     public double getAvgPx() {
-        return avgPx;
+        return avgPxProperty().get();
+    }
+
+    public BooleanProperty rejectedProperty() {
+        return this.rejected;
     }
 
     public void setRejected(boolean rejected) {
-        this.rejected = rejected;
+        this.rejectedProperty().set(rejected);
     }
 
     public boolean getRejected() {
-        return rejected;
+        return rejectedProperty().get();
+    }
+
+    public BooleanProperty canceledProperty() {
+        return this.canceled;
     }
 
     public void setCanceled(boolean canceled) {
-        this.canceled = canceled;
+        this.canceledProperty().set(canceled);
     }
 
     public boolean getCanceled() {
-        return canceled;
+        return canceledProperty().get();
+    }
+
+    public BooleanProperty isNewProperty() {
+        return this.isNew;
     }
 
     public void setNew(boolean isNew) {
-        this.isNew = isNew;
+        this.isNewProperty().set(isNew);
     }
 
     public boolean isNew() {
-        return isNew;
+        return isNewProperty().get();
+    }
+
+    public StringProperty messageProperty() {
+        return this.message;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.messageProperty().set(message);
     }
 
     public String getMessage() {
-        return message;
+        return messageProperty().get();
+    }
+
+    public StringProperty idProperty() {
+        return this.ID;
     }
 
     public void setID(String ID) {
-        this.ID = ID;
+        this.idProperty().set(ID);
     }
 
     public String getID() {
-        return ID;
+        return idProperty().get();
+    }
+
+    public StringProperty originalIDProperty() {
+        return this.originalID;
     }
 
     public void setOriginalID(String originalID) {
-        this.originalID = originalID;
+        this.originalIDProperty().set(originalID);
     }
 
     public String getOriginalID() {
-        return originalID;
+        return originalID.get();
     }
 
     public List<TagValue> tagValuePairs() {
         List<TagValue> list = new ArrayList<>();
-        if (!isEmpty(ID)) {
-            list.add(TagValue.of(ClOrdID.FIELD, ID));
+        if (!isEmpty(getID())) {
+            list.add(TagValue.of(ClOrdID.FIELD, getID()));
         }
-        if (!isEmpty(originalID)) {
-            list.add(TagValue.of(OrigClOrdID.FIELD, originalID));
+        if (!isEmpty(getOriginalID())) {
+            list.add(TagValue.of(OrigClOrdID.FIELD, getOriginalID()));
         }
-        list.add(TagValue.of(Symbol.FIELD, this.symbol));
-        list.add(TagValue.of(Side.FIELD, side.getValue()));
-        list.add(TagValue.of(Quantity.FIELD, quantity));
-        list.add(TagValue.of(OrdType.FIELD, type.getValue()));
-        if (limit != null) {
-            list.add(TagValue.of(Price.FIELD, limit));
+        list.add(TagValue.of(Symbol.FIELD, getSymbol()));
+        list.add(TagValue.of(Side.FIELD, getSide().getValue()));
+        list.add(TagValue.of(Quantity.FIELD, getQuantity()));
+        list.add(TagValue.of(OrdType.FIELD, getType().getValue()));
+        if (getLimit() != null) {
+            list.add(TagValue.of(Price.FIELD, getLimit()));
         }
-        if (stop != null) {
-            list.add(TagValue.of(StopPx.FIELD, stop));
+        if (getStop() != null) {
+            list.add(TagValue.of(StopPx.FIELD, getStop()));
         }
-        list.add(TagValue.of(LeavesQty.FIELD, open));
-        list.add(TagValue.of(CumQty.FIELD, executed));
-        list.add(TagValue.of(AvgPx.FIELD, avgPx));
+        list.add(TagValue.of(LeavesQty.FIELD, getOpen()));
+        list.add(TagValue.of(CumQty.FIELD, getExecuted()));
+        list.add(TagValue.of(AvgPx.FIELD, getAvgPx()));
         if (tif != null) {
-            list.add(TagValue.of(TimeInForce.FIELD, tif.getValue()));
+            list.add(TagValue.of(TimeInForce.FIELD, getTIF().getValue()));
         }
-        if (!isEmpty(message)) {
-            list.add(TagValue.of(Text.FIELD, this.message));
+        if (!isEmpty(getMessage())) {
+            list.add(TagValue.of(Text.FIELD, getMessage()));
         }
         return list;
     }

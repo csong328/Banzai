@@ -1,8 +1,14 @@
 package quickfix.examples.banzai;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class TagValue {
-    private int tag;
-    private String value;
+    private IntegerProperty tag = new SimpleIntegerProperty();
+    private StringProperty value = new SimpleStringProperty();
+
 
     public static TagValue of(int tag, Integer value) {
         return of(tag, Integer.toString(value));
@@ -23,19 +29,28 @@ public class TagValue {
         return pair;
     }
 
+
+    public IntegerProperty tagProperty() {
+        return this.tag;
+    }
+
     public int getTag() {
-        return tag;
+        return tagProperty().get();
     }
 
     public void setTag(int tag) {
-        this.tag = tag;
+        this.tagProperty().set(tag);
+    }
+
+    public StringProperty valueProperty() {
+        return this.value;
     }
 
     public String getValue() {
-        return value;
+        return valueProperty().get();
     }
 
     public void setValue(String value) {
-        this.value = value;
+        this.valueProperty().set(value);
     }
 }

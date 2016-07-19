@@ -19,6 +19,7 @@
 
 package quickfix.examples.banzai;
 
+import javafx.beans.property.*;
 import quickfix.field.*;
 
 import java.util.ArrayList;
@@ -27,77 +28,101 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class Execution {
-    private String symbol = null;
-    private int quantity = 0;
-    private OrderSide side = OrderSide.BUY;
-    private double price;
-    private String ID = null;
-    private String exchangeID = null;
+    private StringProperty symbol = new SimpleStringProperty();
+    private IntegerProperty quantity = new SimpleIntegerProperty(0);
+    private ObjectProperty<OrderSide> side = new SimpleObjectProperty<>(OrderSide.BUY);
+    private DoubleProperty price = new SimpleDoubleProperty();
+    private StringProperty ID = new SimpleStringProperty();
+    private StringProperty exchangeID = new SimpleStringProperty();
     private static int nextID = 1;
 
     public Execution() {
-        ID = Integer.toString(nextID++);
+        this(Integer.toString(nextID++));
     }
 
     public Execution(String ID) {
-        this.ID = ID;
+        this.ID.set(ID);
+    }
+
+    public StringProperty symbolProperty() {
+        return this.symbol;
     }
 
     public String getSymbol() {
-        return symbol;
+        return symbolProperty().get();
     }
 
     public void setSymbol(String symbol) {
-        this.symbol = symbol;
+        this.symbolProperty().set(symbol);
+    }
+
+    public IntegerProperty quantityProperty() {
+        return this.quantity;
     }
 
     public int getQuantity() {
-        return quantity;
+        return quantityProperty().get();
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.quantityProperty().set(quantity);
+    }
+
+    public ObjectProperty<OrderSide> sideProperty() {
+        return this.side;
     }
 
     public OrderSide getSide() {
-        return side;
+        return sideProperty().get();
     }
 
     public void setSide(OrderSide side) {
-        this.side = side;
+        this.sideProperty().set(side);
+    }
+
+    public DoubleProperty priceProperty() {
+        return this.price;
     }
 
     public double getPrice() {
-        return price;
+        return priceProperty().get();
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        this.priceProperty().set(price);
+    }
+
+    public StringProperty idProperty() {
+        return this.ID;
     }
 
     public String getID() {
-        return ID;
+        return idProperty().get();
+    }
+
+    public StringProperty exchangeIDProperty() {
+        return this.exchangeID;
     }
 
     public void setExchangeID(String exchangeID) {
-        this.exchangeID = exchangeID;
+        this.exchangeIDProperty().set(exchangeID);
     }
 
     public String getExchangeID() {
-        return exchangeID;
+        return exchangeIDProperty().get();
     }
 
     public List<TagValue> tagValuePairs() {
         List<TagValue> list = new ArrayList<>();
-        if (!isEmpty(exchangeID)) {
-            list.add(TagValue.of(ExecID.FIELD, exchangeID));
+        if (!isEmpty(getExchangeID())) {
+            list.add(TagValue.of(ExecID.FIELD, getExchangeID()));
         }
-        if (!isEmpty(symbol)) {
-            list.add(TagValue.of(Symbol.FIELD, symbol));
+        if (!isEmpty(getSymbol())) {
+            list.add(TagValue.of(Symbol.FIELD, getSymbol()));
         }
-        list.add(TagValue.of(Side.FIELD, side.getValue()));
-        list.add(TagValue.of(LastShares.FIELD, quantity));
-        list.add(TagValue.of(LastPx.FIELD, price));
+        list.add(TagValue.of(Side.FIELD, getSide().getValue()));
+        list.add(TagValue.of(LastShares.FIELD, getQuantity()));
+        list.add(TagValue.of(LastPx.FIELD, getPrice()));
         return list;
     }
 }
