@@ -1,8 +1,9 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.ui;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import quickfix.SessionID;
+import quickfix.examples.banzai.*;
 
 public interface Model {
   ObjectProperty<Order> selectedOrderProperty();

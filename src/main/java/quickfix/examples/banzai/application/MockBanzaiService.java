@@ -2,7 +2,7 @@ package quickfix.examples.banzai.application;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import quickfix.examples.banzai.Model;
+import quickfix.examples.banzai.ui.Model;
 import quickfix.examples.banzai.Order;
 
 public class MockBanzaiService implements IBanzaiService {

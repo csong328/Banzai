@@ -102,7 +102,7 @@ public class OrderEntryController implements Initializable {
             symbolTextField.textProperty(), quantityTextField.textProperty(),
             sideComboBox.valueProperty(), typeComboBox.valueProperty(),
             limitPriceTextField.textProperty(), stopPriceTextField.textProperty(),
-            tifComboBox.valueProperty()));
+            tifComboBox.valueProperty(), sessionComboBox.valueProperty()));
   }
 
   private void enableReplaceOrderButtonForValidUpdate() {

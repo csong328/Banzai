@@ -1,4 +1,4 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.ui;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -14,6 +14,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import quickfix.SessionID;
+import quickfix.examples.banzai.*;
 
 @Component("model")
 public class ModelImpl implements Model {

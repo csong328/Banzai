@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import quickfix.examples.banzai.Execution;
-import quickfix.examples.banzai.Model;
 
 @Component("executionTableController")
 public class ExecutionTableController implements Initializable {

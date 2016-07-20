@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import quickfix.*;
 import quickfix.examples.banzai.*;
+import quickfix.examples.banzai.ui.Model;
 import quickfix.field.*;
 
 @Component("banzaiService")

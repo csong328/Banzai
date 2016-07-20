@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import quickfix.examples.banzai.Model;
 import quickfix.examples.banzai.Order;
 
 @Component("orderTableController")
