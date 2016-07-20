@@ -13,7 +13,7 @@ import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.application.ApplicationConfig;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
-public class Banzai extends Application {
+public class BanzaiFX extends Application {
 
     private AnnotationConfigApplicationContext applicationContext;
 
@@ -30,7 +30,7 @@ public class Banzai extends Application {
                 .location(getClass().getResource("banzai.fxml"))
                 .load();
 
-        primaryStage.setTitle("Banzai!");
+        primaryStage.setTitle("BanzaiFX");
         Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();

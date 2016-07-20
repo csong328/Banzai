@@ -80,7 +80,7 @@ public class OrderEntryController implements Initializable {
         cancelButton.disableProperty().bind(Bindings.createBooleanBinding(() -> model.getSelectedOrder() == null, model.selectedOrderProperty()));
 
         replaceButton.disableProperty().bind(Bindings.createBooleanBinding(() -> model.getSelectedOrder() == null ||
-                !isValidOrderEntry() || !isValidReplace(), quantityTextField.textProperty(), typeComboBox.valueProperty(), limitPriceTextField.textProperty(), stopPriceTextField.textProperty())
+                !isValidOrderEntry() || !canReplace(), quantityTextField.textProperty(), typeComboBox.valueProperty(), limitPriceTextField.textProperty(), stopPriceTextField.textProperty())
         );
 
         model.selectedOrderProperty().addListener((observable, oldOrder, newOrder) -> {
@@ -172,32 +172,35 @@ public class OrderEntryController implements Initializable {
         }
     }
 
-    private boolean isValidReplace() {
+    private boolean canReplace() {
         Order origOrder = model.getSelectedOrder();
-        return origOrder != null && symbolTextField.getText().equals(origOrder.getSymbol()) &&
-                sideComboBox.getValue() == origOrder.getSide() && tifComboBox.getValue() == origOrder.getTIF() &&
-                (Integer.parseInt(this.quantityTextField.getText()) != origOrder.getQuantity() ||
-                        this.typeComboBox.getValue() != origOrder.getType() || isPriceDifferent());
+        return origOrder != null && isSymbolSame(origOrder) &&
+                isSideSame(origOrder) && isTIFSame(origOrder) &&
+                (isQtyDifferent(origOrder) || isOrderTypeDifferent(origOrder) || isLimitPriceDifferent(origOrder));
     }
 
-    private boolean isPriceDifferent() {
-        Order origOrder = model.getSelectedOrder();
-        if (this.typeComboBox.getValue() != origOrder.getType()) {
-            return true;
-        }
+    private boolean isSymbolSame(Order origOrder) {
+        return symbolTextField.getText().equals(origOrder.getSymbol());
+    }
 
-        switch (this.typeComboBox.getValue()) {
-            case LIMIT:
-                return !Objects.equals(this.limitPriceTextField.getText(), formatPrice(origOrder.getLimit()));
-            case STOP:
-                return !Objects.equals(this.stopPriceTextField.getText(), formatPrice(origOrder.getLimit()));
-            case STOP_LIMIT:
-                return !Objects.equals(this.limitPriceTextField.getText(), formatPrice(origOrder.getLimit())) || !Objects.equals(this.stopPriceTextField.getText(), formatPrice(origOrder.getLimit()));
-            case MARKET:
-                return true;
-            default:
-                return false;
-        }
+    private boolean isSideSame(Order origOrder) {
+        return sideComboBox.getValue() == origOrder.getSide();
+    }
+
+    private boolean isTIFSame(Order origOrder) {
+        return tifComboBox.getValue() == origOrder.getTIF();
+    }
+
+    private boolean isQtyDifferent(Order origOrder) {
+        return Integer.parseInt(this.quantityTextField.getText()) != origOrder.getQuantity();
+    }
+
+    private boolean isOrderTypeDifferent(Order origOrder) {
+        return this.typeComboBox.getValue() != origOrder.getType();
+    }
+
+    private boolean isLimitPriceDifferent(Order origOrder) {
+        return (this.typeComboBox.getValue() == OrderType.LIMIT || this.typeComboBox.getValue() == OrderType.STOP_LIMIT) && !Objects.equals(this.limitPriceTextField.getText(), formatPrice(origOrder.getLimit()));
     }
 
     private String formatPrice(Double price) {

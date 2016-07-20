@@ -1,37 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:id="orderEntryPanel" hgap="5" layoutY="5.0" vgap="5"
-          stylesheets="/quickfix/examples/banzai/ui/banzi.css"
-          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="quickfix.examples.banzai.ui.OrderEntryController">
-    <Label text="Symbol" GridPane.columnIndex="0"/>
-    <Label text="Quantity" GridPane.columnIndex="1"/>
-    <Label text="Side" GridPane.columnIndex="2"/>
-    <Label text="Type" GridPane.columnIndex="3"/>
-    <Label text="Limit" GridPane.columnIndex="4"/>
-    <Label text="Stop" GridPane.columnIndex="5"/>
-    <Label text="TIF" GridPane.columnIndex="6"/>
-    <TextField fx:id="symbolTextField" prefHeight="25.0" prefWidth="88.0"
-               GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <TextField fx:id="quantityTextField" prefHeight="25.0" prefWidth="75.0"
-               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    <ComboBox fx:id="sideComboBox" editable="false" prefHeight="25.0" prefWidth="69.0"
-              GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-    <ComboBox fx:id="typeComboBox" editable="false" prefHeight="25.0" prefWidth="87.0"
-              GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-    <TextField fx:id="limitPriceTextField" prefHeight="25.0" prefWidth="59.0"
-               GridPane.columnIndex="4" GridPane.rowIndex="2"/>
-    <TextField fx:id="stopPriceTextField" prefHeight="25.0" prefWidth="80.0"
-               GridPane.columnIndex="5" GridPane.rowIndex="2"/>
-    <ComboBox fx:id="tifComboBox" editable="false" prefHeight="25.0" prefWidth="78.0"
-              promptText="Day" GridPane.columnIndex="6" GridPane.rowIndex="2"/>
-    <ComboBox fx:id="sessionComboBox" editable="false" prefHeight="25.0" prefWidth="550.0"
-              GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3"/>
-    <Button fx:id="newButton" mnemonicParsing="false" onAction="#onNewOrder"
-            prefHeight="25.0" prefWidth="80.0" text="New" GridPane.columnIndex="4"
-            GridPane.rowIndex="3"/>
-    <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelOrder"
-            text="Cancel" GridPane.columnIndex="5" GridPane.rowIndex="3"/>
-    <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#onReplaceOrder"
-            text="Replace" GridPane.columnIndex="6" GridPane.rowIndex="3"/>
+
+<GridPane fx:id="orderEntryPanel" hgap="5" layoutY="5.0" stylesheets="/quickfix/examples/banzai/ui/banzi.css" vgap="5" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="quickfix.examples.banzai.ui.OrderEntryController">
+   <children>
+       <Label text="Symbol" GridPane.columnIndex="0" />
+       <Label text="Quantity" GridPane.columnIndex="1" />
+       <Label text="Side" GridPane.columnIndex="2" />
+       <Label text="Type" GridPane.columnIndex="3" />
+       <Label text="Limit" GridPane.columnIndex="4" />
+       <Label text="Stop" GridPane.columnIndex="5" />
+       <Label text="TIF" GridPane.columnIndex="6" />
+       <TextField fx:id="symbolTextField" prefHeight="25.0" prefWidth="88.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+       <TextField fx:id="quantityTextField" prefHeight="25.0" prefWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+       <ComboBox fx:id="sideComboBox" editable="false" prefHeight="25.0" prefWidth="110.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+       <ComboBox fx:id="typeComboBox" editable="false" prefHeight="25.0" prefWidth="95.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+       <TextField fx:id="limitPriceTextField" prefHeight="25.0" prefWidth="81.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+       <TextField fx:id="stopPriceTextField" prefHeight="25.0" prefWidth="72.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+       <ComboBox fx:id="tifComboBox" editable="false" prefHeight="25.0" prefWidth="78.0" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+       <ComboBox fx:id="sessionComboBox" editable="false" prefHeight="25.0" prefWidth="383.0" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+       <Button fx:id="newButton" mnemonicParsing="false" onAction="#onNewOrder" prefHeight="25.0" prefWidth="80.0" text="New" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+       <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelOrder" prefHeight="25.0" prefWidth="73.0" text="Cancel" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+       <Button fx:id="replaceButton" mnemonicParsing="false" onAction="#onReplaceOrder" prefHeight="25.0" prefWidth="77.0" text="Replace" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+   </children>
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
 </GridPane>
