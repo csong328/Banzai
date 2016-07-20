@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import quickfix.SessionID;
 import quickfix.examples.banzai.*;
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Component("orderEntryController")
+@Lazy
 public class OrderEntryController implements Initializable {
 
     public static final String INTEGER_PATTERN = "\\d*";
@@ -60,6 +62,9 @@ public class OrderEntryController implements Initializable {
 
     @Autowired
     private Model model;
+
+    @Autowired
+    private IBanzaiService service;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -102,14 +107,30 @@ public class OrderEntryController implements Initializable {
     public void onNewOrder(ActionEvent actionEvent) {
         Order order = orderEntry();
         model.addOrder(order);
+        service.send(order);
         model.setSelectedOrder(null);
     }
 
     public void onCancelOrder(ActionEvent actionEvent) {
+        Order origOrder = model.getSelectedOrder();
+        service.cancel(origOrder);
         model.setSelectedOrder(null);
     }
 
     public void onReplaceOrder(ActionEvent actionEvent) {
+        Order origOrder = model.getSelectedOrder();
+        Order newOrder = (Order) origOrder.clone();
+        newOrder.setQuantity
+                (Integer.parseInt(quantityTextField.getText()));
+        if (origOrder.getType() == OrderType.LIMIT || origOrder.getType() == OrderType.STOP_LIMIT) {
+            newOrder.setLimit(Double.parseDouble(limitPriceTextField.getText()));
+        }
+        newOrder.setRejected(false);
+        newOrder.setCanceled(false);
+        newOrder.setOpen(0);
+        newOrder.setExecuted(0);
+
+        service.replace(origOrder, newOrder);
         model.setSelectedOrder(null);
     }
 

@@ -85,6 +85,16 @@ public class ModelImpl implements Model {
     }
 
     @Override
+    public void logon(SessionID sessionID) {
+        sessionList.add(sessionID);
+    }
+
+    @Override
+    public void logoff(SessionID sessionID) {
+        sessionList.remove(sessionID);
+    }
+
+    @Override
     public ObservableList<Order> getOrderList() {
         return this.orderList;
     }
@@ -96,8 +106,18 @@ public class ModelImpl implements Model {
     }
 
     @Override
+    public void addClOrdID(Order order, String id) {
+        idToOrder.put(id, order);
+    }
+
+    @Override
     public Order getOrder(String ID) {
         return idToOrder.get(ID);
+    }
+
+    @Override
+    public void updateOrder(Order order, String value) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
