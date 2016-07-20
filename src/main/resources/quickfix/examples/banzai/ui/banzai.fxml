@@ -3,12 +3,11 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <HBox stylesheets="/quickfix/examples/banzai/ui/banzi.css"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="quickfix.examples.banzai.ui.BanzaiController">
-    <VBox prefWidth="600">
+    <VBox>
         <fx:include source="/quickfix/examples/banzai/ui/OrderEntryView.fxml"/>
         <TabPane>
             <tabs>
