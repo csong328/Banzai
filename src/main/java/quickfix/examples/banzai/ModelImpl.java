@@ -5,6 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import org.springframework.stereotype.Component;
+import quickfix.SessionID;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class ModelImpl implements Model {
     private final ObservableList<OrderSide> sideList;
     private final ObservableList<OrderType> typeList;
     private final ObservableList<OrderTIF> tifList;
+    private final ObservableList<SessionID> sessionList;
 
     private final ObservableList<Order> orderList;
     private final Map<String, Order> idToOrder = new HashMap<>();
@@ -28,15 +30,16 @@ public class ModelImpl implements Model {
     private final Map<String, Execution> exchangeIdToExecution = new HashMap<>();
 
     public ModelImpl() {
-        sideList = observableArrayList();
-        typeList = observableArrayList();
-        tifList = observableArrayList();
+        this.sideList = observableArrayList();
+        this.typeList = observableArrayList();
+        this.tifList = observableArrayList();
+        this.sessionList = observableArrayList();
 
-        orderList = observableArrayList(o ->
+        this.orderList = observableArrayList(o ->
                 new Observable[]{o.executedProperty(), o.openProperty(), o.avgPxProperty(),
                         o.messageProperty(), o.canceledProperty(),
                         o.isNewProperty(), o.rejectedProperty()});
-        executionList = observableArrayList();
+        this.executionList = observableArrayList();
     }
 
     @PostConstruct
@@ -77,6 +80,11 @@ public class ModelImpl implements Model {
     }
 
     @Override
+    public ObservableList<SessionID> getSessionList() {
+        return sessionList;
+    }
+
+    @Override
     public ObservableList<Order> getOrderList() {
         return this.orderList;
     }
@@ -108,7 +116,7 @@ public class ModelImpl implements Model {
 
     @Override
     public Execution getExchangeExecution(String exchangeID) {
-        return exchangeIdToExecution.get(exchangeID);
+        return this.exchangeIdToExecution.get(exchangeID);
     }
 
 }

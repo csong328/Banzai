@@ -108,6 +108,7 @@ public class OrderEntryController implements Initializable {
         this.sideComboBox.setItems(model.getSideList());
         this.typeComboBox.setItems(model.getTypeList());
         this.tifComboBox.setItems(model.getTIFList());
+        this.sessionComboBox.setItems(model.getSessionList());
     }
 
     public void onNewOrder(ActionEvent actionEvent) {
