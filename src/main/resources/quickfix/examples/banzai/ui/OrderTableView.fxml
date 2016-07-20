@@ -49,7 +49,7 @@
                 <PropertyValueFactory property="avgPx"/>
             </cellValueFactory>
         </TableColumn>
-        <TableColumn text="Target">
+        <TableColumn fx:id="targetColumn" text="Target">
         </TableColumn>
     </columns>
 </TableView>

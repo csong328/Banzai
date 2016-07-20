@@ -191,29 +191,20 @@ public class OrderEntryController implements Initializable {
 
 	private Order orderEntry() {
 		Order order = new Order();
-		order.setSide(sideComboBox.getSelectionModel().getSelectedItem());
-		order.setType(typeComboBox.getSelectionModel().getSelectedItem());
-		order.setTIF(tifComboBox.getSelectionModel().getSelectedItem());
+		order.setSide(sideComboBox.getValue());
+		order.setType(typeComboBox.getValue());
+		order.setTIF(tifComboBox.getValue());
 
 		order.setSymbol(symbolTextField.getText());
-		if (!isEmpty(quantityTextField.getText())) {
-			order.setQuantity(Integer.parseInt(quantityTextField.getText()));
-			order.setOpen(order.getQuantity());
-		}
+		order.setQuantity(Integer.parseInt(quantityTextField.getText()));
+		order.setOpen(order.getQuantity());
 
 		OrderType type = order.getType();
-		if (type == OrderType.LIMIT || type == OrderType.STOP_LIMIT) {
-			if (!isEmpty(limitPriceTextField.getText())) {
-				order.setLimit(limitPriceTextField.getText());
-			}
-		}
-		if (type == OrderType.STOP || type == OrderType.STOP_LIMIT) {
-			if (!isEmpty(stopPriceTextField.getText())) {
-				order.setStop(stopPriceTextField.getText());
-			}
-		}
-		order.setSessionID(
-				sessionComboBox.getSelectionModel().getSelectedItem());
+		if (type == OrderType.LIMIT || type == OrderType.STOP_LIMIT)
+			order.setLimit(limitPriceTextField.getText());
+		if (type == OrderType.STOP || type == OrderType.STOP_LIMIT)
+			order.setStop(stopPriceTextField.getText());
+		order.setSessionID(sessionComboBox.getValue());
 		return order;
 	}
 

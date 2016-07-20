@@ -74,9 +74,9 @@ public class BanzaiFX extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		Model model = applicationContext.getBean(Model.class);
-		model.addOrder(sampleOrder());
-		model.addExecution(sampleExecution());
+//		Model model = applicationContext.getBean(Model.class);
+//		model.addOrder(sampleOrder());
+//		model.addExecution(sampleExecution());
 
         logon();
 	}
