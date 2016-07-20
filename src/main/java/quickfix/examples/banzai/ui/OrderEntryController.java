@@ -85,22 +85,10 @@ public class OrderEntryController implements Initializable {
 
         model.selectedOrderProperty().addListener((observable, oldOrder, newOrder) -> {
                     if (newOrder == null) {
-                        this.symbolTextField.setText("");
-                        this.quantityTextField.setText("");
-                        this.sideComboBox.setValue(OrderSide.BUY);
-                        this.typeComboBox.setValue(OrderType.MARKET);
-                        this.limitPriceTextField.setText("");
-                        this.stopPriceTextField.setText("");
-                        this.tifComboBox.setValue(OrderTIF.DAY);
+                        reset();
 
                     } else {
-                        this.symbolTextField.setText(newOrder.getSymbol());
-                        this.quantityTextField.setText(Integer.toString(newOrder.getQuantity()));
-                        this.sideComboBox.setValue(newOrder.getSide());
-                        this.typeComboBox.setValue(newOrder.getType());
-                        this.limitPriceTextField.setText(newOrder.getLimit() != null ? Double.toString(newOrder.getLimit()) : "");
-                        this.stopPriceTextField.setText(newOrder.getStop() != null ? Double.toString(newOrder.getStop()) : "");
-                        this.tifComboBox.setValue(newOrder.getTIF());
+                        setOrder(newOrder);
                     }
                 }
         );
@@ -115,6 +103,34 @@ public class OrderEntryController implements Initializable {
         Order order = orderEntry();
         model.addOrder(order);
         model.setSelectedOrder(null);
+    }
+
+    public void onCancelOrder(ActionEvent actionEvent) {
+        model.setSelectedOrder(null);
+    }
+
+    public void onReplaceOrder(ActionEvent actionEvent) {
+        model.setSelectedOrder(null);
+    }
+
+    private void reset() {
+        this.symbolTextField.setText("");
+        this.quantityTextField.setText("");
+        this.sideComboBox.setValue(null);
+        this.typeComboBox.setValue(null);
+        this.limitPriceTextField.setText("");
+        this.stopPriceTextField.setText("");
+        this.tifComboBox.setValue(null);
+    }
+
+    private void setOrder(Order order) {
+        this.symbolTextField.setText(order.getSymbol());
+        this.quantityTextField.setText(Integer.toString(order.getQuantity()));
+        this.sideComboBox.setValue(order.getSide());
+        this.typeComboBox.setValue(order.getType());
+        this.limitPriceTextField.setText(order.getLimit() != null ? Double.toString(order.getLimit()) : "");
+        this.stopPriceTextField.setText(order.getStop() != null ? Double.toString(order.getStop()) : "");
+        this.tifComboBox.setValue(order.getTIF());
     }
 
     private Order orderEntry() {
@@ -142,14 +158,6 @@ public class OrderEntryController implements Initializable {
         }
         order.setSessionID(sessionComboBox.getSelectionModel().getSelectedItem());
         return order;
-    }
-
-    public void onCancelOrder(ActionEvent actionEvent) {
-        model.setSelectedOrder(null);
-    }
-
-    public void onReplaceOrder(ActionEvent actionEvent) {
-        model.setSelectedOrder(null);
     }
 
     private boolean isValidOrderEntry() {
