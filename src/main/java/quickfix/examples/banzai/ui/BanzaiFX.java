@@ -31,7 +31,7 @@ public class BanzaiFX extends Application {
                 .load();
 
         primaryStage.setTitle("BanzaiFX");
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 800, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
 
