@@ -1,6 +1,8 @@
 package quickfix.examples.banzai.ui;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static quickfix.examples.banzai.utils.FXUtils.doubleFieldChangeListener;
+import static quickfix.examples.banzai.utils.FXUtils.integerFieldChangeListener;
 
 import java.net.URL;
 import java.util.Objects;
@@ -11,8 +13,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,22 +25,6 @@ import quickfix.examples.banzai.*;
 @Component("orderEntryController")
 @Lazy
 public class OrderEntryController implements Initializable {
-
-	public static final String INTEGER_PATTERN = "\\d*";
-
-	public static final String DOUBLE_PATTERN = "\\d*(\\.\\d*)?";
-
-	private static final ChangeListener<String> INTEGER_TEXT_FIELD_CHANGE_LISTENER = (
-			observable, oldValue, newValue) -> {
-		if (!newValue.matches(INTEGER_PATTERN))
-			((StringProperty) observable).set(oldValue);
-	};
-
-	private static final ChangeListener<String> DOUBLE_TEXT_FIELD_CHANGE_LISTENER = (
-			observable, oldValue, newValue) -> {
-		if (!newValue.matches(DOUBLE_PATTERN))
-			((StringProperty) observable).set(oldValue);
-	};
 
 	@FXML
 	private TextField symbolTextField;
@@ -84,41 +68,21 @@ public class OrderEntryController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.quantityTextField.textProperty()
-				.addListener(INTEGER_TEXT_FIELD_CHANGE_LISTENER);
+				.addListener(integerFieldChangeListener());
 		this.limitPriceTextField.textProperty()
-				.addListener(DOUBLE_TEXT_FIELD_CHANGE_LISTENER);
+				.addListener(doubleFieldChangeListener());
 		this.stopPriceTextField.textProperty()
-				.addListener(DOUBLE_TEXT_FIELD_CHANGE_LISTENER);
+				.addListener(doubleFieldChangeListener());
 
-		limitPriceTextField.disableProperty().bind(Bindings.createObjectBinding(
-				() -> typeComboBox.getValue() != OrderType.LIMIT
-						&& typeComboBox.getValue() != OrderType.STOP_LIMIT,
-				typeComboBox.valueProperty()));
+		limitPriceIsOnlyValidForLimitOrStopLimitOrderType();
 
-		stopPriceTextField.disableProperty().bind(Bindings.createObjectBinding(
-				() -> typeComboBox.getValue() != OrderType.STOP
-						&& typeComboBox.getValue() != OrderType.STOP_LIMIT,
-				typeComboBox.valueProperty()));
+		stopPriceIsOnlyValidForStopOrStopLimitOrderType();
 
-		newButton.disableProperty().bind(Bindings.createBooleanBinding(
-				() -> !isValidOrderEntry(), symbolTextField.textProperty(),
-				quantityTextField.textProperty(), sideComboBox.valueProperty(),
-				typeComboBox.valueProperty(),
-				limitPriceTextField.textProperty(),
-				stopPriceTextField.textProperty(),
-				tifComboBox.valueProperty()));
+		enableNewOrderButtonForValidOrderEntry();
 
-		cancelButton.disableProperty()
-				.bind(Bindings.createBooleanBinding(
-						() -> model.getSelectedOrder() == null || !canCancel(),
-						model.selectedOrderProperty()));
+		enableCancelOrderButton();
 
-		replaceButton.disableProperty().bind(Bindings.createBooleanBinding(
-				() -> model.getSelectedOrder() == null || !isValidOrderEntry()
-						|| !canReplace(),
-				quantityTextField.textProperty(), typeComboBox.valueProperty(),
-				limitPriceTextField.textProperty(),
-				stopPriceTextField.textProperty()));
+		enableReplaceOrderButtonForValidUpdate();
 
 		model.selectedOrderProperty()
 				.addListener((observable, oldOrder, newOrder) -> {
@@ -134,6 +98,46 @@ public class OrderEntryController implements Initializable {
 		this.typeComboBox.setItems(model.getTypeList());
 		this.tifComboBox.setItems(model.getTIFList());
 		this.sessionComboBox.setItems(model.getSessionList());
+	}
+
+	void enableNewOrderButtonForValidOrderEntry() {
+		newButton.disableProperty().bind(Bindings.createBooleanBinding(
+				() -> !isValidOrderEntry(), symbolTextField.textProperty(),
+				quantityTextField.textProperty(), sideComboBox.valueProperty(),
+				typeComboBox.valueProperty(),
+				limitPriceTextField.textProperty(),
+				stopPriceTextField.textProperty(),
+				tifComboBox.valueProperty()));
+	}
+
+	void enableReplaceOrderButtonForValidUpdate() {
+		replaceButton.disableProperty().bind(Bindings.createBooleanBinding(
+				() -> model.getSelectedOrder() == null || !isValidOrderEntry()
+						|| !canReplace(),
+				quantityTextField.textProperty(), typeComboBox.valueProperty(),
+				limitPriceTextField.textProperty(),
+				stopPriceTextField.textProperty()));
+	}
+
+	void enableCancelOrderButton() {
+		cancelButton.disableProperty()
+				.bind(Bindings.createBooleanBinding(
+						() -> model.getSelectedOrder() == null || !canCancel(),
+						model.selectedOrderProperty()));
+	}
+
+	private void limitPriceIsOnlyValidForLimitOrStopLimitOrderType() {
+		limitPriceTextField.disableProperty().bind(Bindings.createObjectBinding(
+				() -> typeComboBox.getValue() != OrderType.LIMIT
+						&& typeComboBox.getValue() != OrderType.STOP_LIMIT,
+				typeComboBox.valueProperty()));
+	}
+
+	private void stopPriceIsOnlyValidForStopOrStopLimitOrderType() {
+		stopPriceTextField.disableProperty().bind(Bindings.createObjectBinding(
+				() -> typeComboBox.getValue() != OrderType.STOP
+						&& typeComboBox.getValue() != OrderType.STOP_LIMIT,
+				typeComboBox.valueProperty()));
 	}
 
 	public void onNewOrder(ActionEvent actionEvent) {
@@ -235,48 +239,48 @@ public class OrderEntryController implements Initializable {
 
 	private boolean canCancel() {
 		Order origOrder = model.getSelectedOrder();
-		return origOrder != null && isSessionIDSame(origOrder);
+		return origOrder != null && isSameSessionID(origOrder);
 	}
 
 	private boolean canReplace() {
 		Order origOrder = model.getSelectedOrder();
-		return origOrder != null && isSymbolSame(origOrder)
-				&& isSideSame(origOrder) && isTIFSame(origOrder)
-				&& isSessionIDSame(origOrder)
-				&& (isQtyDifferent(origOrder) || isOrderTypeDifferent(origOrder)
-						|| isLimitPriceDifferent(origOrder));
+		return origOrder != null && isSameSymbol(origOrder)
+				&& isSameSide(origOrder) && isSameTIF(origOrder)
+				&& isSameSessionID(origOrder)
+				&& (isDifferentQty(origOrder) || isDifferentOrderType(origOrder)
+						|| isDifferentLimitPrice(origOrder));
 	}
 
-	private boolean isSymbolSame(Order origOrder) {
+	private boolean isSameSymbol(Order origOrder) {
 		return symbolTextField.getText().equals(origOrder.getSymbol());
 	}
 
-	private boolean isSideSame(Order origOrder) {
+	private boolean isSameSide(Order origOrder) {
 		return sideComboBox.getValue() == origOrder.getSide();
 	}
 
-	private boolean isTIFSame(Order origOrder) {
+	private boolean isSameTIF(Order origOrder) {
 		return tifComboBox.getValue() == origOrder.getTIF();
 	}
 
-	private boolean isQtyDifferent(Order origOrder) {
+	private boolean isSameSessionID(Order origOrder) {
+		return this.sessionComboBox.getValue().equals(origOrder.getSessionID());
+	}
+
+	private boolean isDifferentQty(Order origOrder) {
 		return Integer.parseInt(this.quantityTextField.getText()) != origOrder
 				.getQuantity();
 	}
 
-	private boolean isOrderTypeDifferent(Order origOrder) {
+	private boolean isDifferentOrderType(Order origOrder) {
 		return this.typeComboBox.getValue() != origOrder.getType();
 	}
 
-	private boolean isLimitPriceDifferent(Order origOrder) {
+	private boolean isDifferentLimitPrice(Order origOrder) {
 		return (this.typeComboBox.getValue() == OrderType.LIMIT
 				|| this.typeComboBox.getValue() == OrderType.STOP_LIMIT)
 				&& !Objects.equals(this.limitPriceTextField.getText(),
 						formatPrice(origOrder.getLimit()));
-	}
-
-	private boolean isSessionIDSame(Order origOrder) {
-		return this.sessionComboBox.getValue().equals(origOrder.getSessionID());
 	}
 
 	private String formatPrice(Double price) {
