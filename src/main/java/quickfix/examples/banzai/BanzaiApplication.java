@@ -25,11 +25,17 @@ import java.util.HashSet;
 
 import javax.swing.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Component;
 import quickfix.*;
 import quickfix.field.*;
 
+@Component("banzaiService")
 public class BanzaiApplication implements Application, IBanzaiService {
-	private final Model model;
+
+	@Autowired
+	private Model model;
 
 	private final DefaultMessageFactory messageFactory = new DefaultMessageFactory();
 
@@ -44,10 +50,6 @@ public class BanzaiApplication implements Application, IBanzaiService {
 	static private final TwoWayMap tifMap = new TwoWayMap();
 
 	static private final HashMap<SessionID, HashSet<ExecID>> execIDs = new HashMap<SessionID, HashSet<ExecID>>();
-
-	public BanzaiApplication(Model model) {
-		this.model = model;
-	}
 
 	public void onCreate(SessionID sessionID) {
 	}
@@ -296,6 +298,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
 		}
 	}
 
+    @Override
 	public void send(Order order) {
 		String beginString = order.getSessionID().getBeginString();
 		if (beginString.equals(FixVersions.BEGINSTRING_FIX40))
@@ -396,6 +399,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
 		return newOrderSingle;
 	}
 
+    @Override
 	public void cancel(Order order) {
 		String beginString = order.getSessionID().getBeginString();
 		if (beginString.equals("FIX.4.0"))
@@ -441,6 +445,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
 		send(message, order.getSessionID());
 	}
 
+    @Override
 	public void replace(Order order, Order newOrder) {
 		String beginString = order.getSessionID().getBeginString();
 		if (beginString.equals("FIX.4.0"))
