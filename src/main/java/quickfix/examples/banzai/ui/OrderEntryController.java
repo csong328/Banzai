@@ -20,7 +20,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import quickfix.SessionID;
-import quickfix.examples.banzai.*;
+import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.OrderSide;
+import quickfix.examples.banzai.OrderTIF;
+import quickfix.examples.banzai.OrderType;
 import quickfix.examples.banzai.application.IBanzaiService;
 
 @Component("orderEntryController")
@@ -62,6 +65,8 @@ public class OrderEntryController implements Initializable {
 
   @Autowired
   private OrderEntryModel orderEntryModel;
+  @Autowired
+  private OrderTableModel orderTableModel;
 
   @Autowired
   private IBanzaiService service;
@@ -108,14 +113,17 @@ public class OrderEntryController implements Initializable {
   private void enableReplaceOrderButtonForValidUpdate() {
     replaceButton.disableProperty()
         .bind(Bindings.createBooleanBinding(
-            () -> orderEntryModel.getSelectedOrder() == null || !isValidOrderEntry() || !canReplace(),
+            () -> orderEntryModel.getSelectedOrder() == null || !isValidOrderEntry()
+                || !canReplace(),
             quantityTextField.textProperty(), typeComboBox.valueProperty(),
             limitPriceTextField.textProperty(), stopPriceTextField.textProperty()));
   }
 
   private void enableCancelOrderButton() {
-    cancelButton.disableProperty().bind(Bindings.createBooleanBinding(
-        () -> orderEntryModel.getSelectedOrder() == null || !canCancel(), orderEntryModel.selectedOrderProperty()));
+    cancelButton.disableProperty()
+        .bind(Bindings.createBooleanBinding(
+            () -> orderEntryModel.getSelectedOrder() == null || !canCancel(),
+            orderEntryModel.selectedOrderProperty()));
   }
 
   private void limitPriceIsOnlyValidForLimitOrStopLimitOrderType() {
@@ -138,7 +146,7 @@ public class OrderEntryController implements Initializable {
 
   public void onNewOrder(ActionEvent actionEvent) {
     Order order = orderEntry();
-    orderEntryModel.addOrder(order);
+    orderTableModel.addOrder(order);
     service.send(order);
     orderEntryModel.setSelectedOrder(null);
   }

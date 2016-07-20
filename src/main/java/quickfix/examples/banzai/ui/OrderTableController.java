@@ -25,11 +25,13 @@ public class OrderTableController implements Initializable {
   private TableColumn<Order, String> targetColumn;
 
   @Autowired
+  private OrderTableModel orderTableModel;
+  @Autowired
   private OrderEntryModel orderEntryModel;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    this.orderTable.setItems(orderEntryModel.getOrderList());
+    this.orderTable.setItems(orderTableModel.getOrderList());
 
     initializeColumn(targetColumn,
         order -> new ReadOnlyObjectWrapper<>(order.getSessionID().getTargetCompID()));

@@ -30,7 +30,9 @@ import org.springframework.stereotype.Component;
 
 import quickfix.*;
 import quickfix.examples.banzai.*;
+import quickfix.examples.banzai.ui.ExecutionTableModel;
 import quickfix.examples.banzai.ui.OrderEntryModel;
+import quickfix.examples.banzai.ui.OrderTableModel;
 import quickfix.field.*;
 
 @Component("banzaiService")
@@ -40,6 +42,10 @@ public class BanzaiApplication implements Application, IBanzaiService {
 
   @Autowired
   private OrderEntryModel orderEntryModel;
+  @Autowired
+  private OrderTableModel orderTableModel;
+  @Autowired
+  private ExecutionTableModel executionTableModel;
 
   private final DefaultMessageFactory messageFactory = new DefaultMessageFactory();
 
@@ -157,7 +163,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
     ExecID execID = (ExecID) message.getField(new ExecID());
     if (alreadyProcessed(execID, sessionID)) return;
 
-    Order order = orderEntryModel.getOrder(message.getField(new ClOrdID()).getValue());
+    Order order = orderTableModel.getOrder(message.getField(new ClOrdID()).getValue());
     if (order == null) {
       return;
     }
@@ -201,7 +207,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
       order.setMessage(message.getField(new Text()).getValue());
     } catch (FieldNotFound e) {}
 
-    orderEntryModel.updateOrder(order, message.getField(new ClOrdID()).getValue());
+    orderTableModel.updateOrder(order, message.getField(new ClOrdID()).getValue());
 
     if (fillSize.compareTo(BigDecimal.ZERO) > 0) {
       Execution execution = new Execution();
@@ -214,21 +220,21 @@ public class BanzaiApplication implements Application, IBanzaiService {
       }
       Side side = (Side) message.getField(new Side());
       execution.setSide(FIXSideToSide(side));
-      orderEntryModel.addExecution(execution);
+      executionTableModel.addExecution(execution);
     }
   }
 
   private void cancelReject(Message message, SessionID sessionID) throws FieldNotFound {
 
     String id = message.getField(new ClOrdID()).getValue();
-    Order order = orderEntryModel.getOrder(id);
+    Order order = orderTableModel.getOrder(id);
     if (order == null) return;
-    if (order.getOriginalID() != null) order = orderEntryModel.getOrder(order.getOriginalID());
+    if (order.getOriginalID() != null) order = orderTableModel.getOrder(order.getOriginalID());
 
     try {
       order.setMessage(message.getField(new Text()).getValue());
     } catch (FieldNotFound e) {}
-    orderEntryModel.updateOrder(order, message.getField(new OrigClOrdID()).getValue());
+    orderTableModel.updateOrder(order, message.getField(new OrigClOrdID()).getValue());
   }
 
   private boolean alreadyProcessed(ExecID execID, SessionID sessionID) {
@@ -383,7 +389,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
             new CxlType(CxlType.FULL_REMAINING_QUANTITY), new Symbol(order.getSymbol()),
             sideToFIXSide(order.getSide()), new OrderQty(order.getQuantity()));
 
-    orderEntryModel.addClOrdID(order, id);
+    orderTableModel.addClOrdID(order, id);
     send(message, order.getSessionID());
   }
 
@@ -394,7 +400,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
             new Symbol(order.getSymbol()), sideToFIXSide(order.getSide()));
     message.setField(new OrderQty(order.getQuantity()));
 
-    orderEntryModel.addClOrdID(order, id);
+    orderTableModel.addClOrdID(order, id);
     send(message, order.getSessionID());
   }
 
@@ -405,7 +411,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
             new Symbol(order.getSymbol()), sideToFIXSide(order.getSide()), new TransactTime());
     message.setField(new OrderQty(order.getQuantity()));
 
-    orderEntryModel.addClOrdID(order, id);
+    orderTableModel.addClOrdID(order, id);
     send(message, order.getSessionID());
   }
 
@@ -431,7 +437,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
         new Symbol(order.getSymbol()), sideToFIXSide(order.getSide()),
         new OrderQty(newOrder.getQuantity()), typeToFIXType(order.getType()));
 
-    orderEntryModel.addClOrdID(order, newOrder.getID());
+    orderTableModel.addClOrdID(order, newOrder.getID());
     send(populateCancelReplace(order, newOrder, message), order.getSessionID());
   }
 
@@ -441,7 +447,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
             new ClOrdID(newOrder.getID()), new HandlInst('1'), new Symbol(order.getSymbol()),
             sideToFIXSide(order.getSide()), typeToFIXType(order.getType()));
 
-    orderEntryModel.addClOrdID(order, newOrder.getID());
+    orderTableModel.addClOrdID(order, newOrder.getID());
     send(populateCancelReplace(order, newOrder, message), order.getSessionID());
   }
 
@@ -451,7 +457,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
             new ClOrdID(newOrder.getID()), new HandlInst('1'), new Symbol(order.getSymbol()),
             sideToFIXSide(order.getSide()), new TransactTime(), typeToFIXType(order.getType()));
 
-    orderEntryModel.addClOrdID(order, newOrder.getID());
+    orderTableModel.addClOrdID(order, newOrder.getID());
     send(populateCancelReplace(order, newOrder, message), order.getSessionID());
   }
 

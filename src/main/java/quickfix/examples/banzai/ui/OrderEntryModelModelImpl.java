@@ -2,19 +2,18 @@ package quickfix.examples.banzai.ui;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import quickfix.SessionID;
-import quickfix.examples.banzai.*;
+import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.OrderSide;
+import quickfix.examples.banzai.OrderTIF;
+import quickfix.examples.banzai.OrderType;
 
 @Component("orderEntryModel")
 public class OrderEntryModelModelImpl implements OrderEntryModel {
@@ -26,22 +25,11 @@ public class OrderEntryModelModelImpl implements OrderEntryModel {
   private final ObservableList<OrderTIF> tifList;
   private final ObservableList<SessionID> sessionList;
 
-  private final ObservableList<Order> orderList;
-  private final Map<String, Order> idToOrder = new HashMap<>();
-
-  private final ObservableList<Execution> executionList;
-  private final Map<String, Execution> exchangeIdToExecution = new HashMap<>();
-
   public OrderEntryModelModelImpl() {
     this.sideList = observableArrayList();
     this.typeList = observableArrayList();
     this.tifList = observableArrayList();
     this.sessionList = observableArrayList();
-
-    this.orderList = observableArrayList(
-        o -> new Observable[] {o.executedProperty(), o.openProperty(), o.avgPxProperty(),
-            o.messageProperty(), o.canceledProperty(), o.isNewProperty(), o.rejectedProperty()});
-    this.executionList = observableArrayList();
   }
 
   @PostConstruct
@@ -94,51 +82,6 @@ public class OrderEntryModelModelImpl implements OrderEntryModel {
   @Override
   public void logoff(SessionID sessionID) {
     sessionList.remove(sessionID);
-  }
-
-  @Override
-  public ObservableList<Order> getOrderList() {
-    return this.orderList;
-  }
-
-  @Override
-  public void addOrder(Order order) {
-    idToOrder.put(order.getID(), order);
-    orderList.add(order);
-  }
-
-  @Override
-  public void addClOrdID(Order order, String id) {
-    idToOrder.put(id, order);
-  }
-
-  @Override
-  public Order getOrder(String ID) {
-    return idToOrder.get(ID);
-  }
-
-  @Override
-  public void updateOrder(Order order, String value) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public ObservableList<Execution> getExecutionList() {
-    return this.executionList;
-  }
-
-  @Override
-  public void addExecution(Execution execution) {
-    if (exchangeIdToExecution.containsKey(execution.getExchangeID())) {
-      return;
-    }
-    exchangeIdToExecution.put(execution.getExchangeID(), execution);
-    this.executionList.add(execution);
-  }
-
-  @Override
-  public Execution getExchangeExecution(String exchangeID) {
-    return this.exchangeIdToExecution.get(exchangeID);
   }
 
 }
