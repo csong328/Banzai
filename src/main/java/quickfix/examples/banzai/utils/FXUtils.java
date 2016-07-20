@@ -22,6 +22,8 @@ public class FXUtils {
         }
       };
 
+  private FXUtils() {}
+
   public static ChangeListener<String> integerFieldChangeListener() {
     return INTEGER_TEXT_FIELD_CHANGE_LISTENER;
   }

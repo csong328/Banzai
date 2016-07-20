@@ -16,13 +16,7 @@
 
 package quickfix.examples.banzai;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.property.*;
-import quickfix.field.*;
 
 public class Execution {
   private StringProperty symbol = new SimpleStringProperty();
