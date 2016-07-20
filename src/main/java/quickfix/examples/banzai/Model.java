@@ -5,34 +5,39 @@ import javafx.collections.ObservableList;
 import quickfix.SessionID;
 
 public interface Model {
-    ObjectProperty<Order> selectedOrderProperty();
+  ObjectProperty<Order> selectedOrderProperty();
 
-    Order getSelectedOrder();
+  Order getSelectedOrder();
 
-    void setSelectedOrder(Order order);
+  void setSelectedOrder(Order order);
 
-    ObservableList<OrderSide> getSideList();
+  ObservableList<OrderSide> getSideList();
 
-    ObservableList<OrderType> getTypeList();
+  ObservableList<OrderType> getTypeList();
 
-    ObservableList<OrderTIF> getTIFList();
+  ObservableList<OrderTIF> getTIFList();
 
-    ObservableList<SessionID> getSessionList();
-    void logon(SessionID sessionID);
-    void logoff(SessionID sessionID);
+  ObservableList<SessionID> getSessionList();
 
-    ObservableList<Order> getOrderList();
+  void logon(SessionID sessionID);
 
-    void addOrder(Order order);
-    void addClOrdID(Order order, String id);
-    Order getOrder(String ID);
-    void updateOrder(Order order, String value);
+  void logoff(SessionID sessionID);
 
-    ObservableList<Execution> getExecutionList();
+  ObservableList<Order> getOrderList();
 
-    void addExecution(Execution execution);
+  void addOrder(Order order);
 
-    Execution getExchangeExecution(String exchangeID);
+  void addClOrdID(Order order, String id);
+
+  Order getOrder(String ID);
+
+  void updateOrder(Order order, String value);
+
+  ObservableList<Execution> getExecutionList();
+
+  void addExecution(Execution execution);
+
+  Execution getExchangeExecution(String exchangeID);
 
 
 }

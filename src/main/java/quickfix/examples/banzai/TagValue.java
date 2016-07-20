@@ -6,56 +6,55 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class TagValue {
-    private IntegerProperty tag = new SimpleIntegerProperty();
-    private StringProperty value = new SimpleStringProperty();
+  private IntegerProperty tag = new SimpleIntegerProperty();
+  private StringProperty value = new SimpleStringProperty();
+
+  public static TagValue of(int tag, Integer value) {
+    return of(tag, Integer.toString(value));
+  }
+
+  public static TagValue of(int tag, Double value) {
+    return of(tag, Double.toString(value));
+  }
+
+  public static TagValue of(int tag, char value) {
+    return of(tag, Character.toString(value));
+  }
+
+  public static TagValue of(int tag, String value) {
+    TagValue pair = new TagValue();
+    pair.setTag(tag);
+    pair.setValue(value);
+    return pair;
+  }
 
 
-    public static TagValue of(int tag, Integer value) {
-        return of(tag, Integer.toString(value));
-    }
+  public IntegerProperty tagProperty() {
+    return this.tag;
+  }
 
-    public static TagValue of(int tag, Double value) {
-        return of(tag, Double.toString(value));
-    }
+  public int getTag() {
+    return tagProperty().get();
+  }
 
-    public static TagValue of(int tag, char value) {
-        return of(tag, Character.toString(value));
-    }
+  public void setTag(int tag) {
+    this.tagProperty().set(tag);
+  }
 
-    public static TagValue of(int tag, String value) {
-        TagValue pair = new TagValue();
-        pair.setTag(tag);
-        pair.setValue(value);
-        return pair;
-    }
+  public StringProperty valueProperty() {
+    return this.value;
+  }
 
+  public String getValue() {
+    return valueProperty().get();
+  }
 
-    public IntegerProperty tagProperty() {
-        return this.tag;
-    }
+  public void setValue(String value) {
+    this.valueProperty().set(value);
+  }
 
-    public int getTag() {
-        return tagProperty().get();
-    }
-
-    public void setTag(int tag) {
-        this.tagProperty().set(tag);
-    }
-
-    public StringProperty valueProperty() {
-        return this.value;
-    }
-
-    public String getValue() {
-        return valueProperty().get();
-    }
-
-    public void setValue(String value) {
-        this.valueProperty().set(value);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%d=%s", getTag(), getValue());
-    }
+  @Override
+  public String toString() {
+    return String.format("%d=%s", getTag(), getValue());
+  }
 }

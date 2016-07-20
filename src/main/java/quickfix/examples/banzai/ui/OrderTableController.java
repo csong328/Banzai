@@ -19,30 +19,30 @@ import quickfix.examples.banzai.Order;
 
 @Component("orderTableController")
 public class OrderTableController implements Initializable {
-	@FXML
-	private TableView<Order> orderTable;
+  @FXML
+  private TableView<Order> orderTable;
 
-	@FXML
-	private TableColumn<Order, String> targetColumn;
+  @FXML
+  private TableColumn<Order, String> targetColumn;
 
-	@Autowired
-	private Model model;
+  @Autowired
+  private Model model;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		this.orderTable.setItems(model.getOrderList());
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    this.orderTable.setItems(model.getOrderList());
 
-		initializeColumn(targetColumn, order -> new ReadOnlyObjectWrapper<>(
-				order.getSessionID().getTargetCompID()));
-	}
+    initializeColumn(targetColumn,
+        order -> new ReadOnlyObjectWrapper<>(order.getSessionID().getTargetCompID()));
+  }
 
-	public void onOrderSelected(Event event) {
-		Order order = this.orderTable.getSelectionModel().getSelectedItem();
-		model.setSelectedOrder(order);
-	}
+  public void onOrderSelected(Event event) {
+    Order order = this.orderTable.getSelectionModel().getSelectedItem();
+    model.setSelectedOrder(order);
+  }
 
-	private <S, T> void initializeColumn(TableColumn<S, T> column,
-			Function<S, ObservableValue<T>> prop) {
-		column.setCellValueFactory(cellData -> prop.apply(cellData.getValue()));
-	}
+  private <S, T> void initializeColumn(TableColumn<S, T> column,
+      Function<S, ObservableValue<T>> prop) {
+    column.setCellValueFactory(cellData -> prop.apply(cellData.getValue()));
+  }
 }
