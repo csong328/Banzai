@@ -11,6 +11,8 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javafx.collections.FXCollections.observableArrayList;
+
 @Component("model")
 public class ModelImpl implements Model {
 
@@ -22,11 +24,11 @@ public class ModelImpl implements Model {
     private final Map<String, Execution> exchangeIdToExecution = new HashMap<>();
 
     public ModelImpl() {
-        orderList = FXCollections.observableArrayList(o ->
+        orderList = observableArrayList(o ->
                 new Observable[]{o.executedProperty(), o.openProperty(), o.avgPxProperty(),
                         o.messageProperty(), o.canceledProperty(),
                         o.isNewProperty(), o.rejectedProperty()});
-        executionList = FXCollections.observableArrayList(e -> new Observable[]{});
+        executionList = observableArrayList(e -> new Observable[]{});
     }
 
     @PostConstruct
@@ -81,5 +83,20 @@ public class ModelImpl implements Model {
     @Override
     public void setSelectedOrder(Order order) {
         selectedOrderProperty().set(order);
+    }
+
+    @Override
+    public ObservableList<OrderSide> getSideList() {
+        return observableArrayList(OrderSide.values());
+    }
+
+    @Override
+    public ObservableList<OrderType> getTypeList() {
+        return observableArrayList(OrderType.values());
+    }
+
+    @Override
+    public ObservableList<OrderTIF> getTIFList() {
+        return observableArrayList(OrderTIF.values());
     }
 }

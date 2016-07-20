@@ -21,4 +21,8 @@ public interface Model {
     Order getSelectedOrder();
 
     void setSelectedOrder(Order order);
+
+    ObservableList<OrderSide> getSideList();
+    ObservableList<OrderType> getTypeList();
+    ObservableList<OrderTIF> getTIFList();
 }
