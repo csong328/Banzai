@@ -25,11 +25,11 @@ public class OrderTableController implements Initializable {
   private TableColumn<Order, String> targetColumn;
 
   @Autowired
-  private Model model;
+  private OrderEntryModel orderEntryModel;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    this.orderTable.setItems(model.getOrderList());
+    this.orderTable.setItems(orderEntryModel.getOrderList());
 
     initializeColumn(targetColumn,
         order -> new ReadOnlyObjectWrapper<>(order.getSessionID().getTargetCompID()));
@@ -37,7 +37,7 @@ public class OrderTableController implements Initializable {
 
   public void onOrderSelected(Event event) {
     Order order = this.orderTable.getSelectionModel().getSelectedItem();
-    model.setSelectedOrder(order);
+    orderEntryModel.setSelectedOrder(order);
   }
 
   private <S, T> void initializeColumn(TableColumn<S, T> column,

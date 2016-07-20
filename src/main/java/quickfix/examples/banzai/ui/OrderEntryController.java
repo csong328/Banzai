@@ -61,7 +61,7 @@ public class OrderEntryController implements Initializable {
   private Button replaceButton;
 
   @Autowired
-  private Model model;
+  private OrderEntryModel orderEntryModel;
 
   @Autowired
   private IBanzaiService service;
@@ -82,7 +82,7 @@ public class OrderEntryController implements Initializable {
 
     enableReplaceOrderButtonForValidUpdate();
 
-    model.selectedOrderProperty().addListener((observable, oldOrder, newOrder) -> {
+    orderEntryModel.selectedOrderProperty().addListener((observable, oldOrder, newOrder) -> {
       if (newOrder == null) {
         reset();
       } else {
@@ -90,10 +90,10 @@ public class OrderEntryController implements Initializable {
       }
     });
 
-    this.sideComboBox.setItems(model.getSideList());
-    this.typeComboBox.setItems(model.getTypeList());
-    this.tifComboBox.setItems(model.getTIFList());
-    this.sessionComboBox.setItems(model.getSessionList());
+    this.sideComboBox.setItems(orderEntryModel.getSideList());
+    this.typeComboBox.setItems(orderEntryModel.getTypeList());
+    this.tifComboBox.setItems(orderEntryModel.getTIFList());
+    this.sessionComboBox.setItems(orderEntryModel.getSessionList());
   }
 
   private void enableNewOrderButtonForValidOrderEntry() {
@@ -108,14 +108,14 @@ public class OrderEntryController implements Initializable {
   private void enableReplaceOrderButtonForValidUpdate() {
     replaceButton.disableProperty()
         .bind(Bindings.createBooleanBinding(
-            () -> model.getSelectedOrder() == null || !isValidOrderEntry() || !canReplace(),
+            () -> orderEntryModel.getSelectedOrder() == null || !isValidOrderEntry() || !canReplace(),
             quantityTextField.textProperty(), typeComboBox.valueProperty(),
             limitPriceTextField.textProperty(), stopPriceTextField.textProperty()));
   }
 
   private void enableCancelOrderButton() {
     cancelButton.disableProperty().bind(Bindings.createBooleanBinding(
-        () -> model.getSelectedOrder() == null || !canCancel(), model.selectedOrderProperty()));
+        () -> orderEntryModel.getSelectedOrder() == null || !canCancel(), orderEntryModel.selectedOrderProperty()));
   }
 
   private void limitPriceIsOnlyValidForLimitOrStopLimitOrderType() {
@@ -138,19 +138,19 @@ public class OrderEntryController implements Initializable {
 
   public void onNewOrder(ActionEvent actionEvent) {
     Order order = orderEntry();
-    model.addOrder(order);
+    orderEntryModel.addOrder(order);
     service.send(order);
-    model.setSelectedOrder(null);
+    orderEntryModel.setSelectedOrder(null);
   }
 
   public void onCancelOrder(ActionEvent actionEvent) {
-    Order origOrder = model.getSelectedOrder();
+    Order origOrder = orderEntryModel.getSelectedOrder();
     service.cancel(origOrder);
-    model.setSelectedOrder(null);
+    orderEntryModel.setSelectedOrder(null);
   }
 
   public void onReplaceOrder(ActionEvent actionEvent) {
-    Order origOrder = model.getSelectedOrder();
+    Order origOrder = orderEntryModel.getSelectedOrder();
     Order newOrder = (Order) origOrder.clone();
     newOrder.setQuantity(Integer.parseInt(quantityTextField.getText()));
     if (origOrder.getType() == OrderType.LIMIT || origOrder.getType() == OrderType.STOP_LIMIT) {
@@ -162,7 +162,7 @@ public class OrderEntryController implements Initializable {
     newOrder.setExecuted(0);
 
     service.replace(origOrder, newOrder);
-    model.setSelectedOrder(null);
+    orderEntryModel.setSelectedOrder(null);
   }
 
   private void reset() {
@@ -228,12 +228,12 @@ public class OrderEntryController implements Initializable {
   }
 
   private boolean canCancel() {
-    Order origOrder = model.getSelectedOrder();
+    Order origOrder = orderEntryModel.getSelectedOrder();
     return origOrder != null && isSameSessionID(origOrder);
   }
 
   private boolean canReplace() {
-    Order origOrder = model.getSelectedOrder();
+    Order origOrder = orderEntryModel.getSelectedOrder();
     return origOrder != null && isSameSymbol(origOrder) && isSameSide(origOrder)
         && isSameTIF(origOrder) && isSameSessionID(origOrder) && (isDifferentQty(origOrder)
             || isDifferentOrderType(origOrder) || isDifferentLimitPrice(origOrder));

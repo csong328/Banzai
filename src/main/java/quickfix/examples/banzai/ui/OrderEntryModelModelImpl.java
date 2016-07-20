@@ -16,8 +16,8 @@ import javafx.collections.ObservableList;
 import quickfix.SessionID;
 import quickfix.examples.banzai.*;
 
-@Component("model")
-public class ModelImpl implements Model {
+@Component("orderEntryModel")
+public class OrderEntryModelModelImpl implements OrderEntryModel {
 
   private ObjectProperty<Order> selectedOrder = new SimpleObjectProperty<>();
 
@@ -32,7 +32,7 @@ public class ModelImpl implements Model {
   private final ObservableList<Execution> executionList;
   private final Map<String, Execution> exchangeIdToExecution = new HashMap<>();
 
-  public ModelImpl() {
+  public OrderEntryModelModelImpl() {
     this.sideList = observableArrayList();
     this.typeList = observableArrayList();
     this.tifList = observableArrayList();

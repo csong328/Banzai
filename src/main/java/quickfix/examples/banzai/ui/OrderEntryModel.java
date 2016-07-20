@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import quickfix.SessionID;
 import quickfix.examples.banzai.*;
 
-public interface Model {
+public interface OrderEntryModel {
   ObjectProperty<Order> selectedOrderProperty();
 
   Order getSelectedOrder();

@@ -18,11 +18,11 @@ public class ExecutionTableController implements Initializable {
   private TableView<Execution> executionTable;
 
   @Autowired
-  private Model model;
+  private OrderEntryModel orderEntryModel;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    this.executionTable.setItems(model.getExecutionList());
+    this.executionTable.setItems(orderEntryModel.getExecutionList());
   }
 
   public void onExecutionSelected(Event event) {}
