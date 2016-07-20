@@ -145,9 +145,11 @@ public class OrderEntryController implements Initializable {
     }
 
     public void onCancelOrder(ActionEvent actionEvent) {
+        model.setSelectedOrder(null);
     }
 
     public void onReplaceOrder(ActionEvent actionEvent) {
+        model.setSelectedOrder(null);
     }
 
     private boolean isValidOrderEntry() {
