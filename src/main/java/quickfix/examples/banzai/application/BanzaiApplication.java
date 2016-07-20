@@ -14,7 +14,7 @@
  * Contact ask@quickfixengine.org if any conditions of this licensing are not clear to you.
  ******************************************************************************/
 
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.application;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import quickfix.*;
+import quickfix.examples.banzai.*;
 import quickfix.field.*;
 
 @Component("banzaiService")

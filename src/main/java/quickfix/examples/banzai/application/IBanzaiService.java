@@ -1,4 +1,6 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.application;
+
+import quickfix.examples.banzai.Order;
 
 public interface IBanzaiService {
   void send(Order order);

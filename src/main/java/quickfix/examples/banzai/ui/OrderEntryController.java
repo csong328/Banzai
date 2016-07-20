@@ -21,6 +21,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import quickfix.SessionID;
 import quickfix.examples.banzai.*;
+import quickfix.examples.banzai.application.IBanzaiService;
 
 @Component("orderEntryController")
 @Lazy
