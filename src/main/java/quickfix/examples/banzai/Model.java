@@ -4,6 +4,18 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 
 public interface Model {
+    ObjectProperty<Order> selectedOrderProperty();
+
+    Order getSelectedOrder();
+
+    void setSelectedOrder(Order order);
+
+    ObservableList<OrderSide> getSideList();
+
+    ObservableList<OrderType> getTypeList();
+
+    ObservableList<OrderTIF> getTIFList();
+
     ObservableList<Order> getOrderList();
 
     void addOrder(Order order);
@@ -15,14 +27,4 @@ public interface Model {
     void addExecution(Execution execution);
 
     Execution getExchangeExecution(String exchangeID);
-
-    ObjectProperty<Order> selectedOrderProperty();
-
-    Order getSelectedOrder();
-
-    void setSelectedOrder(Order order);
-
-    ObservableList<OrderSide> getSideList();
-    ObservableList<OrderType> getTypeList();
-    ObservableList<OrderTIF> getTIFList();
 }
