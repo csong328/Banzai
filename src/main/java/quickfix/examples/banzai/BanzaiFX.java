@@ -14,6 +14,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import quickfix.*;
 import quickfix.examples.banzai.application.ApplicationConfig;
+import quickfix.examples.banzai.application.BanzaiApplication;
+import quickfix.examples.banzai.ui.OrderEntryController;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
 public class BanzaiFX extends Application {
@@ -31,6 +33,11 @@ public class BanzaiFX extends Application {
     super.init();
     this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
     quickfix.Application application = applicationContext.getBean(quickfix.Application.class);
+
+    OrderEntryController orderEntryController =
+        applicationContext.getBean(OrderEntryController.class);
+    BanzaiApplication banzaiApplication = applicationContext.getBean(BanzaiApplication.class);
+    banzaiApplication.addLogonObserver(orderEntryController);
 
     SessionSettings settings = getSessionSettings(parameters);
     boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));

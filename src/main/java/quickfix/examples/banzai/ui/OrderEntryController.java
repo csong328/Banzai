@@ -6,6 +6,8 @@ import static quickfix.examples.banzai.utils.FXUtils.integerFieldChangeListener;
 
 import java.net.URL;
 import java.util.Objects;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +24,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import quickfix.FixVersions;
 import quickfix.SessionID;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderTIF;
-import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.*;
 import quickfix.examples.banzai.application.IBanzaiService;
 
 @Component("orderEntryController")
 @Lazy
-public class OrderEntryController implements Initializable {
+public class OrderEntryController implements Initializable, Observer {
 
   @FXML
   private TextField symbolTextField;
@@ -289,7 +288,17 @@ public class OrderEntryController implements Initializable {
     return price != null ? Double.toString(price) : "";
   }
 
-  public void logon(final SessionID sessionID) {
+  @Override
+  public void update(Observable o, Object arg) {
+    LogonEvent logonEvent = (LogonEvent) arg;
+    if (logonEvent.isLoggedOn()) {
+      logon(logonEvent.getSessionID());
+    } else {
+      logoff(logonEvent.getSessionID());
+    }
+  }
+
+  private void logon(final SessionID sessionID) {
     boolean wasEmpty = this.sessionComboBox.getItems().isEmpty();
     this.sessionComboBox.getItems().add(sessionID);
     if (wasEmpty || FixVersions.BEGINSTRING_FIX42.equals(sessionID.getBeginString())) {
@@ -299,7 +308,7 @@ public class OrderEntryController implements Initializable {
     }
   }
 
-  public void logoff(SessionID sessionID) {
+  private void logoff(SessionID sessionID) {
     this.sessionComboBox.getItems().remove(sessionID);
   }
 }

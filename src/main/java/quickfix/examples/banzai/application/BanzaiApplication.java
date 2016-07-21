@@ -28,48 +28,39 @@ import javafx.application.Platform;
 import quickfix.*;
 import quickfix.examples.banzai.*;
 import quickfix.examples.banzai.ui.ExecutionTableModel;
-import quickfix.examples.banzai.ui.OrderEntryController;
-import quickfix.examples.banzai.ui.OrderEntryModel;
 import quickfix.examples.banzai.ui.OrderTableModel;
 import quickfix.field.*;
 
 @Component("banzaiService")
 public class BanzaiApplication implements Application, IBanzaiService {
-
     private static final Logger logger = LoggerFactory.getLogger(BanzaiApplication.class);
 
-    @Autowired
-    private OrderEntryModel orderEntryModel;
+    private final ObservableLogon observableLogon = new ObservableLogon();
+
     @Autowired
     private OrderTableModel orderTableModel;
     @Autowired
     private ExecutionTableModel executionTableModel;
-    @Autowired
-    private OrderEntryController orderEntryController;
 
     private final DefaultMessageFactory messageFactory = new DefaultMessageFactory();
 
     private boolean isAvailable = true;
-
     private boolean isMissingField;
 
-    static private final TwoWayMap sideMap = new TwoWayMap();
-
-    static private final TwoWayMap typeMap = new TwoWayMap();
-
-    static private final TwoWayMap tifMap = new TwoWayMap();
-
-    static private final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
+    private static final TwoWayMap sideMap = new TwoWayMap();
+    private static final TwoWayMap typeMap = new TwoWayMap();
+    private static final TwoWayMap tifMap = new TwoWayMap();
+    private static final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
 
     public void onCreate(SessionID sessionID) {
     }
 
     public void onLogon(SessionID sessionID) {
-        orderEntryController.logon(sessionID);
+        observableLogon.logon(sessionID);
     }
 
     public void onLogout(SessionID sessionID) {
-        orderEntryController.logoff(sessionID);
+        observableLogon.logoff(sessionID);
     }
 
     public void toAdmin(quickfix.Message message, SessionID sessionID) {
@@ -614,5 +605,29 @@ public class BanzaiApplication implements Application, IBanzaiService {
         this.isAvailable = isAvailable;
     }
 
+    private static class ObservableLogon extends Observable {
+        private final HashSet<SessionID> set = new HashSet<SessionID>();
 
+        public void logon(SessionID sessionID) {
+            set.add(sessionID);
+            setChanged();
+            notifyObservers(new LogonEvent(sessionID, true));
+            clearChanged();
+        }
+
+        public void logoff(SessionID sessionID) {
+            set.remove(sessionID);
+            setChanged();
+            notifyObservers(new LogonEvent(sessionID, false));
+            clearChanged();
+        }
+    }
+
+    public void addLogonObserver(Observer observer) {
+        observableLogon.addObserver(observer);
+    }
+
+    public void deleteLogonObserver(Observer observer) {
+        observableLogon.deleteObserver(observer);
+    }
 }
