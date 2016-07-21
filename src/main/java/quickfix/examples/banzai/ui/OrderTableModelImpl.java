@@ -29,7 +29,6 @@ public class OrderTableModelImpl implements OrderTableModel {
 
   @Override
   public void addOrder(Order order) {
-    idToOrder.put(order.getID(), order);
     orderList.add(order);
   }
 

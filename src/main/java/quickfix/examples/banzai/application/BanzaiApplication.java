@@ -346,6 +346,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
                             new Symbol(order.getSymbol()), sideToFIXSide(order.getSide()),
                             new OrderQty(order.getQuantity()), typeToFIXType(order.getType()));
 
+            orderTableModel.addClOrdID(order, order.getID());
             BanzaiApplication.this.send(populateOrder(order, newOrderSingle), order.getSessionID());
         }
 
@@ -386,6 +387,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
                     sideToFIXSide(order.getSide()), typeToFIXType(order.getType()));
             newOrderSingle.set(new OrderQty(order.getQuantity()));
 
+            orderTableModel.addClOrdID(order, order.getID());
             BanzaiApplication.this.send(populateOrder(order, newOrderSingle), order.getSessionID());
         }
 
@@ -426,6 +428,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
                     sideToFIXSide(order.getSide()), new TransactTime(), typeToFIXType(order.getType()));
             newOrderSingle.set(new OrderQty(order.getQuantity()));
 
+            orderTableModel.addClOrdID(order, order.getID());
             BanzaiApplication.this.send(populateOrder(order, newOrderSingle), order.getSessionID());
         }
 
@@ -466,6 +469,8 @@ public class BanzaiApplication implements Application, IBanzaiService {
                             sideToFIXSide(order.getSide()), new TransactTime(), typeToFIXType(order.getType()));
             newOrderSingle.set(new OrderQty(order.getQuantity()));
             newOrderSingle.set(new Symbol(order.getSymbol()));
+
+            orderTableModel.addClOrdID(order, order.getID());
             BanzaiApplication.this.send(populateOrder(order, newOrderSingle), order.getSessionID());
         }
 
@@ -494,6 +499,8 @@ public class BanzaiApplication implements Application, IBanzaiService {
             newOrderSingle.set(new OrderQty(order.getQuantity()));
             newOrderSingle.set(new Symbol(order.getSymbol()));
             newOrderSingle.set(new HandlInst('1'));
+
+            orderTableModel.addClOrdID(order, order.getID());
             BanzaiApplication.this.send(populateOrder(order, newOrderSingle), order.getSessionID());
         }
 
@@ -522,6 +529,8 @@ public class BanzaiApplication implements Application, IBanzaiService {
             newOrderSingle.set(new OrderQty(order.getQuantity()));
             newOrderSingle.set(new Symbol(order.getSymbol()));
             newOrderSingle.set(new HandlInst('1'));
+
+            orderTableModel.addClOrdID(order, order.getID());
             BanzaiApplication.this.send(populateOrder(order, newOrderSingle), order.getSessionID());
         }
 
