@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import quickfix.FixVersions;
 import quickfix.SessionID;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.OrderSide;
@@ -87,7 +89,7 @@ public class OrderEntryController implements Initializable {
 
     enableReplaceOrderButtonForValidUpdate();
 
-    orderEntryModel.selectedOrderProperty().addListener((observable, oldOrder, newOrder) -> {
+    this.orderEntryModel.selectedOrderProperty().addListener((observable, oldOrder, newOrder) -> {
       if (newOrder == null) {
         reset();
       } else {
@@ -98,7 +100,11 @@ public class OrderEntryController implements Initializable {
     this.sideComboBox.setItems(orderEntryModel.getSideList());
     this.typeComboBox.setItems(orderEntryModel.getTypeList());
     this.tifComboBox.setItems(orderEntryModel.getTIFList());
+    this.sideComboBox.getSelectionModel().selectFirst();
+    this.typeComboBox.getSelectionModel().selectFirst();
+    this.tifComboBox.getSelectionModel().selectFirst();
     this.sessionComboBox.setItems(orderEntryModel.getSessionList());
+    this.sessionComboBox.getSelectionModel().selectFirst();
   }
 
   private void enableNewOrderButtonForValidOrderEntry() {
@@ -176,11 +182,11 @@ public class OrderEntryController implements Initializable {
   private void reset() {
     this.symbolTextField.setText("");
     this.quantityTextField.setText("");
-    this.sideComboBox.setValue(null);
-    this.typeComboBox.setValue(null);
+    this.sideComboBox.getSelectionModel().selectFirst();
+    this.typeComboBox.getSelectionModel().selectFirst();
     this.limitPriceTextField.setText("");
     this.stopPriceTextField.setText("");
-    this.tifComboBox.setValue(null);
+    this.tifComboBox.getSelectionModel().selectFirst();
   }
 
   private void setOrder(Order order) {
@@ -193,6 +199,7 @@ public class OrderEntryController implements Initializable {
     this.stopPriceTextField
         .setText(order.getStop() != null ? Double.toString(order.getStop()) : "");
     this.tifComboBox.setValue(order.getTIF());
+    this.sessionComboBox.setValue(order.getSessionID());
   }
 
   private Order orderEntry() {
@@ -237,14 +244,15 @@ public class OrderEntryController implements Initializable {
 
   private boolean canCancel() {
     Order origOrder = orderEntryModel.getSelectedOrder();
-    return origOrder != null && isSameSessionID(origOrder);
+    return origOrder != null && origOrder.getOpen() > 0 && isSameSessionID(origOrder);
   }
 
   private boolean canReplace() {
     Order origOrder = orderEntryModel.getSelectedOrder();
-    return origOrder != null && isSameSymbol(origOrder) && isSameSide(origOrder)
-        && isSameTIF(origOrder) && isSameSessionID(origOrder) && (isDifferentQty(origOrder)
-            || isDifferentOrderType(origOrder) || isDifferentLimitPrice(origOrder));
+    return origOrder != null && origOrder.getOpen() > 0 && isSameSymbol(origOrder)
+        && isSameSide(origOrder) && isSameTIF(origOrder) && isSameSessionID(origOrder)
+        && (isDifferentQty(origOrder) || isDifferentOrderType(origOrder)
+            || isDifferentLimitPrice(origOrder));
   }
 
   private boolean isSameSymbol(Order origOrder) {
@@ -279,5 +287,19 @@ public class OrderEntryController implements Initializable {
 
   private String formatPrice(Double price) {
     return price != null ? Double.toString(price) : "";
+  }
+
+  public void logon(final SessionID sessionID) {
+    boolean wasEmpty = this.sessionComboBox.getItems().isEmpty();
+    this.sessionComboBox.getItems().add(sessionID);
+    if (wasEmpty || FixVersions.BEGINSTRING_FIX42.equals(sessionID.getBeginString())) {
+      Platform.runLater(() -> {
+        this.sessionComboBox.setValue(sessionID);
+      });
+    }
+  }
+
+  public void logoff(SessionID sessionID) {
+    this.sessionComboBox.getItems().remove(sessionID);
   }
 }

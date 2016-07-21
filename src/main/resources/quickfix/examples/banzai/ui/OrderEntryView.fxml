@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <GridPane fx:id="orderEntryPanel" hgap="5" layoutY="5.0" stylesheets="/quickfix/examples/banzai/ui/banzi.css" vgap="5" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="quickfix.examples.banzai.ui.OrderEntryController">
    <children>
        <Label text="Symbol" GridPane.columnIndex="0" />

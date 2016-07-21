@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 import quickfix.*;
 import quickfix.examples.banzai.*;
 import quickfix.examples.banzai.ui.ExecutionTableModel;
+import quickfix.examples.banzai.ui.OrderEntryController;
 import quickfix.examples.banzai.ui.OrderEntryModel;
 import quickfix.examples.banzai.ui.OrderTableModel;
 import quickfix.field.*;
@@ -46,6 +47,8 @@ public class BanzaiApplication implements Application, IBanzaiService {
   private OrderTableModel orderTableModel;
   @Autowired
   private ExecutionTableModel executionTableModel;
+  @Autowired
+  private OrderEntryController orderEntryController;
 
   private final DefaultMessageFactory messageFactory = new DefaultMessageFactory();
 
@@ -64,11 +67,11 @@ public class BanzaiApplication implements Application, IBanzaiService {
   public void onCreate(SessionID sessionID) {}
 
   public void onLogon(SessionID sessionID) {
-    orderEntryModel.logon(sessionID);
+    orderEntryController.logon(sessionID);
   }
 
   public void onLogout(SessionID sessionID) {
-    orderEntryModel.logoff(sessionID);
+    orderEntryController.logoff(sessionID);
   }
 
   public void toAdmin(quickfix.Message message, SessionID sessionID) {}
@@ -176,10 +179,10 @@ public class BanzaiApplication implements Application, IBanzaiService {
       fillSize = new BigDecimal("" + lastShares.getValue());
     } else {
       // > FIX 4.1
-//      LeavesQty leavesQty = new LeavesQty();
-//      message.getField(leavesQty);
-//      fillSize =
-//          new BigDecimal(order.getQuantity()).subtract(new BigDecimal("" + leavesQty.getValue()));
+      // LeavesQty leavesQty = new LeavesQty();
+      // message.getField(leavesQty);
+      // fillSize =
+      // new BigDecimal(order.getQuantity()).subtract(new BigDecimal("" + leavesQty.getValue()));
       fillSize = new BigDecimal(0);
     }
 
