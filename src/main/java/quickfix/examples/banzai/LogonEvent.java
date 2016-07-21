@@ -20,6 +20,10 @@ import quickfix.SessionID;
 
 public class LogonEvent {
   private final SessionID sessionID;
+  /**
+   * true - log on
+   * false - log off
+   */
   private final boolean loggedOn;
 
   public LogonEvent(SessionID sessionID, boolean loggedOn) {
