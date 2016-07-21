@@ -19,6 +19,7 @@ package quickfix.examples.banzai.application;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.*;
@@ -469,7 +470,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
 
     if (order.getQuantity() != newOrder.getQuantity())
       message.setField(new OrderQty(newOrder.getQuantity()));
-    if (!order.getLimit().equals(newOrder.getLimit()))
+    if (!Objects.equals(order.getLimit(), newOrder.getLimit()))
       message.setField(new Price(newOrder.getLimit()));
     return message;
   }

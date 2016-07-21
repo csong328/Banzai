@@ -45,10 +45,16 @@ public class OrderTableModelImpl implements OrderTableModel {
 
   @Override
   public void updateOrder(Order order, String id) {
-
+    if (!id.equals(order.getID())) {
+      String originalID = order.getID();
+      order.setID(id);
+      replaceOrder(order, originalID);
+      return;
+    }
   }
 
   private void replaceOrder(Order order, String originalID) {
+    idToOrder.put(order.getID(), order);
   }
 
 }

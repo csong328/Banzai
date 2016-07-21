@@ -24,7 +24,4 @@ public interface OrderEntryModel {
 
   ObservableList<SessionID> getSessionList();
 
-  void logon(SessionID sessionID);
-
-  void logoff(SessionID sessionID);
 }

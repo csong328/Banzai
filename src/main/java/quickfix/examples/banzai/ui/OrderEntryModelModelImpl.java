@@ -73,15 +73,4 @@ public class OrderEntryModelModelImpl implements OrderEntryModel {
   public ObservableList<SessionID> getSessionList() {
     return sessionList;
   }
-
-  @Override
-  public void logon(SessionID sessionID) {
-    sessionList.add(sessionID);
-  }
-
-  @Override
-  public void logoff(SessionID sessionID) {
-    sessionList.remove(sessionID);
-  }
-
 }
