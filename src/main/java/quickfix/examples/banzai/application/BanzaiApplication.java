@@ -176,10 +176,11 @@ public class BanzaiApplication implements Application, IBanzaiService {
       fillSize = new BigDecimal("" + lastShares.getValue());
     } else {
       // > FIX 4.1
-      LeavesQty leavesQty = new LeavesQty();
-      message.getField(leavesQty);
-      fillSize =
-          new BigDecimal(order.getQuantity()).subtract(new BigDecimal("" + leavesQty.getValue()));
+//      LeavesQty leavesQty = new LeavesQty();
+//      message.getField(leavesQty);
+//      fillSize =
+//          new BigDecimal(order.getQuantity()).subtract(new BigDecimal("" + leavesQty.getValue()));
+      fillSize = new BigDecimal(0);
     }
 
     if (fillSize.compareTo(BigDecimal.ZERO) > 0) {

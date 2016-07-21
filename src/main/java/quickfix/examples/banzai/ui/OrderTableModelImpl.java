@@ -44,8 +44,11 @@ public class OrderTableModelImpl implements OrderTableModel {
   }
 
   @Override
-  public void updateOrder(Order order, String value) {
-    throw new UnsupportedOperationException();
+  public void updateOrder(Order order, String id) {
+
+  }
+
+  private void replaceOrder(Order order, String originalID) {
   }
 
 }
