@@ -11,4 +11,6 @@ public interface ExecutionTableModel {
 
     Execution getExchangeExecution(String exchangeID);
 
+    void clear();
+
 }

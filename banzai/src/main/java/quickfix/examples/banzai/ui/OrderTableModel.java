@@ -5,13 +5,17 @@ import quickfix.examples.banzai.Order;
 
 public interface OrderTableModel {
 
-    ObservableList<Order> getOrderList();
+  ObservableList<Order> getOrderList();
 
-    void addOrder(Order order);
+  void addOrder(Order order);
 
-    void addClOrdID(Order order, String id);
+  void addClOrdID(Order order, String id);
 
-    Order getOrder(String ID);
+  Order getOrder(String ID);
 
-    void updateOrder(Order order, String value);
+  void updateOrder(Order order);
+
+  void replaceOrder(Order newOrder);
+
+  void clear();
 }

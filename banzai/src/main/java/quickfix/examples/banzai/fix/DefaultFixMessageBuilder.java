@@ -13,6 +13,7 @@ import quickfix.field.HandlInst;
 import quickfix.field.LocateReqd;
 import quickfix.field.MsgSeqNum;
 import quickfix.field.MsgType;
+import quickfix.field.OrderID;
 import quickfix.field.OrderQty;
 import quickfix.field.OrigClOrdID;
 import quickfix.field.Price;
@@ -134,6 +135,7 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
     return MessageBuilder.newBuilder(createMessage("G"))
             .setField(new OrigClOrdID(order.getID()))
             .setField(new ClOrdID(newOrder.getID()))
+            .setField(new OrderID(order.getOrderID()))
             .setField(new HandlInst('1'))
             .setField(new Symbol(order.getSymbol()))
             .setField(sideToFIXSide(newOrder.getSide()))
@@ -142,13 +144,12 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
   }
 
   protected Message createCancelRequest(Order order) {
-    String id = order.generateID();
     return MessageBuilder.newBuilder(createMessage("F"))
-            .setField(new OrigClOrdID(order.getID()))
-            .setField(new ClOrdID(id))
+            .setField(new OrigClOrdID(order.getOriginalID()))
+            .setField(new ClOrdID(order.getID()))
+            .setField(new OrderID(order.getOrderID()))
             .setField(new Symbol(order.getSymbol()))
             .setField(sideToFIXSide(order.getSide()))
-            .setField(new OrderQty(order.getQuantity()))
-            .setField(typeToFIXType(order.getType())).build();
+            .setField(new OrderQty(order.getQuantity())).build();
   }
 }

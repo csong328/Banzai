@@ -1,15 +1,15 @@
 package quickfix.examples.banzai.ui;
 
-import static javafx.collections.FXCollections.observableArrayList;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
 import javafx.beans.Observable;
 import javafx.collections.ObservableList;
 import quickfix.examples.banzai.Order;
+
+import static javafx.collections.FXCollections.observableArrayList;
 
 @Component("orderTableModel")
 public class OrderTableModelImpl implements OrderTableModel {
@@ -18,8 +18,8 @@ public class OrderTableModelImpl implements OrderTableModel {
 
   public OrderTableModelImpl() {
     this.orderList = observableArrayList(
-        o -> new Observable[] {o.executedProperty(), o.openProperty(), o.avgPxProperty(),
-            o.messageProperty(), o.canceledProperty(), o.isNewProperty(), o.rejectedProperty()});
+            o -> new Observable[]{o.executedProperty(), o.openProperty(), o.avgPxProperty(),
+                    o.messageProperty(), o.canceledProperty(), o.isNewProperty(), o.rejectedProperty()});
   }
 
   @Override
@@ -43,17 +43,29 @@ public class OrderTableModelImpl implements OrderTableModel {
   }
 
   @Override
-  public void updateOrder(Order order, String id) {
-    if (!id.equals(order.getID())) {
-      String originalID = order.getID();
-      order.setID(id);
-      replaceOrder(order, originalID);
-      return;
+  public void updateOrder(Order order) {
+  }
+
+  @Override
+  public void replaceOrder(Order newOrder) {
+    int index = getIndex(newOrder.getOriginalID());
+    if (index != -1) {
+      orderList.set(index, newOrder);
     }
   }
 
-  private void replaceOrder(Order order, String originalID) {
-    idToOrder.put(order.getID(), order);
+  public int getIndex(String ID) {
+    for (int i = 0; i < orderList.size(); i++) {
+      Order item = orderList.get(i);
+      if (item.getID().equals(ID)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
+  @Override
+  public void clear() {
+    this.orderList.clear();
+  }
 }

@@ -16,7 +16,16 @@
 
 package quickfix.examples.banzai;
 
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import quickfix.SessionID;
 
 public class Order implements Cloneable {
@@ -35,6 +44,7 @@ public class Order implements Cloneable {
   private BooleanProperty canceled = new SimpleBooleanProperty(false);
   private BooleanProperty isNew = new SimpleBooleanProperty(true);
   private StringProperty message = new SimpleStringProperty();
+  private StringProperty orderID = new SimpleStringProperty();
   private StringProperty ID = new SimpleStringProperty();
   private StringProperty originalID = new SimpleStringProperty();
   private static int nextID = 1;
@@ -48,15 +58,24 @@ public class Order implements Cloneable {
   }
 
   public Object clone() {
-    try {
-      Order order = (Order) super.clone();
-      order.setOriginalID(getID());
-      order.setID(order.generateID());
-      return order;
-    } catch (CloneNotSupportedException e) {
-      // ignore
-    }
-    return null;
+    Order order = new Order();
+    order.setOriginalID(getID());
+    order.setSessionID(getSessionID());
+    order.setSymbol(getSymbol());
+    order.setQuantity(getQuantity());
+    order.setOpen(getOpen());
+    order.setExecuted(getExecuted());
+    order.setSide(getSide());
+    order.setType(getType());
+    order.setTIF(getTIF());
+    order.setLimit(getLimit());
+    order.setStop(getStop());
+    order.setAvgPx(getAvgPx());
+    order.setRejected(getRejected());
+    order.setCanceled(getCanceled());
+    order.setMessage(getMessage());
+    order.setOrderID(getOrderID());
+    return order;
   }
 
   public String generateID() {
@@ -261,6 +280,18 @@ public class Order implements Cloneable {
 
   public StringProperty idProperty() {
     return this.ID;
+  }
+
+  public String getOrderID() {
+    return orderID.get();
+  }
+
+  public StringProperty orderIDProperty() {
+    return orderID;
+  }
+
+  public void setOrderID(String orderID) {
+    this.orderID.set(orderID);
   }
 
   public void setID(String ID) {

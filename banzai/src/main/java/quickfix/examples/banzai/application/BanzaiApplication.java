@@ -60,6 +60,7 @@ import quickfix.field.LastPx;
 import quickfix.field.LastShares;
 import quickfix.field.MsgType;
 import quickfix.field.OrdStatus;
+import quickfix.field.OrderID;
 import quickfix.field.OrigClOrdID;
 import quickfix.field.SessionRejectReason;
 import quickfix.field.Side;
@@ -205,22 +206,45 @@ public class BanzaiApplication implements Application, IBanzaiService {
     if (ordStatus.valueEquals(OrdStatus.REJECTED)) {
       order.setRejected(true);
       order.setOpen(0);
-    } else if (ordStatus.valueEquals(OrdStatus.CANCELED)
-            || ordStatus.valueEquals(OrdStatus.DONE_FOR_DAY)) {
+
+    } else if (ordStatus.valueEquals(OrdStatus.CANCELED)) {
+      Order origOrder = getOrder(message.getField(new OrigClOrdID()).getValue());
+      if (origOrder != null) {
+        order.setExecuted(origOrder.getExecuted());
+        order.setAvgPx(origOrder.getAvgPx());
+      }
       order.setCanceled(true);
       order.setOpen(0);
+      orderTableModel.replaceOrder(order);
+
+    } else if (ordStatus.valueEquals(OrdStatus.REPLACED)) {
+      Order origOrder = getOrder(message.getField(new OrigClOrdID()).getValue());
+      if (origOrder != null) {
+        order.setExecuted(origOrder.getExecuted());
+        order.setAvgPx(origOrder.getAvgPx());
+      }
+      order.setCanceled(true);
+      order.setOpen(order.getQuantity() - order.getExecuted());
+      orderTableModel.replaceOrder(order);
+
+    } else if (ordStatus.valueEquals(OrdStatus.DONE_FOR_DAY)) {
+      order.setCanceled(true);
+      order.setOpen(0);
+
     } else if (ordStatus.valueEquals(OrdStatus.NEW)) {
       if (order.isNew()) {
         order.setNew(false);
       }
     }
 
+    if (message.isSetField(OrderID.FIELD)) {
+      order.setOrderID(message.getString(OrderID.FIELD));
+    }
+
     try {
       order.setMessage(message.getField(new Text()).getValue());
     } catch (FieldNotFound e) {
     }
-
-    orderTableModel.updateOrder(order, message.getField(new ClOrdID()).getValue());
 
     if (fillSize.compareTo(BigDecimal.ZERO) > 0) {
       Execution execution = new Execution();
@@ -256,7 +280,6 @@ public class BanzaiApplication implements Application, IBanzaiService {
       order.setMessage(message.getField(new Text()).getValue());
     } catch (FieldNotFound e) {
     }
-    orderTableModel.updateOrder(order, message.getField(new OrigClOrdID()).getValue());
   }
 
   private boolean alreadyProcessed(ExecID execID, SessionID sessionID) {
@@ -299,8 +322,8 @@ public class BanzaiApplication implements Application, IBanzaiService {
   public void replace(Order order, Order newOrder) {
     String beginString = order.getSessionID().getBeginString();
     quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
-    quickfix.Message message = builder.cancel(order);
-    addClOrdID(order);
+    quickfix.Message message = builder.replace(order, newOrder);
+    addClOrdID(newOrder);
     send(message, order.getSessionID());
   }
 

@@ -160,8 +160,10 @@ public abstract class AbstractExecutioReportBuilder implements
     }
     execBuilder.setField(order.getField(new Symbol()))
             .setField(order.getField(new Side()))
-            .setField(order.getField(new OrderQty()))
-            .setField(order.getField(new OrdType()));
+            .setField(order.getField(new OrderQty()));
+    if (order.isSetField(OrdType.FIELD)) {
+      execBuilder.setField(order.getField(new OrdType()));
+    }
     if (order.isSetField(Account.FIELD)) {
       execBuilder.setField(order.getField(new Account()));
     }
