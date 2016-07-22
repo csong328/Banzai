@@ -31,11 +31,11 @@ import static quickfix.examples.banzai.TypeMapping.tifToFIXTif;
 import static quickfix.examples.banzai.TypeMapping.typeToFIXType;
 
 
-public abstract class AbstractFixMessageBuilder implements FixMessageBuilder {
+public class DefaultFixMessageBuilder implements FixMessageBuilder {
   private final MessageFactory messageFactory;
   private final String beginString;
 
-  public AbstractFixMessageBuilder(MessageFactory messageFactory, String beginString) {
+  public DefaultFixMessageBuilder(MessageFactory messageFactory, String beginString) {
     super();
     this.messageFactory = messageFactory;
     this.beginString = beginString;
