@@ -1,5 +1,6 @@
 package quickfix.examples.banzai;
 
+import quickfix.examples.banzai.utils.TwoWayMap;
 import quickfix.field.OrdType;
 import quickfix.field.Side;
 import quickfix.field.TimeInForce;

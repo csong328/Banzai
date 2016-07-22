@@ -2,6 +2,7 @@ package quickfix.examples.fix.builder.execution;
 
 import quickfix.FieldNotFound;
 import quickfix.Message;
+import quickfix.examples.utility.MessageBuilder;
 import quickfix.field.AvgPx;
 import quickfix.field.CumQty;
 import quickfix.field.ExecType;
@@ -14,94 +15,75 @@ import quickfix.field.Text;
 
 public class FIX43ExecutionReportBuilder extends AbstractExecutioReportBuilder {
 
-	public Message orderAcked(Message message, String orderID, String execID)
-			throws FieldNotFound {
-		Message exec = createExecutionReport(message, orderID, execID);
+  public Message orderAcked(Message message, String orderID, String execID)
+          throws FieldNotFound {
+    double orderQty = message.getDouble(OrderQty.FIELD);
+    return MessageBuilder.newBuilder(createExecutionReport(message, orderID, execID))
+            .setField(new ExecType(ExecType.NEW))
+            .setField(new OrdStatus(OrdStatus.NEW))
+            .setField(new LastQty(0))
+            .setField(new LastPx(0))
+            .setField(new LeavesQty(orderQty))
+            .setField(new CumQty(0))
+            .setField(new AvgPx(0))
+            .build();
+  }
 
-		exec.setField(new ExecType(ExecType.NEW));
-		exec.setField(new OrdStatus(OrdStatus.NEW));
+  public Message orderRejected(Message message, String orderID,
+                               String execID, String text) throws FieldNotFound {
+    return MessageBuilder.newBuilder(createExecutionReport(message, orderID, execID))
+            .setField(new ExecType(ExecType.REJECTED))
+            .setField(new OrdStatus(OrdStatus.REJECTED))
+            .setField(new LastQty(0))
+            .setField(new LastPx(0))
+            .setField(new LeavesQty(0))
+            .setField(new CumQty(0))
+            .setField(new AvgPx(0))
+            .setField(new Text(text))
+            .build();
+  }
 
-		exec.setField(new LastQty(0));
-		exec.setField(new LastPx(0));
-		
-		double orderQty = message.getDouble(OrderQty.FIELD);
-		exec.setField(new LeavesQty(orderQty));
-		exec.setField(new CumQty(0));
-		exec.setField(new AvgPx(0));
+  public Message fillOrder(Message message, String orderID, String execID,
+                           char ordStatus, double cumQty, double avgPx, double lastShares,
+                           double lastPx) throws FieldNotFound {
+    char execType = getFillType(message, cumQty);
+    double orderQty = message.getDouble(OrderQty.FIELD);
+    return MessageBuilder.newBuilder(createExecutionReport(message, orderID, execID))
+            .setField(new ExecType(execType))
+            .setField(new OrdStatus(ordStatus))
+            .setField(new LastQty(lastShares))
+            .setField(new LastPx(lastPx))
+            .setField(new LeavesQty(orderQty - cumQty))
+            .setField(new CumQty(cumQty))
+            .setField(new AvgPx(avgPx))
+            .build();
+  }
 
-		return exec;
-	}
+  public Message orderCanceled(Message message, String orderID,
+                               String execID, double cumQty, double avgPx) throws FieldNotFound {
+    return MessageBuilder.newBuilder(createExecutionReport(message, orderID, execID))
+            .setField(new ExecType(ExecType.CANCELED))
+            .setField(new OrdStatus(OrdStatus.CANCELED))
+            .setField(new LastQty(0))
+            .setField(new LastPx(0))
+            .setField(new LeavesQty(0))
+            .setField(new CumQty(cumQty))
+            .setField(new AvgPx(avgPx))
+            .build();
+  }
 
-	public Message orderRejected(Message message, String orderID,
-                                 String execID, String text) throws FieldNotFound {
-		Message exec = createExecutionReport(message, orderID, execID);
-		
-		exec.setField(new ExecType(ExecType.REJECTED));
-		exec.setField(new OrdStatus(OrdStatus.REJECTED));
-
-		exec.setField(new LastQty(0));
-		exec.setField(new LastPx(0));
-		
-		exec.setField(new LeavesQty(0));
-		exec.setField(new CumQty(0));
-		exec.setField(new AvgPx(0));
-		
-		exec.setField(new Text(text));
-		return exec;
-	}
-
-	public Message fillOrder(Message message, String orderID, String execID,
-                             char ordStatus, double cumQty, double avgPx, double lastShares,
-                             double lastPx) throws FieldNotFound {
-		char execType = getFillType(message, cumQty);
-		
-		Message exec = createExecutionReport(message, orderID, execID);
-
-		exec.setField(new ExecType(execType));
-		exec.setField(new OrdStatus(ordStatus));
-
-		exec.setField(new LastQty(lastShares));
-		exec.setField(new LastPx(lastPx));
-		
-		double orderQty = message.getDouble(OrderQty.FIELD);
-		exec.setField(new LeavesQty(orderQty - cumQty));
-		exec.setField(new CumQty(cumQty));
-		exec.setField(new AvgPx(avgPx));
-
-		return exec;
-	}
-
-	public Message orderCanceled(Message message, String orderID,
-                                 String execID, double cumQty, double avgPx) throws FieldNotFound {
-		Message exec = createExecutionReport(message, orderID, execID);
-
-		exec.setField(new ExecType(ExecType.CANCELED));
-		exec.setField(new OrdStatus(OrdStatus.CANCELED));
-
-		exec.setField(new LastQty(0));
-		exec.setField(new LastPx(0));
-		
-		exec.setField(new LeavesQty(0));
-		exec.setField(new CumQty(cumQty));
-		exec.setField(new AvgPx(avgPx));
-		return exec;
-	}
-
-	@Override
-	public Message orderReplaced(Message message, String orderID,
-                                 String execID, double cumQty, double avgPx) throws FieldNotFound {
-		Message exec = createExecutionReport(message, orderID, execID);
-		
-		exec.setField(new ExecType(ExecType.REPLACE));
-		exec.setField(new OrdStatus(OrdStatus.REPLACED));
-
-		exec.setField(new LastQty(0));
-		exec.setField(new LastPx(0));
-		
-		double orderQty = message.getDouble(OrderQty.FIELD);
-		exec.setField(new LeavesQty(orderQty - cumQty));
-		exec.setField(new CumQty(cumQty));
-		exec.setField(new AvgPx(avgPx));
-		return exec;
-	}
+  @Override
+  public Message orderReplaced(Message message, String orderID,
+                               String execID, double cumQty, double avgPx) throws FieldNotFound {
+    double orderQty = message.getDouble(OrderQty.FIELD);
+    return MessageBuilder.newBuilder(createExecutionReport(message, orderID, execID))
+            .setField(new ExecType(ExecType.REPLACE))
+            .setField(new OrdStatus(OrdStatus.REPLACED))
+            .setField(new LastQty(0))
+            .setField(new LastPx(0))
+            .setField(new LeavesQty(orderQty - cumQty))
+            .setField(new CumQty(cumQty))
+            .setField(new AvgPx(avgPx))
+            .build();
+  }
 }

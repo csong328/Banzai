@@ -14,7 +14,7 @@
  * Contact ask@quickfixengine.org if any conditions of this licensing are not clear to you.
  ******************************************************************************/
 
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.utils;
 
 import java.util.HashMap;
 

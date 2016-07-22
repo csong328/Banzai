@@ -47,6 +47,8 @@ import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
 import quickfix.examples.banzai.ui.ExecutionTableModel;
 import quickfix.examples.banzai.ui.OrderTableModel;
+import quickfix.examples.utility.DefaultMessageSender;
+import quickfix.examples.utility.MessageSender;
 import quickfix.field.AvgPx;
 import quickfix.field.BeginString;
 import quickfix.field.BusinessRejectReason;
@@ -77,10 +79,9 @@ public class BanzaiApplication implements Application, IBanzaiService {
   @Autowired
   private ExecutionTableModel executionTableModel;
 
-  private final DefaultMessageFactory messageFactory = new DefaultMessageFactory();
-
   private boolean isAvailable = true;
   private boolean isMissingField;
+  private MessageSender messageSender = new DefaultMessageSender();
 
   private static final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
   private static FixMessageBuilderFactory fixMessageBuilderFactory = new FixMessageBuilderFactory(new DefaultMessageFactory());
@@ -156,8 +157,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
   private void sendSessionReject(Message message, int rejectReason)
           throws FieldNotFound, SessionNotFound {
     String beginString = message.getHeader().getString(BeginString.FIELD);
-    quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
-    Message reply = builder.sessionReject(message, rejectReason);
+    Message reply = getFixMessageBuilder(beginString).sessionReject(message, rejectReason);
     Session.sendToTarget(reply);
     logger.error("Reject: {}", reply.toString());
   }
@@ -165,16 +165,13 @@ public class BanzaiApplication implements Application, IBanzaiService {
   private void sendBusinessReject(Message message, int rejectReason, String rejectText)
           throws FieldNotFound, SessionNotFound {
     String beginString = message.getHeader().getString(BeginString.FIELD);
-    quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
-    Message reply = builder.businessReject(message, rejectReason,
+    Message reply = getFixMessageBuilder(beginString).businessReject(message, rejectReason,
             rejectText);
     Session.sendToTarget(reply);
     logger.error("Reject: {}", reply.toString());
   }
 
-
   private void executionReport(Message message, SessionID sessionID) throws FieldNotFound {
-
     ExecID execID = (ExecID) message.getField(new ExecID());
     if (alreadyProcessed(execID, sessionID)) return;
 
@@ -277,11 +274,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
   }
 
   private void send(quickfix.Message message, SessionID sessionID) {
-    try {
-      Session.sendToTarget(message, sessionID);
-    } catch (SessionNotFound e) {
-      logger.error(String.format("Failed to send %s", message), e);
-    }
+    messageSender.sendMessage(message, sessionID);
   }
 
   @Override
