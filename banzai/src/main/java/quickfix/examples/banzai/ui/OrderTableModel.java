@@ -9,12 +9,6 @@ public interface OrderTableModel {
 
   void addOrder(Order order);
 
-  void addClOrdID(Order order, String id);
-
-  Order getOrder(String ID);
-
-  void updateOrder(Order order);
-
   void replaceOrder(Order newOrder);
 
   void clear();

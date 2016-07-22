@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -86,6 +87,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
 
   private static final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
   private static FixMessageBuilderFactory fixMessageBuilderFactory = new FixMessageBuilderFactory(new DefaultMessageFactory());
+  private Map<String, Order> orderMap = new HashMap<>();
 
   public void onCreate(SessionID sessionID) {
   }
@@ -261,12 +263,12 @@ public class BanzaiApplication implements Application, IBanzaiService {
     }
   }
 
-  private Order getOrder(String value) throws FieldNotFound {
-    return orderTableModel.getOrder(value);
+  private Order getOrder(String ID) throws FieldNotFound {
+    return orderMap.get(ID);
   }
 
   private void addClOrdID(Order order) {
-    orderTableModel.addClOrdID(order, order.getID());
+    orderMap.put(order.getID(), order);
   }
 
   private void cancelReject(Message message, SessionID sessionID) throws FieldNotFound {

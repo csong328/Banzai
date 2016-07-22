@@ -2,9 +2,6 @@ package quickfix.examples.banzai.ui;
 
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javafx.beans.Observable;
 import javafx.collections.ObservableList;
 import quickfix.examples.banzai.Order;
@@ -14,7 +11,6 @@ import static javafx.collections.FXCollections.observableArrayList;
 @Component("orderTableModel")
 public class OrderTableModelImpl implements OrderTableModel {
   private final ObservableList<Order> orderList;
-  private final Map<String, Order> idToOrder = new HashMap<>();
 
   public OrderTableModelImpl() {
     this.orderList = observableArrayList(
@@ -30,20 +26,6 @@ public class OrderTableModelImpl implements OrderTableModel {
   @Override
   public void addOrder(Order order) {
     orderList.add(order);
-  }
-
-  @Override
-  public void addClOrdID(Order order, String id) {
-    idToOrder.put(id, order);
-  }
-
-  @Override
-  public Order getOrder(String ID) {
-    return idToOrder.get(ID);
-  }
-
-  @Override
-  public void updateOrder(Order order) {
   }
 
   @Override
