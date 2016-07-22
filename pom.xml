@@ -22,7 +22,8 @@
 
 	<modules>
 		<module>banzai</module>
-	</modules>
+        <module>exchange-sim</module>
+    </modules>
 
 	<dependencies>
         <dependency>
