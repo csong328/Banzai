@@ -11,4 +11,12 @@
 
     <artifactId>exchange-sim</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>chen.song</groupId>
+            <artifactId>fix-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
