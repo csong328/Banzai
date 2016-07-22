@@ -1,2 +1,4 @@
-/Banzai.iml
 /.idea/
+/*/target/
+/*/*.iml
+/*.iml

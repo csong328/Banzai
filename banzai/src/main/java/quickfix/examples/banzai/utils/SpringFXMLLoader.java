@@ -173,5 +173,4 @@ public class SpringFXMLLoader<S, T> {
     }
   }
 
-
 }
