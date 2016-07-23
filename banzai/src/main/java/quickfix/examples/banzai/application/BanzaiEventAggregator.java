@@ -8,11 +8,8 @@ import javax.annotation.PostConstruct;
 import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.ui.ExecutionTableController;
-import quickfix.examples.banzai.ui.ExecutionTableModel;
 import quickfix.examples.banzai.ui.OrderEntryController;
-import quickfix.examples.banzai.ui.OrderEntryModel;
 import quickfix.examples.banzai.ui.OrderTableController;
-import quickfix.examples.banzai.ui.OrderTableModel;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 
@@ -20,12 +17,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @Component("eventAggregator")
 public class BanzaiEventAggregator implements OrderEventListener {
-  @Autowired
-  private OrderEntryModel orderEntryModel;
-  @Autowired
-  private ExecutionTableModel executionTableModel;
-  @Autowired
-  private OrderTableModel orderTableModel;
 
   @Autowired
   private OrderEntryController orderEntryController;
@@ -82,12 +73,12 @@ public class BanzaiEventAggregator implements OrderEventListener {
 
   private void onOrderSelected(OrderEvent event) {
     Order order = event.getOrder();
-    orderEntryModel.setSelectedOrder(order);
+    orderEntryController.setSelectedOrder(order);
   }
 
   private void onNewOrder(OrderEvent event) {
     Order order = event.getOrder();
-    orderTableModel.addOrder(order);
+    orderTableController.addOrder(order);
     service.send(order);
   }
 
@@ -109,12 +100,12 @@ public class BanzaiEventAggregator implements OrderEventListener {
 
   private void onFill(OrderEvent event) {
     Execution execution = (Execution) event.getArg();
-    executionTableModel.addExecution(execution);
+    executionTableController.addExecution(execution);
   }
 
   private void onClearAll() {
-    orderTableModel.clear();
-    executionTableModel.clear();
+    orderTableController.clear();
+    executionTableController.clear();
   }
 
 }

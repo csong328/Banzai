@@ -58,6 +58,10 @@ public class OrderTableController implements Initializable {
     this.orderTableModel.replaceOrder(newOrder);
   }
 
+  public void clear() {
+    this.orderTableModel.clear();
+  }
+
   @FXML
   public void onOrderSelected(Event event) {
     Order order = this.orderTable.getSelectionModel().getSelectedItem();

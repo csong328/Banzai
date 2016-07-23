@@ -29,5 +29,9 @@ public class ExecutionTableController implements Initializable {
     this.executionTableModel.addExecution(execution);
   }
 
+  public void clear() {
+    this.executionTableModel.clear();
+  }
+
   public void onExecutionSelected(Event event) {}
 }

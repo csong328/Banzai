@@ -198,6 +198,10 @@ public class OrderEntryController implements Initializable, Observer {
     notify(new OrderEvent(null, OrderEventType.ClearAll));
   }
 
+  public void setSelectedOrder(Order order) {
+    this.orderEntryModel.setSelectedOrder(order);
+  }
+
   private void reset() {
     this.symbolTextField.setText("");
     this.quantityTextField.setText("");
