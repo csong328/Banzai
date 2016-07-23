@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
@@ -25,7 +27,9 @@ import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
-import quickfix.examples.banzai.application.IBanzaiService;
+import quickfix.examples.banzai.ui.event.OrderEvent;
+import quickfix.examples.banzai.ui.event.OrderEventListener;
+import quickfix.examples.banzai.ui.event.OrderEventType;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static quickfix.examples.banzai.utils.FXUtils.doubleFieldChangeListener;
@@ -70,13 +74,16 @@ public class OrderEntryController implements Initializable, Observer {
 
   @Autowired
   private OrderEntryModel orderEntryModel;
-  @Autowired
-  private OrderTableModel orderTableModel;
-  @Autowired
-  private ExecutionTableModel executionTableModel;
 
-  @Autowired
-  private IBanzaiService service;
+  private List<OrderEventListener> eventListenerList = new ArrayList<>();
+
+  public void addOrderEventListener(OrderEventListener listener) {
+    eventListenerList.add(listener);
+  }
+
+  private void notify(OrderEvent event) {
+    eventListenerList.forEach(l -> l.handle(event));
+  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -155,20 +162,22 @@ public class OrderEntryController implements Initializable, Observer {
                             typeComboBox.valueProperty()));
   }
 
+  @FXML
   public void onNewOrder(ActionEvent actionEvent) {
     Order order = orderEntry();
-    orderTableModel.addOrder(order);
-    service.send(order);
+    notify(new OrderEvent(order, OrderEventType.New));
     orderEntryModel.setSelectedOrder(null);
   }
 
+  @FXML
   public void onCancelOrder(ActionEvent actionEvent) {
     Order origOrder = orderEntryModel.getSelectedOrder();
     Order newOrder = (Order) origOrder.clone();
-    service.cancel(newOrder);
+    notify(new OrderEvent(newOrder, OrderEventType.Cancel, origOrder));
     orderEntryModel.setSelectedOrder(null);
   }
 
+  @FXML
   public void onReplaceOrder(ActionEvent actionEvent) {
     Order origOrder = orderEntryModel.getSelectedOrder();
     Order newOrder = (Order) origOrder.clone();
@@ -179,8 +188,14 @@ public class OrderEntryController implements Initializable, Observer {
     newOrder.setRejected(false);
     newOrder.setCanceled(false);
 
-    service.replace(origOrder, newOrder);
+    notify(new OrderEvent(newOrder, OrderEventType.Replace, origOrder));
     orderEntryModel.setSelectedOrder(null);
+  }
+
+  @FXML
+  public void onClear(ActionEvent actionEvent) {
+    reset();
+    notify(new OrderEvent(null, OrderEventType.ClearAll));
   }
 
   private void reset() {
@@ -257,13 +272,6 @@ public class OrderEntryController implements Initializable, Observer {
             && isSameSide(origOrder) && isSameTIF(origOrder) && isSameSessionID(origOrder)
             && (isDifferentQty(origOrder) || isDifferentOrderType(origOrder)
             || isDifferentLimitPrice(origOrder));
-  }
-
-  @FXML
-  public void onClear(ActionEvent actionEvent) {
-    reset();
-    this.orderTableModel.clear();
-    this.executionTableModel.clear();
   }
 
   private boolean isSameSymbol(Order origOrder) {

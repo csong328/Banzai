@@ -40,7 +40,7 @@ public class ExecutionTableModelImpl implements ExecutionTableModel {
 
   @Override
   public void clear() {
-    this.exchangeIdToExecution.clear();
+    this.executionList.clear();
   }
 
 }

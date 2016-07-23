@@ -18,12 +18,13 @@ package quickfix.examples.banzai.application;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -46,10 +47,9 @@ import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.LogonEvent;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
-import quickfix.examples.banzai.ui.ExecutionTableController;
-import quickfix.examples.banzai.ui.ExecutionTableModel;
-import quickfix.examples.banzai.ui.OrderTableController;
-import quickfix.examples.banzai.ui.OrderTableModel;
+import quickfix.examples.banzai.ui.event.OrderEvent;
+import quickfix.examples.banzai.ui.event.OrderEventListener;
+import quickfix.examples.banzai.ui.event.OrderEventType;
 import quickfix.examples.utility.DefaultMessageSender;
 import quickfix.examples.utility.MessageSender;
 import quickfix.field.AvgPx;
@@ -78,11 +78,6 @@ public class BanzaiApplication implements Application, IBanzaiService {
 
   private final ObservableLogon observableLogon = new ObservableLogon();
 
-  @Autowired
-  private OrderTableController orderTableController;
-  @Autowired
-  private ExecutionTableController executionTableController;
-
   private boolean isAvailable = true;
   private boolean isMissingField;
   private MessageSender messageSender = new DefaultMessageSender();
@@ -90,6 +85,17 @@ public class BanzaiApplication implements Application, IBanzaiService {
   private static final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
   private static FixMessageBuilderFactory fixMessageBuilderFactory = new FixMessageBuilderFactory(new DefaultMessageFactory());
   private Map<String, Order> orderMap = new HashMap<>();
+
+  private List<OrderEventListener> eventListenerList = new ArrayList<>();
+
+  public void addOrderEventListener(OrderEventListener listener) {
+    eventListenerList.add(listener);
+  }
+
+  private void notify(OrderEvent event) {
+    eventListenerList.forEach(l -> l.handle(event));
+  }
+
 
   public void onCreate(SessionID sessionID) {
   }
@@ -219,7 +225,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
       }
       order.setCanceled(true);
       order.setOpen(0);
-      orderTableController.replaceOrder(order);
+      notify(new OrderEvent(order, OrderEventType.OrderReplaced));
 
     } else if (ordStatus.valueEquals(OrdStatus.REPLACED)) {
       Order origOrder = getOrder(message.getField(new OrigClOrdID()).getValue());
@@ -229,7 +235,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
       }
       order.setCanceled(true);
       order.setOpen(order.getQuantity() - order.getExecuted());
-      orderTableController.replaceOrder(order);
+      notify(new OrderEvent(order, OrderEventType.OrderReplaced));
 
     } else if (ordStatus.valueEquals(OrdStatus.DONE_FOR_DAY)) {
       order.setCanceled(true);
@@ -261,7 +267,7 @@ public class BanzaiApplication implements Application, IBanzaiService {
       }
       Side side = (Side) message.getField(new Side());
       execution.setSide(FIXSideToSide(side));
-      executionTableController.addExecution(execution);
+      notify(new OrderEvent(order, OrderEventType.Fill, execution));
     }
   }
 
