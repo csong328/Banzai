@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
@@ -30,8 +28,8 @@ import quickfix.examples.banzai.OrderType;
 import quickfix.examples.banzai.ui.OrderEntryController;
 import quickfix.examples.banzai.ui.OrderEntryModel;
 import quickfix.examples.banzai.ui.event.OrderEvent;
-import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
+import quickfix.examples.banzai.ui.event.SimpleOrderEventSource;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static quickfix.examples.banzai.utils.FXUtils.doubleFieldChangeListener;
@@ -39,7 +37,7 @@ import static quickfix.examples.banzai.utils.FXUtils.integerFieldChangeListener;
 
 @Component("orderEntryController")
 @Lazy
-public class OrderEntryControllerImpl implements OrderEntryController, Initializable, Observer {
+public class OrderEntryControllerImpl extends SimpleOrderEventSource implements OrderEntryController, Initializable, Observer {
 
   @FXML
   private TextField symbolTextField;
@@ -76,16 +74,6 @@ public class OrderEntryControllerImpl implements OrderEntryController, Initializ
 
   @Autowired
   private OrderEntryModel orderEntryModel;
-
-  private List<OrderEventListener> eventListenerList = new ArrayList<>();
-
-  public void addOrderEventListener(OrderEventListener listener) {
-    eventListenerList.add(listener);
-  }
-
-  private void notify(OrderEvent event) {
-    eventListenerList.forEach(l -> l.handle(event));
-  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

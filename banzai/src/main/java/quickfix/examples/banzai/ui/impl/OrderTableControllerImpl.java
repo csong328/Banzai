@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
@@ -20,11 +18,11 @@ import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.ui.OrderTableController;
 import quickfix.examples.banzai.ui.OrderTableModel;
 import quickfix.examples.banzai.ui.event.OrderEvent;
-import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
+import quickfix.examples.banzai.ui.event.SimpleOrderEventSource;
 
 @Component("orderTableController")
-public class OrderTableControllerImpl implements OrderTableController, Initializable {
+public class OrderTableControllerImpl extends SimpleOrderEventSource implements OrderTableController, Initializable {
   @FXML
   private TableView<Order> orderTable;
 
@@ -33,16 +31,6 @@ public class OrderTableControllerImpl implements OrderTableController, Initializ
 
   @Autowired
   private OrderTableModel orderTableModel;
-
-  private List<OrderEventListener> eventListenerList = new ArrayList<>();
-
-  public void addOrderEventListener(OrderEventListener listener) {
-    eventListenerList.add(listener);
-  }
-
-  private void notify(OrderEvent event) {
-    eventListenerList.forEach(l -> l.handle(event));
-  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

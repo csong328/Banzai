@@ -21,10 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -48,8 +46,8 @@ import quickfix.examples.banzai.LogonEvent;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
 import quickfix.examples.banzai.ui.event.OrderEvent;
-import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
+import quickfix.examples.banzai.ui.event.SimpleOrderEventSource;
 import quickfix.examples.utility.DefaultMessageSender;
 import quickfix.examples.utility.MessageSender;
 import quickfix.field.AvgPx;
@@ -73,7 +71,7 @@ import quickfix.field.Text;
 import static quickfix.examples.banzai.TypeMapping.FIXSideToSide;
 
 @Component("banzaiService")
-public class BanzaiServiceImpl implements Application, IBanzaiService {
+public class BanzaiServiceImpl extends SimpleOrderEventSource implements Application, IBanzaiService {
   private static final Logger logger = LoggerFactory.getLogger(BanzaiServiceImpl.class);
 
   private final ObservableLogon observableLogon = new ObservableLogon();
@@ -85,16 +83,6 @@ public class BanzaiServiceImpl implements Application, IBanzaiService {
   private static final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
   private static FixMessageBuilderFactory fixMessageBuilderFactory = new FixMessageBuilderFactory(new DefaultMessageFactory());
   private Map<String, Order> orderMap = new HashMap<>();
-
-  private List<OrderEventListener> eventListenerList = new ArrayList<>();
-
-  public void addOrderEventListener(OrderEventListener listener) {
-    eventListenerList.add(listener);
-  }
-
-  private void notify(OrderEvent event) {
-    eventListenerList.forEach(l -> l.handle(event));
-  }
 
   public void onCreate(SessionID sessionID) {
   }
