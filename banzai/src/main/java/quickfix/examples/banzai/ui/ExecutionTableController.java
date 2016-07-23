@@ -25,5 +25,9 @@ public class ExecutionTableController implements Initializable {
     this.executionTable.setItems(executionTableModel.getExecutionList());
   }
 
+  public void addExecution(Execution execution) {
+    this.executionTableModel.addExecution(execution);
+  }
+
   public void onExecutionSelected(Event event) {}
 }

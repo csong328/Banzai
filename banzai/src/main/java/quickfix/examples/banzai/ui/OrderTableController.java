@@ -37,6 +37,10 @@ public class OrderTableController implements Initializable {
         order -> new ReadOnlyObjectWrapper<>(order.getSessionID().getTargetCompID()));
   }
 
+  public void replaceOrder(Order newOrder) {
+    this.orderTableModel.replaceOrder(newOrder);
+  }
+
   public void onOrderSelected(Event event) {
     Order order = this.orderTable.getSelectionModel().getSelectedItem();
     orderEntryModel.setSelectedOrder(order);
