@@ -1,4 +1,4 @@
-package quickfix.examples.banzai.application;
+package quickfix.examples.banzai.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,9 +7,7 @@ import javax.annotation.PostConstruct;
 
 import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.ui.ExecutionTableControllerImpl;
-import quickfix.examples.banzai.ui.OrderEntryControllerImpl;
-import quickfix.examples.banzai.ui.OrderTableControllerImpl;
+import quickfix.examples.banzai.application.IBanzaiService;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 
@@ -19,14 +17,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class BanzaiEventAggregator implements OrderEventListener {
 
   @Autowired
-  private OrderEntryControllerImpl orderEntryController;
+  private OrderEntryController orderEntryController;
   @Autowired
-  private OrderTableControllerImpl orderTableController;
+  private OrderTableController orderTableController;
   @Autowired
-  private ExecutionTableControllerImpl executionTableController;
+  private ExecutionTableController executionTableController;
 
   @Autowired
-  private BanzaiApplication service;
+  private IBanzaiService service;
 
   @PostConstruct
   public void init() {
@@ -38,7 +36,6 @@ public class BanzaiEventAggregator implements OrderEventListener {
   @Override
   public void handle(OrderEvent event) {
     checkNotNull(event.getEventType(), "Event type not set");
-
 
     switch (event.getEventType()) {
       case OrderSelected:
@@ -57,16 +54,16 @@ public class BanzaiEventAggregator implements OrderEventListener {
         onReplaceOrder(event);
         break;
 
-      case ClearAll:
-        onClearAll();
-        break;
-
       case OrderReplaced:
         onOrderReplaced(event);
         break;
 
       case Fill:
         onFill(event);
+        break;
+
+      case ClearAll:
+        onClearAll();
         break;
     }
   }

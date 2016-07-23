@@ -73,8 +73,8 @@ import quickfix.field.Text;
 import static quickfix.examples.banzai.TypeMapping.FIXSideToSide;
 
 @Component("banzaiService")
-public class BanzaiApplication implements Application, IBanzaiService {
-  private static final Logger logger = LoggerFactory.getLogger(BanzaiApplication.class);
+public class BanzaiServiceImpl implements Application, IBanzaiService {
+  private static final Logger logger = LoggerFactory.getLogger(BanzaiServiceImpl.class);
 
   private final ObservableLogon observableLogon = new ObservableLogon();
 
@@ -95,7 +95,6 @@ public class BanzaiApplication implements Application, IBanzaiService {
   private void notify(OrderEvent event) {
     eventListenerList.forEach(l -> l.handle(event));
   }
-
 
   public void onCreate(SessionID sessionID) {
   }

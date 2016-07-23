@@ -1,4 +1,4 @@
-package quickfix.examples.banzai.ui;
+package quickfix.examples.banzai.ui.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,12 +17,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.ui.OrderTableController;
+import quickfix.examples.banzai.ui.OrderTableModel;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
 
 @Component("orderTableController")
-public class OrderTableControllerImpl implements Initializable {
+public class OrderTableControllerImpl implements OrderTableController, Initializable {
   @FXML
   private TableView<Order> orderTable;
 

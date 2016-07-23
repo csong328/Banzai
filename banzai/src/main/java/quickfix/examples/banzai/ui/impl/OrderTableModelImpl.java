@@ -1,10 +1,11 @@
-package quickfix.examples.banzai.ui;
+package quickfix.examples.banzai.ui.impl;
 
 import org.springframework.stereotype.Component;
 
 import javafx.beans.Observable;
 import javafx.collections.ObservableList;
 import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.ui.OrderTableModel;
 
 import static javafx.collections.FXCollections.observableArrayList;
 

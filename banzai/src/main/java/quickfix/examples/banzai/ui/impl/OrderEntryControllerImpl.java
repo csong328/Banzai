@@ -1,4 +1,4 @@
-package quickfix.examples.banzai.ui;
+package quickfix.examples.banzai.ui.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,6 +27,8 @@ import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.ui.OrderEntryController;
+import quickfix.examples.banzai.ui.OrderEntryModel;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
@@ -37,7 +39,7 @@ import static quickfix.examples.banzai.utils.FXUtils.integerFieldChangeListener;
 
 @Component("orderEntryController")
 @Lazy
-public class OrderEntryControllerImpl implements Initializable, Observer {
+public class OrderEntryControllerImpl implements OrderEntryController, Initializable, Observer {
 
   @FXML
   private TextField symbolTextField;

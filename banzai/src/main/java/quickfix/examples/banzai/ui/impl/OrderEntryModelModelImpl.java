@@ -1,4 +1,4 @@
-package quickfix.examples.banzai.ui;
+package quickfix.examples.banzai.ui.impl;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -14,6 +14,7 @@ import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.ui.OrderEntryModel;
 
 @Component("orderEntryModel")
 public class OrderEntryModelModelImpl implements OrderEntryModel {

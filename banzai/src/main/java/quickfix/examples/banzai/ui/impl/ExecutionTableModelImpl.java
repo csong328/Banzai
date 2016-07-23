@@ -1,4 +1,4 @@
-package quickfix.examples.banzai.ui;
+package quickfix.examples.banzai.ui.impl;
 
 import org.springframework.stereotype.Component;
 
@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javafx.collections.ObservableList;
 import quickfix.examples.banzai.Execution;
+import quickfix.examples.banzai.ui.ExecutionTableModel;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
