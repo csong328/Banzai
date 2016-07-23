@@ -1,4 +1,4 @@
-package quickfix.examples.banzai.ui;
+package quickfix.examples.banzai.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,6 +8,9 @@ import javax.annotation.PostConstruct;
 import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.application.IBanzaiService;
+import quickfix.examples.banzai.ui.ExecutionTableController;
+import quickfix.examples.banzai.ui.OrderEntryController;
+import quickfix.examples.banzai.ui.OrderTableController;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 
