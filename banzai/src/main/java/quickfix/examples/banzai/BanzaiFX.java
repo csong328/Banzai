@@ -28,6 +28,8 @@ import quickfix.examples.banzai.application.BanzaiServiceImpl;
 import quickfix.examples.banzai.ui.impl.OrderEntryControllerImpl;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class BanzaiFX extends Application {
   private static final Logger logger = LoggerFactory.getLogger(BanzaiFX.class);
 
@@ -66,10 +68,8 @@ public class BanzaiFX extends Application {
     try (InputStream inputStream = args.length == 0
             ? BanzaiFX.class.getResourceAsStream("banzai.cfg")
             : new FileInputStream(args[0])) {
-      if (inputStream == null) {
-        throw new RuntimeException(
-                String.format("usage: %s [configFile].", BanzaiFX.class.getName()));
-      }
+
+      checkNotNull(inputStream, "usage: %s [configFile].", BanzaiFX.class.getName());
       return new SessionSettings(inputStream);
     }
   }

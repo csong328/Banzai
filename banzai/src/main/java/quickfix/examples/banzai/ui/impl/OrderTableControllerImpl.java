@@ -11,11 +11,11 @@ import java.util.function.Function;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.ui.OrderTableController;
 import quickfix.examples.banzai.ui.OrderTableModel;
@@ -64,8 +64,8 @@ public class OrderTableControllerImpl implements OrderTableController, Initializ
     this.orderTableModel.clear();
   }
 
-  @FXML
-  public void onOrderSelected(Event event) {
+  @Override
+  public void onOrderSelected(MouseEvent mouseEvent) {
     Order order = this.orderTable.getSelectionModel().getSelectedItem();
     notify(new OrderEvent(order, OrderEventType.OrderSelected));
   }

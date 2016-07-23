@@ -35,5 +35,6 @@ public class ExecutionTableControllerImpl implements ExecutionTableController, I
     this.executionTableModel.clear();
   }
 
+  @FXML
   public void onExecutionSelected(Event event) {}
 }
