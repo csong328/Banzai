@@ -63,7 +63,7 @@ public class BanzaiEventAggregator implements OrderEventListener {
         break;
 
       case ClearAll:
-        onClearAll();
+        onClearAll(event);
         break;
     }
   }
@@ -100,7 +100,7 @@ public class BanzaiEventAggregator implements OrderEventListener {
     executionTableController.addExecution(execution);
   }
 
-  private void onClearAll() {
+  private void onClearAll(OrderEvent event) {
     orderTableController.clear();
     executionTableController.clear();
   }
