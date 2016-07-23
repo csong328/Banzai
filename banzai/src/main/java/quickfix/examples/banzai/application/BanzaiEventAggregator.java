@@ -7,9 +7,9 @@ import javax.annotation.PostConstruct;
 
 import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.ui.ExecutionTableController;
-import quickfix.examples.banzai.ui.OrderEntryController;
-import quickfix.examples.banzai.ui.OrderTableController;
+import quickfix.examples.banzai.ui.ExecutionTableControllerImpl;
+import quickfix.examples.banzai.ui.OrderEntryControllerImpl;
+import quickfix.examples.banzai.ui.OrderTableControllerImpl;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 
@@ -19,11 +19,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class BanzaiEventAggregator implements OrderEventListener {
 
   @Autowired
-  private OrderEntryController orderEntryController;
+  private OrderEntryControllerImpl orderEntryController;
   @Autowired
-  private OrderTableController orderTableController;
+  private OrderTableControllerImpl orderTableController;
   @Autowired
-  private ExecutionTableController executionTableController;
+  private ExecutionTableControllerImpl executionTableController;
 
   @Autowired
   private BanzaiApplication service;

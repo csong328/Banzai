@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <TableView fx:id="orderTable" onMouseClicked="#onOrderSelected" stylesheets="/quickfix/examples/banzai/ui/banzi.css"
            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="quickfix.examples.banzai.ui.OrderTableController">
+           fx:controller="quickfix.examples.banzai.ui.OrderTableControllerImpl">
     <columns>
         <TableColumn text="Symbol">
             <cellValueFactory>

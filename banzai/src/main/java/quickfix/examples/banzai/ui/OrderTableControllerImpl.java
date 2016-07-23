@@ -22,7 +22,7 @@ import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
 
 @Component("orderTableController")
-public class OrderTableController implements Initializable {
+public class OrderTableControllerImpl implements Initializable {
   @FXML
   private TableView<Order> orderTable;
 

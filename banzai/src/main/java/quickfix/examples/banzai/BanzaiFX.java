@@ -25,7 +25,7 @@ import quickfix.SessionSettings;
 import quickfix.SocketInitiator;
 import quickfix.examples.banzai.application.ApplicationConfig;
 import quickfix.examples.banzai.application.BanzaiApplication;
-import quickfix.examples.banzai.ui.OrderEntryController;
+import quickfix.examples.banzai.ui.OrderEntryControllerImpl;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
 public class BanzaiFX extends Application {
@@ -44,8 +44,8 @@ public class BanzaiFX extends Application {
     this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
     quickfix.Application application = applicationContext.getBean(quickfix.Application.class);
 
-    OrderEntryController orderEntryController =
-            applicationContext.getBean(OrderEntryController.class);
+    OrderEntryControllerImpl orderEntryController =
+            applicationContext.getBean(OrderEntryControllerImpl.class);
     BanzaiApplication banzaiApplication = applicationContext.getBean(BanzaiApplication.class);
     banzaiApplication.addLogonObserver(orderEntryController);
 

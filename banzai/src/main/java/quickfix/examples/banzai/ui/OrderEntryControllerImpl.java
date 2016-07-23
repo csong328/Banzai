@@ -37,7 +37,7 @@ import static quickfix.examples.banzai.utils.FXUtils.integerFieldChangeListener;
 
 @Component("orderEntryController")
 @Lazy
-public class OrderEntryController implements Initializable, Observer {
+public class OrderEntryControllerImpl implements Initializable, Observer {
 
   @FXML
   private TextField symbolTextField;

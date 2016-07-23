@@ -13,7 +13,7 @@ import javafx.scene.control.TableView;
 import quickfix.examples.banzai.Execution;
 
 @Component("executionTableController")
-public class ExecutionTableController implements Initializable {
+public class ExecutionTableControllerImpl implements Initializable {
   @FXML
   private TableView<Execution> executionTable;
 
