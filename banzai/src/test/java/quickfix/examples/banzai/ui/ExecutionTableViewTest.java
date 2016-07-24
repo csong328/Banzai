@@ -51,16 +51,24 @@ public class ExecutionTableViewTest extends ApplicationTest {
   }
 
   @Test
-  public void testAddExecution() {
+  public void testClear() {
+    final Execution execution = execution();
+
+    this.executionTableController.addExecution(execution);
+
+    verifyThat("#executionTable", hasItems(1));
+
+    this.executionTableController.clear();
+    verifyThat("#executionTable", hasItems(0));
+  }
+
+  private Execution execution() {
     final Execution execution = new Execution();
     execution.setQuantity(100);
     execution.setExchangeID("NYSE");
     execution.setPrice(23.01);
     execution.setSymbol("MSFT");
     execution.setSide(OrderSide.BUY);
-
-    this.executionTableController.addExecution(execution);
-
-    verifyThat("#executionTable", hasItems(1));
+    return execution;
   }
 }
