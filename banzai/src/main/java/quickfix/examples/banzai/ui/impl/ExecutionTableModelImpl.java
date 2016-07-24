@@ -6,27 +6,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.collections.ObservableList;
-import quickfix.examples.banzai.Execution;
+import quickfix.examples.banzai.ExecutionImpl;
 import quickfix.examples.banzai.ui.ExecutionTableModel;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
 @Component("executionTableModel")
-public class ExecutionTableModelImpl implements ExecutionTableModel<Execution> {
-  private final ObservableList<Execution> executionList;
-  private final Map<String, Execution> exchangeIdToExecution = new HashMap<>();
+public class ExecutionTableModelImpl implements ExecutionTableModel<ExecutionImpl> {
+  private final ObservableList<ExecutionImpl> executionList;
+  private final Map<String, ExecutionImpl> exchangeIdToExecution = new HashMap<>();
 
   public ExecutionTableModelImpl() {
     this.executionList = observableArrayList();
   }
 
   @Override
-  public ObservableList<Execution> getExecutionList() {
+  public ObservableList<ExecutionImpl> getExecutionList() {
     return this.executionList;
   }
 
   @Override
-  public void addExecution(final Execution execution) {
+  public void addExecution(final ExecutionImpl execution) {
     if (this.exchangeIdToExecution.containsKey(execution.getExchangeID())) {
       return;
     }
@@ -35,7 +35,7 @@ public class ExecutionTableModelImpl implements ExecutionTableModel<Execution> {
   }
 
   @Override
-  public Execution getExchangeExecution(final String exchangeID) {
+  public ExecutionImpl getExchangeExecution(final String exchangeID) {
     return this.exchangeIdToExecution.get(exchangeID);
   }
 
