@@ -155,7 +155,7 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
 
   @FXML
   public void onNewOrder(final ActionEvent actionEvent) {
-    final OrderImpl order = orderEntry();
+    final Order order = orderEntry();
     notify(new OrderEvent(order, OrderEventType.New));
     this.orderEntryModel.setSelectedOrder(null);
   }
@@ -163,7 +163,7 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
   @FXML
   public void onCancelOrder(final ActionEvent actionEvent) {
     final Order origOrder = this.orderEntryModel.getSelectedOrder();
-    final Order newOrder = (OrderImpl) origOrder.clone();
+    final Order newOrder = (Order) origOrder.clone();
     notify(new OrderEvent(newOrder, OrderEventType.Cancel, origOrder));
     this.orderEntryModel.setSelectedOrder(null);
   }
@@ -171,7 +171,7 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
   @FXML
   public void onReplaceOrder(final ActionEvent actionEvent) {
     final Order origOrder = this.orderEntryModel.getSelectedOrder();
-    final Order newOrder = (OrderImpl) origOrder.clone();
+    final Order newOrder = (Order) origOrder.clone();
     newOrder.setQuantity(Integer.parseInt(this.quantityTextField.getText()));
     if (origOrder.getType() == OrderType.LIMIT || origOrder.getType() == OrderType.STOP_LIMIT) {
       newOrder.setLimit(Double.parseDouble(this.limitPriceTextField.getText()));
@@ -216,8 +216,8 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
     this.sessionComboBox.setValue(order.getSessionID());
   }
 
-  private OrderImpl orderEntry() {
-    final OrderImpl order = new OrderImpl();
+  private Order orderEntry() {
+    final Order order = new OrderImpl();
     order.setSide(this.sideComboBox.getValue());
     order.setType(this.typeComboBox.getValue());
     order.setTIF(this.tifComboBox.getValue());
@@ -229,8 +229,9 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
     final OrderType type = order.getType();
     if (type == OrderType.LIMIT || type == OrderType.STOP_LIMIT)
       order.setLimit(this.limitPriceTextField.getText());
-    if (type == OrderType.STOP || type == OrderType.STOP_LIMIT)
-      order.setStop(this.stopPriceTextField.getText());
+    if (type == OrderType.STOP || type == OrderType.STOP_LIMIT) {
+      order.setStop(Double.parseDouble(this.stopPriceTextField.getText()));
+    }
     order.setSessionID(this.sessionComboBox.getValue());
     return order;
   }

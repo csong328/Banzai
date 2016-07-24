@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderImpl;
 import quickfix.examples.banzai.ui.ExecutionTableController;
 import quickfix.examples.banzai.ui.OrderEntryController;
 import quickfix.examples.banzai.ui.OrderTableController;
@@ -90,7 +89,7 @@ public class BanzaiEventAggregator implements OrderEventListener {
 
   private void onReplaceOrder(final OrderEvent event) {
     final Order order = event.getOrder();
-    final OrderImpl origOrder = (OrderImpl) event.getArg();
+    final Order origOrder = (Order) event.getArg();
     this.connectivity.replace(origOrder, order);
   }
 

@@ -71,7 +71,7 @@ public class OrderTableViewTest extends ApplicationTest {
 
   @Test
   public void testAddOrder() {
-    final OrderImpl order = newOrder();
+    final Order order = newOrder();
 
     this.orderTableController.addOrder(order);
 
@@ -80,7 +80,7 @@ public class OrderTableViewTest extends ApplicationTest {
 
   @Test
   public void testSelectOrder() {
-    final OrderImpl order = newOrder();
+    final Order order = newOrder();
 
     this.orderTableController.addOrder(order);
 
@@ -128,8 +128,8 @@ public class OrderTableViewTest extends ApplicationTest {
     verifyThat("#orderTable", hasItems(0));
   }
 
-  private OrderImpl newOrder() {
-    final OrderImpl order = new OrderImpl();
+  private Order newOrder() {
+    final Order order = new OrderImpl();
     order.setSymbol("MSFT");
     order.setQuantity(100);
     order.setSide(OrderSide.BUY);

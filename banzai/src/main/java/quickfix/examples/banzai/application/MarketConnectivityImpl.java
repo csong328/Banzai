@@ -14,6 +14,7 @@ import java.util.Set;
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionID;
+import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.ExecutionImpl;
 import quickfix.examples.banzai.LogonEvent;
 import quickfix.examples.banzai.Order;
@@ -182,7 +183,7 @@ public class MarketConnectivityImpl extends SimpleOrderEventSource implements IM
     }
 
     if (fillSize.compareTo(BigDecimal.ZERO) > 0) {
-      final ExecutionImpl execution = new ExecutionImpl();
+      final Execution execution = new ExecutionImpl();
       execution.setExchangeID(sessionID + message.getField(new ExecID()).getValue());
 
       execution.setSymbol(message.getField(new Symbol()).getValue());

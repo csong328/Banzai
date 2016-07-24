@@ -254,7 +254,7 @@ public class OrderEntryViewTest extends ApplicationTest {
   }
 
   private void prepareMarketOrder() {
-    final OrderImpl order = new OrderImpl();
+    final Order order = new OrderImpl();
     order.setSymbol("MSFT");
     order.setQuantity(100);
     order.setSide(OrderSide.BUY);
