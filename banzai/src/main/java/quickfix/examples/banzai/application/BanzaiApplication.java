@@ -22,20 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.application.Platform;
-import quickfix.Application;
-import quickfix.DoNotSend;
+import quickfix.ApplicationAdapter;
 import quickfix.FieldNotFound;
 import quickfix.IncorrectDataFormat;
 import quickfix.IncorrectTagValue;
 import quickfix.Message;
-import quickfix.RejectLogon;
 import quickfix.Session;
 import quickfix.SessionID;
 import quickfix.SessionNotFound;
 import quickfix.UnsupportedMessageType;
 import quickfix.examples.banzai.fix.FixMessageBuilder;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
-import quickfix.examples.banzai.ui.event.SimpleOrderEventSource;
 import quickfix.field.BeginString;
 import quickfix.field.BusinessRejectReason;
 import quickfix.field.DeliverToCompID;
@@ -43,7 +40,7 @@ import quickfix.field.MsgType;
 import quickfix.field.SessionRejectReason;
 
 @Component("banzaiApplication")
-public class BanzaiApplication extends SimpleOrderEventSource implements Application {
+public class BanzaiApplication extends ApplicationAdapter {
   private static final Logger logger = LoggerFactory.getLogger(BanzaiApplication.class);
 
   @Autowired
@@ -54,71 +51,54 @@ public class BanzaiApplication extends SimpleOrderEventSource implements Applica
   private boolean isAvailable = true;
   private boolean isMissingField;
 
-  public void onCreate(final SessionID sessionID) {
-  }
-
+  @Override
   public void onLogon(final SessionID sessionID) {
     this.marketConnectivity.onLogon(sessionID);
   }
 
+  @Override
   public void onLogout(final SessionID sessionID) {
     this.marketConnectivity.onLogout(sessionID);
   }
 
-  public void toAdmin(final quickfix.Message message, final SessionID sessionID) {
-  }
-
-  public void toApp(final quickfix.Message message, final SessionID sessionID) throws DoNotSend {
-  }
-
-  public void fromAdmin(final quickfix.Message message, final SessionID sessionID)
-          throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon {
-  }
-
+  @Override
   public void fromApp(final quickfix.Message message, final SessionID sessionID)
           throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
     try {
-      Platform.runLater(new MessageProcessor(message, sessionID));
+      Platform.runLater(() -> process(message, sessionID));
     } catch (final Exception e) {
     }
   }
 
-  private class MessageProcessor implements Runnable {
-    private final quickfix.Message message;
+  private void process(final quickfix.Message message, final SessionID sessionID) {
+    try {
+      final MsgType msgType = new MsgType();
+      if (this.isAvailable) {
+        if (this.isMissingField) {
+          // For OpenFIX certification testing
+          sendBusinessReject(message, BusinessRejectReason.CONDITIONALLY_REQUIRED_FIELD_MISSING,
+                  "Conditionally required field missing");
 
-    private final SessionID sessionID;
+        } else if (message.getHeader().isSetField(DeliverToCompID.FIELD)) {
+          // This is here to support OpenFIX certification
+          sendSessionReject(message, SessionRejectReason.COMPID_PROBLEM);
 
-    MessageProcessor(final quickfix.Message message, final SessionID sessionID) {
-      this.message = message;
-      this.sessionID = sessionID;
-    }
+        } else if (message.getHeader().getField(msgType).valueEquals("8")) {
+          this.marketConnectivity.executionReport(message, sessionID);
 
-    public void run() {
-      try {
-        final MsgType msgType = new MsgType();
-        if (BanzaiApplication.this.isAvailable) {
-          if (BanzaiApplication.this.isMissingField) {
-            // For OpenFIX certification testing
-            sendBusinessReject(this.message, BusinessRejectReason.CONDITIONALLY_REQUIRED_FIELD_MISSING,
-                    "Conditionally required field missing");
-          } else if (this.message.getHeader().isSetField(DeliverToCompID.FIELD)) {
-            // This is here to support OpenFIX certification
-            sendSessionReject(this.message, SessionRejectReason.COMPID_PROBLEM);
-          } else if (this.message.getHeader().getField(msgType).valueEquals("8")) {
-            BanzaiApplication.this.marketConnectivity.executionReport(this.message, this.sessionID);
-          } else if (this.message.getHeader().getField(msgType).valueEquals("9")) {
-            BanzaiApplication.this.marketConnectivity.cancelReject(this.message, this.sessionID);
-          } else {
-            sendBusinessReject(this.message, BusinessRejectReason.UNSUPPORTED_MESSAGE_TYPE,
-                    "Unsupported Message Type");
-          }
+        } else if (message.getHeader().getField(msgType).valueEquals("9")) {
+          this.marketConnectivity.cancelReject(message, sessionID);
+
         } else {
-          sendBusinessReject(this.message, BusinessRejectReason.APPLICATION_NOT_AVAILABLE,
-                  "Application not available");
+          sendBusinessReject(message, BusinessRejectReason.UNSUPPORTED_MESSAGE_TYPE,
+                  "Unsupported Message Type");
         }
-      } catch (final Exception e) {
-        e.printStackTrace();
+      } else {
+        sendBusinessReject(message, BusinessRejectReason.APPLICATION_NOT_AVAILABLE,
+                "Application not available");
       }
+    } catch (final Exception e) {
+      e.printStackTrace();
     }
   }
 
