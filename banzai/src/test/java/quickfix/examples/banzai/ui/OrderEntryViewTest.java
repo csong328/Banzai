@@ -1,5 +1,6 @@
 package quickfix.examples.banzai.ui;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import quickfix.FixVersions;
 import quickfix.SessionID;
 import quickfix.examples.banzai.LogonEvent;
 import quickfix.examples.banzai.Order;
@@ -56,6 +58,11 @@ public class OrderEntryViewTest extends ApplicationTest {
     initMocks(this);
   }
 
+  @After
+  public void tearDown() throws Exception {
+    this.orderEntryController.setSelectedOrder(null);
+  }
+
   @Override
   public void start(final Stage stage) throws Exception {
     final Parent root = SpringFXMLLoader.create().applicationContext(this.applicationContext)
@@ -64,7 +71,7 @@ public class OrderEntryViewTest extends ApplicationTest {
     stage.setScene(scene);
     stage.show();
 
-    this.sessionID = new SessionID("FIX.4.2", "Banzai", "EXEC");
+    this.sessionID = new SessionID(FixVersions.BEGINSTRING_FIX42, "Banzai", "EXEC");
     final LogonEvent logonEvent = new LogonEvent(this.sessionID, true);
     this.orderEntryController.update(null, logonEvent);
   }
