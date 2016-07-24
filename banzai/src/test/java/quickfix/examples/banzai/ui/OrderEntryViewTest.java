@@ -26,6 +26,7 @@ import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.application.UIControlConfig;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
@@ -42,7 +43,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UIControlTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = UIControlConfig.class, loader = AnnotationConfigContextLoader.class)
 public class OrderEntryViewTest extends ApplicationTest {
   @Autowired
   private ApplicationContext applicationContext;

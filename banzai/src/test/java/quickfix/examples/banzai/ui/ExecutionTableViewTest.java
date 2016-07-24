@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.OrderSide;
+import quickfix.examples.banzai.application.UIControlConfig;
 import quickfix.examples.banzai.ui.impl.ExecutionTableControllerImpl;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
@@ -24,7 +25,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TableViewMatchers.hasItems;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UIControlTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = UIControlConfig.class, loader = AnnotationConfigContextLoader.class)
 public class ExecutionTableViewTest extends ApplicationTest {
   @Autowired
   private ApplicationContext applicationContext;
