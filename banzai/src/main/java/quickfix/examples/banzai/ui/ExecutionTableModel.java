@@ -5,12 +5,11 @@ import quickfix.examples.banzai.Execution;
 
 public interface ExecutionTableModel {
 
-    ObservableList<Execution> getExecutionList();
+  ObservableList<Execution> getExecutionList();
 
-    void addExecution(Execution execution);
+  void addExecution(Execution execution);
 
-    Execution getExchangeExecution(String exchangeID);
+  Execution getExchangeExecution(String exchangeID);
 
-    void clear();
-
+  void clear();
 }

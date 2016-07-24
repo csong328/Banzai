@@ -19,23 +19,23 @@ package quickfix.examples.banzai.utils;
 import java.util.HashMap;
 
 public class TwoWayMap<T1, T2> {
-    private HashMap<T1, T2> firstToSecond = new HashMap<T1, T2>();
-    private HashMap<T2, T1> secondToFirst = new HashMap<T2, T1>();
+  private final HashMap<T1, T2> firstToSecond = new HashMap<>();
+  private final HashMap<T2, T1> secondToFirst = new HashMap<>();
 
-    public void put(T1 first, T2 second) {
-        firstToSecond.put(first, second);
-        secondToFirst.put(second, first);
-    }
+  public void put(final T1 first, final T2 second) {
+    this.firstToSecond.put(first, second);
+    this.secondToFirst.put(second, first);
+  }
 
-    public T2 getFirst(T1 first) {
-        return firstToSecond.get(first);
-    }
+  public T2 getFirst(final T1 first) {
+    return this.firstToSecond.get(first);
+  }
 
-    public T1 getSecond(T2 second) {
-        return secondToFirst.get(second);
-    }
+  public T1 getSecond(final T2 second) {
+    return this.secondToFirst.get(second);
+  }
 
-    public String toString() {
-        return firstToSecond.toString() + "\n" + secondToFirst.toString();
-    }
+  public String toString() {
+    return this.firstToSecond.toString() + "\n" + this.secondToFirst.toString();
+  }
 }

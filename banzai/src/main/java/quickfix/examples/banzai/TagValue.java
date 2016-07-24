@@ -6,28 +6,27 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class TagValue {
-  private IntegerProperty tag = new SimpleIntegerProperty();
-  private StringProperty value = new SimpleStringProperty();
+  private final IntegerProperty tag = new SimpleIntegerProperty();
+  private final StringProperty value = new SimpleStringProperty();
 
-  public static TagValue of(int tag, Integer value) {
+  public static TagValue of(final int tag, final Integer value) {
     return of(tag, Integer.toString(value));
   }
 
-  public static TagValue of(int tag, Double value) {
+  public static TagValue of(final int tag, final Double value) {
     return of(tag, Double.toString(value));
   }
 
-  public static TagValue of(int tag, char value) {
+  public static TagValue of(final int tag, final char value) {
     return of(tag, Character.toString(value));
   }
 
-  public static TagValue of(int tag, String value) {
-    TagValue pair = new TagValue();
+  public static TagValue of(final int tag, final String value) {
+    final TagValue pair = new TagValue();
     pair.setTag(tag);
     pair.setValue(value);
     return pair;
   }
-
 
   public IntegerProperty tagProperty() {
     return this.tag;
@@ -37,7 +36,7 @@ public class TagValue {
     return tagProperty().get();
   }
 
-  public void setTag(int tag) {
+  public void setTag(final int tag) {
     this.tagProperty().set(tag);
   }
 
@@ -49,7 +48,7 @@ public class TagValue {
     return valueProperty().get();
   }
 
-  public void setValue(String value) {
+  public void setValue(final String value) {
     this.valueProperty().set(value);
   }
 

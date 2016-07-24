@@ -5,14 +5,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SimpleOrderEventSource implements OrderEventSource {
 
-  private List<OrderEventListener> eventListenerList = new CopyOnWriteArrayList<>();
+  private final List<OrderEventListener> eventListenerList = new CopyOnWriteArrayList<>();
 
   @Override
-  public void addOrderEventListener(OrderEventListener listener) {
-    eventListenerList.add(listener);
+  public void addOrderEventListener(final OrderEventListener listener) {
+    this.eventListenerList.add(listener);
   }
 
-  public void notify(OrderEvent event) {
-    eventListenerList.forEach(l -> l.handle(event));
+  public void notify(final OrderEvent event) {
+    this.eventListenerList.forEach(l -> l.handle(event));
   }
 }

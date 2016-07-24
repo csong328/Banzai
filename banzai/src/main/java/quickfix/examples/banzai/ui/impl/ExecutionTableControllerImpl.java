@@ -1,10 +1,10 @@
 package quickfix.examples.banzai.ui.impl;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -23,11 +23,11 @@ public class ExecutionTableControllerImpl implements ExecutionTableController, I
   private ExecutionTableModel executionTableModel;
 
   @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    this.executionTable.setItems(executionTableModel.getExecutionList());
+  public void initialize(final URL location, final ResourceBundle resources) {
+    this.executionTable.setItems(this.executionTableModel.getExecutionList());
   }
 
-  public void addExecution(Execution execution) {
+  public void addExecution(final Execution execution) {
     this.executionTableModel.addExecution(execution);
   }
 
@@ -36,5 +36,6 @@ public class ExecutionTableControllerImpl implements ExecutionTableController, I
   }
 
   @FXML
-  public void onExecutionSelected(Event event) {}
+  public void onExecutionSelected(final Event event) {
+  }
 }

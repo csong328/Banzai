@@ -16,22 +16,29 @@
 
 package quickfix.examples.banzai;
 
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class Execution {
-  private StringProperty symbol = new SimpleStringProperty();
-  private IntegerProperty quantity = new SimpleIntegerProperty(0);
-  private ObjectProperty<OrderSide> side = new SimpleObjectProperty<>(OrderSide.BUY);
-  private DoubleProperty price = new SimpleDoubleProperty();
-  private StringProperty ID = new SimpleStringProperty();
-  private StringProperty exchangeID = new SimpleStringProperty();
+  private final StringProperty symbol = new SimpleStringProperty();
+  private final IntegerProperty quantity = new SimpleIntegerProperty(0);
+  private final ObjectProperty<OrderSide> side = new SimpleObjectProperty<>(OrderSide.BUY);
+  private final DoubleProperty price = new SimpleDoubleProperty();
+  private final StringProperty ID = new SimpleStringProperty();
+  private final StringProperty exchangeID = new SimpleStringProperty();
   private static int nextID = 1;
 
   public Execution() {
     this(Integer.toString(nextID++));
   }
 
-  public Execution(String ID) {
+  public Execution(final String ID) {
     this.ID.set(ID);
   }
 
@@ -43,7 +50,7 @@ public class Execution {
     return symbolProperty().get();
   }
 
-  public void setSymbol(String symbol) {
+  public void setSymbol(final String symbol) {
     symbolProperty().set(symbol);
   }
 
@@ -55,7 +62,7 @@ public class Execution {
     return quantityProperty().get();
   }
 
-  public void setQuantity(int quantity) {
+  public void setQuantity(final int quantity) {
     quantityProperty().set(quantity);
   }
 
@@ -67,7 +74,7 @@ public class Execution {
     return sideProperty().get();
   }
 
-  public void setSide(OrderSide side) {
+  public void setSide(final OrderSide side) {
     sideProperty().set(side);
   }
 
@@ -79,7 +86,7 @@ public class Execution {
     return priceProperty().get();
   }
 
-  public void setPrice(double price) {
+  public void setPrice(final double price) {
     priceProperty().set(price);
   }
 
@@ -95,7 +102,7 @@ public class Execution {
     return this.exchangeID;
   }
 
-  public void setExchangeID(String exchangeID) {
+  public void setExchangeID(final String exchangeID) {
     exchangeIDProperty().set(exchangeID);
   }
 

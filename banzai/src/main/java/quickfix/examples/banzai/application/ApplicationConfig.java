@@ -5,4 +5,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("quickfix.examples.banzai")
-public class ApplicationConfig {}
+public class ApplicationConfig {
+}

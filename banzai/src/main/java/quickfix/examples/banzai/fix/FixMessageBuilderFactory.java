@@ -11,54 +11,54 @@ import quickfix.field.CxlType;
 import quickfix.field.TransactTime;
 
 public class FixMessageBuilderFactory {
-  private Map<String, FixMessageBuilder> fixMessageBuilders = new HashMap<String, FixMessageBuilder>();
+  private final Map<String, FixMessageBuilder> fixMessageBuilders = new HashMap<>();
 
-  public FixMessageBuilderFactory(MessageFactory messageFactory) {
+  public FixMessageBuilderFactory(final MessageFactory messageFactory) {
     super();
-    FixMessageBuilder fix40 = new DefaultFixMessageBuilder(messageFactory, FixVersions.BEGINSTRING_FIX40) {
+    final FixMessageBuilder fix40 = new DefaultFixMessageBuilder(messageFactory, FixVersions.BEGINSTRING_FIX40) {
       @Override
-      public Message createCancelRequest(Order order) {
-        Message cancel = super.createCancelRequest(order);
+      public Message createCancelRequest(final Order order) {
+        final Message cancel = super.createCancelRequest(order);
         cancel.setField(new CxlType(
                 CxlType.FULL_REMAINING_QUANTITY));
         return cancel;
       }
     };
+    
+    final FixMessageBuilder fix41 = new DefaultFixMessageBuilder(messageFactory, FixVersions.BEGINSTRING_FIX41);
 
-    FixMessageBuilder fix41 = new DefaultFixMessageBuilder(messageFactory, FixVersions.BEGINSTRING_FIX41);
-
-    FixMessageBuilder fix42 = new DefaultFixMessageBuilder(messageFactory, FixVersions.BEGINSTRING_FIX42) {
+    final FixMessageBuilder fix42 = new DefaultFixMessageBuilder(messageFactory, FixVersions.BEGINSTRING_FIX42) {
       @Override
-      public Message createNewOrderSingle(Order order) {
-        Message request = super.createNewOrderSingle(order);
+      public Message createNewOrderSingle(final Order order) {
+        final Message request = super.createNewOrderSingle(order);
         request.setField(new TransactTime());
         return request;
       }
 
       @Override
-      public Message createReplaceRequest(Order order, Order newOrder) {
-        Message request = super.createReplaceRequest(order, newOrder);
+      public Message createReplaceRequest(final Order order, final Order newOrder) {
+        final Message request = super.createReplaceRequest(order, newOrder);
         request.setField(new TransactTime());
         return request;
       }
 
       @Override
-      public Message createCancelRequest(Order order) {
-        Message request = super.createCancelRequest(order);
+      public Message createCancelRequest(final Order order) {
+        final Message request = super.createCancelRequest(order);
         request.setField(new TransactTime());
         return request;
       }
     };
 
-    fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX40, fix40);
-    fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX41, fix41);
-    fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX42, fix42);
-    fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX43, fix42);
-    fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX44, fix42);
-    fixMessageBuilders.put(FixVersions.BEGINSTRING_FIXT11, fix42);
+    this.fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX40, fix40);
+    this.fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX41, fix41);
+    this.fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX42, fix42);
+    this.fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX43, fix42);
+    this.fixMessageBuilders.put(FixVersions.BEGINSTRING_FIX44, fix42);
+    this.fixMessageBuilders.put(FixVersions.BEGINSTRING_FIXT11, fix42);
   }
 
-  public FixMessageBuilder getFixMessageBuilder(String beginString) {
-    return fixMessageBuilders.get(beginString);
+  public FixMessageBuilder getFixMessageBuilder(final String beginString) {
+    return this.fixMessageBuilders.get(beginString);
   }
 }

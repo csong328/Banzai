@@ -23,5 +23,4 @@ public interface OrderEntryModel {
   ObservableList<OrderTIF> getTIFList();
 
   ObservableList<SessionID> getSessionList();
-
 }

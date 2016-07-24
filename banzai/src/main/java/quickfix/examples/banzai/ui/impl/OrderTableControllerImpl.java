@@ -33,18 +33,18 @@ public class OrderTableControllerImpl extends SimpleOrderEventSource implements 
   private OrderTableModel orderTableModel;
 
   @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    this.orderTable.setItems(orderTableModel.getOrderList());
+  public void initialize(final URL location, final ResourceBundle resources) {
+    this.orderTable.setItems(this.orderTableModel.getOrderList());
 
-    initializeColumn(targetColumn,
+    initializeColumn(this.targetColumn,
             order -> new ReadOnlyObjectWrapper<>(order.getSessionID().getTargetCompID()));
   }
 
-  public void addOrder(Order order) {
+  public void addOrder(final Order order) {
     this.orderTableModel.addOrder(order);
   }
 
-  public void replaceOrder(Order newOrder) {
+  public void replaceOrder(final Order newOrder) {
     this.orderTableModel.replaceOrder(newOrder);
   }
 
@@ -53,13 +53,13 @@ public class OrderTableControllerImpl extends SimpleOrderEventSource implements 
   }
 
   @Override
-  public void onOrderSelected(MouseEvent mouseEvent) {
-    Order order = this.orderTable.getSelectionModel().getSelectedItem();
+  public void onOrderSelected(final MouseEvent mouseEvent) {
+    final Order order = this.orderTable.getSelectionModel().getSelectedItem();
     notify(new OrderEvent(order, OrderEventType.OrderSelected));
   }
 
-  private <S, T> void initializeColumn(TableColumn<S, T> column,
-                                       Function<S, ObservableValue<T>> prop) {
+  private <S, T> void initializeColumn(final TableColumn<S, T> column,
+                                       final Function<S, ObservableValue<T>> prop) {
     column.setCellValueFactory(cellData -> prop.apply(cellData.getValue()));
   }
 }

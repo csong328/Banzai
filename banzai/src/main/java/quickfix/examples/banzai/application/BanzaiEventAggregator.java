@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import quickfix.examples.banzai.Execution;
 import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.application.IBanzaiService;
 import quickfix.examples.banzai.ui.ExecutionTableController;
 import quickfix.examples.banzai.ui.OrderEntryController;
 import quickfix.examples.banzai.ui.OrderTableController;
@@ -37,7 +36,7 @@ public class BanzaiEventAggregator implements OrderEventListener {
   }
 
   @Override
-  public void handle(OrderEvent event) {
+  public void handle(final OrderEvent event) {
     checkNotNull(event.getEventType(), "Event type not set");
 
     switch (event.getEventType()) {
@@ -71,41 +70,41 @@ public class BanzaiEventAggregator implements OrderEventListener {
     }
   }
 
-  private void onOrderSelected(OrderEvent event) {
-    Order order = event.getOrder();
-    orderEntryController.setSelectedOrder(order);
+  private void onOrderSelected(final OrderEvent event) {
+    final Order order = event.getOrder();
+    this.orderEntryController.setSelectedOrder(order);
   }
 
-  private void onNewOrder(OrderEvent event) {
-    Order order = event.getOrder();
-    orderTableController.addOrder(order);
-    service.send(order);
+  private void onNewOrder(final OrderEvent event) {
+    final Order order = event.getOrder();
+    this.orderTableController.addOrder(order);
+    this.service.send(order);
   }
 
-  private void onCancelOrder(OrderEvent event) {
-    Order order = event.getOrder();
-    service.cancel(order);
+  private void onCancelOrder(final OrderEvent event) {
+    final Order order = event.getOrder();
+    this.service.cancel(order);
   }
 
-  private void onReplaceOrder(OrderEvent event) {
-    Order order = event.getOrder();
-    Order origOrder = (Order) event.getArg();
-    service.replace(origOrder, order);
+  private void onReplaceOrder(final OrderEvent event) {
+    final Order order = event.getOrder();
+    final Order origOrder = (Order) event.getArg();
+    this.service.replace(origOrder, order);
   }
 
-  private void onOrderReplaced(OrderEvent event) {
-    Order order = event.getOrder();
-    orderTableController.replaceOrder(order);
+  private void onOrderReplaced(final OrderEvent event) {
+    final Order order = event.getOrder();
+    this.orderTableController.replaceOrder(order);
   }
 
-  private void onFill(OrderEvent event) {
-    Execution execution = (Execution) event.getArg();
-    executionTableController.addExecution(execution);
+  private void onFill(final OrderEvent event) {
+    final Execution execution = (Execution) event.getArg();
+    this.executionTableController.addExecution(execution);
   }
 
-  private void onClearAll(OrderEvent event) {
-    orderTableController.clear();
-    executionTableController.clear();
+  private void onClearAll(final OrderEvent event) {
+    this.orderTableController.clear();
+    this.executionTableController.clear();
   }
 
 }

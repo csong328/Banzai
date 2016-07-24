@@ -7,25 +7,25 @@ public class OrderEvent {
   private final OrderEventType eventType;
   private final Object arg;
 
-  public OrderEvent(Order order, OrderEventType eventType) {
+  public OrderEvent(final Order order, final OrderEventType eventType) {
     this(order, eventType, null);
   }
 
-  public OrderEvent(Order order, OrderEventType eventType, Object arg) {
+  public OrderEvent(final Order order, final OrderEventType eventType, final Object arg) {
     this.order = order;
     this.eventType = eventType;
     this.arg = arg;
   }
 
   public Order getOrder() {
-    return order;
+    return this.order;
   }
 
   public OrderEventType getEventType() {
-    return eventType;
+    return this.eventType;
   }
 
   public Object getArg() {
-    return arg;
+    return this.arg;
   }
 }

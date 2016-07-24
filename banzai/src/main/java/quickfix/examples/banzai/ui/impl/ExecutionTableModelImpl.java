@@ -26,16 +26,16 @@ public class ExecutionTableModelImpl implements ExecutionTableModel {
   }
 
   @Override
-  public void addExecution(Execution execution) {
-    if (exchangeIdToExecution.containsKey(execution.getExchangeID())) {
+  public void addExecution(final Execution execution) {
+    if (this.exchangeIdToExecution.containsKey(execution.getExchangeID())) {
       return;
     }
-    exchangeIdToExecution.put(execution.getExchangeID(), execution);
+    this.exchangeIdToExecution.put(execution.getExchangeID(), execution);
     this.executionList.add(execution);
   }
 
   @Override
-  public Execution getExchangeExecution(String exchangeID) {
+  public Execution getExchangeExecution(final String exchangeID) {
     return this.exchangeIdToExecution.get(exchangeID);
   }
 

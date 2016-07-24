@@ -78,38 +78,38 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
 
   private boolean isAvailable = true;
   private boolean isMissingField;
-  private MessageSender messageSender = new DefaultMessageSender();
+  private final MessageSender messageSender = new DefaultMessageSender();
 
   private static final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
-  private static FixMessageBuilderFactory fixMessageBuilderFactory = new FixMessageBuilderFactory(new DefaultMessageFactory());
-  private Map<String, Order> orderMap = new HashMap<>();
+  private static final FixMessageBuilderFactory fixMessageBuilderFactory = new FixMessageBuilderFactory(new DefaultMessageFactory());
+  private final Map<String, Order> orderMap = new HashMap<>();
 
-  public void onCreate(SessionID sessionID) {
+  public void onCreate(final SessionID sessionID) {
   }
 
-  public void onLogon(SessionID sessionID) {
-    observableLogon.logon(sessionID);
+  public void onLogon(final SessionID sessionID) {
+    this.observableLogon.logon(sessionID);
   }
 
-  public void onLogout(SessionID sessionID) {
-    observableLogon.logoff(sessionID);
+  public void onLogout(final SessionID sessionID) {
+    this.observableLogon.logoff(sessionID);
   }
 
-  public void toAdmin(quickfix.Message message, SessionID sessionID) {
+  public void toAdmin(final quickfix.Message message, final SessionID sessionID) {
   }
 
-  public void toApp(quickfix.Message message, SessionID sessionID) throws DoNotSend {
+  public void toApp(final quickfix.Message message, final SessionID sessionID) throws DoNotSend {
   }
 
-  public void fromAdmin(quickfix.Message message, SessionID sessionID)
+  public void fromAdmin(final quickfix.Message message, final SessionID sessionID)
           throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, RejectLogon {
   }
 
-  public void fromApp(quickfix.Message message, SessionID sessionID)
+  public void fromApp(final quickfix.Message message, final SessionID sessionID)
           throws FieldNotFound, IncorrectDataFormat, IncorrectTagValue, UnsupportedMessageType {
     try {
       Platform.runLater(new MessageProcessor(message, sessionID));
-    } catch (Exception e) {
+    } catch (final Exception e) {
     }
   }
 
@@ -118,62 +118,62 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
 
     private final SessionID sessionID;
 
-    MessageProcessor(quickfix.Message message, SessionID sessionID) {
+    MessageProcessor(final quickfix.Message message, final SessionID sessionID) {
       this.message = message;
       this.sessionID = sessionID;
     }
 
     public void run() {
       try {
-        MsgType msgType = new MsgType();
-        if (isAvailable) {
-          if (isMissingField) {
+        final MsgType msgType = new MsgType();
+        if (BanzaiServiceImpl.this.isAvailable) {
+          if (BanzaiServiceImpl.this.isMissingField) {
             // For OpenFIX certification testing
-            sendBusinessReject(message, BusinessRejectReason.CONDITIONALLY_REQUIRED_FIELD_MISSING,
+            sendBusinessReject(this.message, BusinessRejectReason.CONDITIONALLY_REQUIRED_FIELD_MISSING,
                     "Conditionally required field missing");
-          } else if (message.getHeader().isSetField(DeliverToCompID.FIELD)) {
+          } else if (this.message.getHeader().isSetField(DeliverToCompID.FIELD)) {
             // This is here to support OpenFIX certification
-            sendSessionReject(message, SessionRejectReason.COMPID_PROBLEM);
-          } else if (message.getHeader().getField(msgType).valueEquals("8")) {
-            executionReport(message, sessionID);
-          } else if (message.getHeader().getField(msgType).valueEquals("9")) {
-            cancelReject(message, sessionID);
+            sendSessionReject(this.message, SessionRejectReason.COMPID_PROBLEM);
+          } else if (this.message.getHeader().getField(msgType).valueEquals("8")) {
+            executionReport(this.message, this.sessionID);
+          } else if (this.message.getHeader().getField(msgType).valueEquals("9")) {
+            cancelReject(this.message, this.sessionID);
           } else {
-            sendBusinessReject(message, BusinessRejectReason.UNSUPPORTED_MESSAGE_TYPE,
+            sendBusinessReject(this.message, BusinessRejectReason.UNSUPPORTED_MESSAGE_TYPE,
                     "Unsupported Message Type");
           }
         } else {
-          sendBusinessReject(message, BusinessRejectReason.APPLICATION_NOT_AVAILABLE,
+          sendBusinessReject(this.message, BusinessRejectReason.APPLICATION_NOT_AVAILABLE,
                   "Application not available");
         }
-      } catch (Exception e) {
+      } catch (final Exception e) {
         e.printStackTrace();
       }
     }
   }
 
-  private void sendSessionReject(Message message, int rejectReason)
+  private void sendSessionReject(final Message message, final int rejectReason)
           throws FieldNotFound, SessionNotFound {
-    String beginString = message.getHeader().getString(BeginString.FIELD);
-    Message reply = getFixMessageBuilder(beginString).sessionReject(message, rejectReason);
+    final String beginString = message.getHeader().getString(BeginString.FIELD);
+    final Message reply = getFixMessageBuilder(beginString).sessionReject(message, rejectReason);
     Session.sendToTarget(reply);
     logger.error("Reject: {}", reply.toString());
   }
 
-  private void sendBusinessReject(Message message, int rejectReason, String rejectText)
+  private void sendBusinessReject(final Message message, final int rejectReason, final String rejectText)
           throws FieldNotFound, SessionNotFound {
-    String beginString = message.getHeader().getString(BeginString.FIELD);
-    Message reply = getFixMessageBuilder(beginString).businessReject(message, rejectReason,
+    final String beginString = message.getHeader().getString(BeginString.FIELD);
+    final Message reply = getFixMessageBuilder(beginString).businessReject(message, rejectReason,
             rejectText);
     Session.sendToTarget(reply);
     logger.error("Reject: {}", reply.toString());
   }
 
-  private void executionReport(Message message, SessionID sessionID) throws FieldNotFound {
-    ExecID execID = (ExecID) message.getField(new ExecID());
+  private void executionReport(final Message message, final SessionID sessionID) throws FieldNotFound {
+    final ExecID execID = (ExecID) message.getField(new ExecID());
     if (alreadyProcessed(execID, sessionID)) return;
 
-    Order order = getOrder(message.getField(new ClOrdID()).getValue());
+    final Order order = getOrder(message.getField(new ClOrdID()).getValue());
     if (order == null) {
       return;
     }
@@ -181,7 +181,7 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
     BigDecimal fillSize = BigDecimal.ZERO;
 
     if (message.isSetField(LastShares.FIELD)) {
-      LastShares lastShares = new LastShares();
+      final LastShares lastShares = new LastShares();
       message.getField(lastShares);
       fillSize = new BigDecimal("" + lastShares.getValue());
     } else {
@@ -198,14 +198,14 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
       order.setAvgPx(Double.parseDouble(message.getString(AvgPx.FIELD)));
     }
 
-    OrdStatus ordStatus = (OrdStatus) message.getField(new OrdStatus());
+    final OrdStatus ordStatus = (OrdStatus) message.getField(new OrdStatus());
 
     if (ordStatus.valueEquals(OrdStatus.REJECTED)) {
       order.setRejected(true);
       order.setOpen(0);
 
     } else if (ordStatus.valueEquals(OrdStatus.CANCELED)) {
-      Order origOrder = getOrder(message.getField(new OrigClOrdID()).getValue());
+      final Order origOrder = getOrder(message.getField(new OrigClOrdID()).getValue());
       if (origOrder != null) {
         order.setExecuted(origOrder.getExecuted());
         order.setAvgPx(origOrder.getAvgPx());
@@ -215,7 +215,7 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
       notify(new OrderEvent(order, OrderEventType.OrderReplaced));
 
     } else if (ordStatus.valueEquals(OrdStatus.REPLACED)) {
-      Order origOrder = getOrder(message.getField(new OrigClOrdID()).getValue());
+      final Order origOrder = getOrder(message.getField(new OrigClOrdID()).getValue());
       if (origOrder != null) {
         order.setExecuted(origOrder.getExecuted());
         order.setAvgPx(origOrder.getAvgPx());
@@ -240,11 +240,11 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
 
     try {
       order.setMessage(message.getField(new Text()).getValue());
-    } catch (FieldNotFound e) {
+    } catch (final FieldNotFound e) {
     }
 
     if (fillSize.compareTo(BigDecimal.ZERO) > 0) {
-      Execution execution = new Execution();
+      final Execution execution = new Execution();
       execution.setExchangeID(sessionID + message.getField(new ExecID()).getValue());
 
       execution.setSymbol(message.getField(new Symbol()).getValue());
@@ -252,34 +252,34 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
       if (message.isSetField(LastPx.FIELD)) {
         execution.setPrice(Double.parseDouble(message.getString(LastPx.FIELD)));
       }
-      Side side = (Side) message.getField(new Side());
+      final Side side = (Side) message.getField(new Side());
       execution.setSide(FIXSideToSide(side));
       notify(new OrderEvent(order, OrderEventType.Fill, execution));
     }
   }
 
-  private Order getOrder(String ID) throws FieldNotFound {
-    return orderMap.get(ID);
+  private Order getOrder(final String ID) throws FieldNotFound {
+    return this.orderMap.get(ID);
   }
 
-  private void addClOrdID(Order order) {
-    orderMap.put(order.getID(), order);
+  private void addClOrdID(final Order order) {
+    this.orderMap.put(order.getID(), order);
   }
 
-  private void cancelReject(Message message, SessionID sessionID) throws FieldNotFound {
+  private void cancelReject(final Message message, final SessionID sessionID) throws FieldNotFound {
 
-    String id = message.getField(new ClOrdID()).getValue();
+    final String id = message.getField(new ClOrdID()).getValue();
     Order order = getOrder(id);
     if (order == null) return;
     if (order.getOriginalID() != null) order = getOrder(order.getOriginalID());
 
     try {
       order.setMessage(message.getField(new Text()).getValue());
-    } catch (FieldNotFound e) {
+    } catch (final FieldNotFound e) {
     }
   }
 
-  private boolean alreadyProcessed(ExecID execID, SessionID sessionID) {
+  private boolean alreadyProcessed(final ExecID execID, final SessionID sessionID) {
     Set<ExecID> set = execIDs.get(sessionID);
     if (set == null) {
       set = new HashSet<>();
@@ -293,80 +293,80 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
     }
   }
 
-  private void send(quickfix.Message message, SessionID sessionID) {
-    messageSender.sendMessage(message, sessionID);
+  private void send(final quickfix.Message message, final SessionID sessionID) {
+    this.messageSender.sendMessage(message, sessionID);
   }
 
   @Override
-  public void send(Order order) {
-    String beginString = order.getSessionID().getBeginString();
-    quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
-    quickfix.Message newOrderSingle = builder.newOrder(order);
+  public void send(final Order order) {
+    final String beginString = order.getSessionID().getBeginString();
+    final quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
+    final quickfix.Message newOrderSingle = builder.newOrder(order);
     addClOrdID(order);
     send(newOrderSingle, order.getSessionID());
   }
 
   @Override
-  public void cancel(Order order) {
-    String beginString = order.getSessionID().getBeginString();
-    quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
-    quickfix.Message message = builder.cancel(order);
+  public void cancel(final Order order) {
+    final String beginString = order.getSessionID().getBeginString();
+    final quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
+    final quickfix.Message message = builder.cancel(order);
     addClOrdID(order);
     send(message, order.getSessionID());
   }
 
   @Override
-  public void replace(Order order, Order newOrder) {
-    String beginString = order.getSessionID().getBeginString();
-    quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
-    quickfix.Message message = builder.replace(order, newOrder);
+  public void replace(final Order order, final Order newOrder) {
+    final String beginString = order.getSessionID().getBeginString();
+    final quickfix.examples.banzai.fix.FixMessageBuilder builder = getFixMessageBuilder(beginString);
+    final quickfix.Message message = builder.replace(order, newOrder);
     addClOrdID(newOrder);
     send(message, order.getSessionID());
   }
 
   public boolean isMissingField() {
-    return isMissingField;
+    return this.isMissingField;
   }
 
-  public void setMissingField(boolean isMissingField) {
+  public void setMissingField(final boolean isMissingField) {
     this.isMissingField = isMissingField;
   }
 
   public boolean isAvailable() {
-    return isAvailable;
+    return this.isAvailable;
   }
 
-  public void setAvailable(boolean isAvailable) {
+  public void setAvailable(final boolean isAvailable) {
     this.isAvailable = isAvailable;
   }
 
   private static class ObservableLogon extends Observable {
-    private final HashSet<SessionID> set = new HashSet<SessionID>();
+    private final HashSet<SessionID> set = new HashSet<>();
 
-    public void logon(SessionID sessionID) {
-      set.add(sessionID);
+    public void logon(final SessionID sessionID) {
+      this.set.add(sessionID);
       setChanged();
       notifyObservers(new LogonEvent(sessionID, true));
       clearChanged();
     }
 
-    public void logoff(SessionID sessionID) {
-      set.remove(sessionID);
+    public void logoff(final SessionID sessionID) {
+      this.set.remove(sessionID);
       setChanged();
       notifyObservers(new LogonEvent(sessionID, false));
       clearChanged();
     }
   }
 
-  public void addLogonObserver(Observer observer) {
-    observableLogon.addObserver(observer);
+  public void addLogonObserver(final Observer observer) {
+    this.observableLogon.addObserver(observer);
   }
 
-  public void deleteLogonObserver(Observer observer) {
-    observableLogon.deleteObserver(observer);
+  public void deleteLogonObserver(final Observer observer) {
+    this.observableLogon.deleteObserver(observer);
   }
 
-  private quickfix.examples.banzai.fix.FixMessageBuilder getFixMessageBuilder(String beginString) {
+  private quickfix.examples.banzai.fix.FixMessageBuilder getFixMessageBuilder(final String beginString) {
     return fixMessageBuilderFactory.getFixMessageBuilder(beginString);
   }
 }

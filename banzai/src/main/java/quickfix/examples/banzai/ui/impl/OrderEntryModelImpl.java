@@ -17,7 +17,7 @@ import quickfix.examples.banzai.OrderType;
 import quickfix.examples.banzai.ui.OrderEntryModel;
 
 @Component("orderEntryModel")
-public class OrderEntryModelModelImpl implements OrderEntryModel {
+public class OrderEntryModelImpl implements OrderEntryModel {
 
   private ObjectProperty<Order> selectedOrder = new SimpleObjectProperty<>();
 
@@ -26,7 +26,7 @@ public class OrderEntryModelModelImpl implements OrderEntryModel {
   private final ObservableList<OrderTIF> tifList;
   private final ObservableList<SessionID> sessionList;
 
-  public OrderEntryModelModelImpl() {
+  public OrderEntryModelImpl() {
     this.sideList = observableArrayList();
     this.typeList = observableArrayList();
     this.tifList = observableArrayList();

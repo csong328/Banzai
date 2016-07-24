@@ -36,26 +36,26 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
   private final MessageFactory messageFactory;
   private final String beginString;
 
-  public DefaultFixMessageBuilder(MessageFactory messageFactory, String beginString) {
+  public DefaultFixMessageBuilder(final MessageFactory messageFactory, final String beginString) {
     super();
     this.messageFactory = messageFactory;
     this.beginString = beginString;
   }
 
-  public Message businessReject(Message message, int rejectReason,
-                                String rejectText) throws FieldNotFound {
-    Message reply = sessionReject(message, rejectReason);
+  public Message businessReject(final Message message, final int rejectReason,
+                                final String rejectText) throws FieldNotFound {
+    final Message reply = sessionReject(message, rejectReason);
     reply.setString(Text.FIELD, rejectText);
     return reply;
   }
 
-  public Message sessionReject(Message message, int rejectReason)
+  public Message sessionReject(final Message message, final int rejectReason)
           throws FieldNotFound {
 
     checkArgument(this.beginString.equals(message.getHeader().getString(BeginString.FIELD)), "version mismatch");
-    Message reply = createMessage(MsgType.REJECT);
+    final Message reply = createMessage(MsgType.REJECT);
     reverseRoute(message, reply);
-    String refSeqNum = message.getHeader().getString(MsgSeqNum.FIELD);
+    final String refSeqNum = message.getHeader().getString(MsgSeqNum.FIELD);
     reply.setString(RefSeqNum.FIELD, refSeqNum);
     reply.setString(RefMsgType.FIELD,
             message.getHeader().getString(MsgType.FIELD));
@@ -63,11 +63,11 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
     return reply;
   }
 
-  protected Message createMessage(String msgType) {
-    return messageFactory.create(beginString, msgType);
+  protected Message createMessage(final String msgType) {
+    return this.messageFactory.create(this.beginString, msgType);
   }
 
-  private void reverseRoute(Message message, Message reply)
+  private void reverseRoute(final Message message, final Message reply)
           throws FieldNotFound {
     reply.getHeader().setString(SenderCompID.FIELD,
             message.getHeader().getString(TargetCompID.FIELD));
@@ -75,14 +75,14 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
             message.getHeader().getString(SenderCompID.FIELD));
   }
 
-  public Message newOrder(Order order) {
-    Message newOrderSingle = createNewOrderSingle(order);
+  public Message newOrder(final Order order) {
+    final Message newOrderSingle = createNewOrderSingle(order);
     populateOrder(order, newOrderSingle);
     return newOrderSingle;
   }
 
-  private Message populateOrder(Order order, Message newOrderSingle) {
-    OrderType type = order.getType();
+  private Message populateOrder(final Order order, final Message newOrderSingle) {
+    final OrderType type = order.getType();
 
     if (type == OrderType.LIMIT)
       newOrderSingle.setField(new Price(order.getLimit().doubleValue()));
@@ -102,14 +102,14 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
     return newOrderSingle;
   }
 
-  public Message replace(Order order, Order newOrder) {
-    Message message = createReplaceRequest(order, newOrder);
+  public Message replace(final Order order, final Order newOrder) {
+    final Message message = createReplaceRequest(order, newOrder);
     populateCancelReplace(order, newOrder, message);
     return message;
   }
 
-  private Message populateCancelReplace(Order order, Order newOrder,
-                                        quickfix.Message message) {
+  private Message populateCancelReplace(final Order order, final Order newOrder,
+                                        final quickfix.Message message) {
     message.setField(new OrderQty(newOrder.getQuantity()));
     message.setField(typeToFIXType(newOrder.getType()));
     if (newOrder.getLimit() != null)
@@ -117,11 +117,11 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
     return message;
   }
 
-  public Message cancel(Order order) {
+  public Message cancel(final Order order) {
     return createCancelRequest(order);
   }
 
-  protected Message createNewOrderSingle(Order order) {
+  protected Message createNewOrderSingle(final Order order) {
     return MessageBuilder.newBuilder(createMessage("D"))
             .setField(new ClOrdID(order.getID()))
             .setField(new HandlInst('1'))
@@ -131,7 +131,7 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
             .setField(typeToFIXType(order.getType())).build();
   }
 
-  protected Message createReplaceRequest(Order order, Order newOrder) {
+  protected Message createReplaceRequest(final Order order, final Order newOrder) {
     return MessageBuilder.newBuilder(createMessage("G"))
             .setField(new OrigClOrdID(order.getID()))
             .setField(new ClOrdID(newOrder.getID()))
@@ -143,7 +143,7 @@ public class DefaultFixMessageBuilder implements FixMessageBuilder {
             .setField(typeToFIXType(newOrder.getType())).build();
   }
 
-  protected Message createCancelRequest(Order order) {
+  protected Message createCancelRequest(final Order order) {
     return MessageBuilder.newBuilder(createMessage("F"))
             .setField(new OrigClOrdID(order.getOriginalID()))
             .setField(new ClOrdID(order.getID()))

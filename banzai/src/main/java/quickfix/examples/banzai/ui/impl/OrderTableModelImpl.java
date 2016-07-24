@@ -25,21 +25,21 @@ public class OrderTableModelImpl implements OrderTableModel {
   }
 
   @Override
-  public void addOrder(Order order) {
-    orderList.add(order);
+  public void addOrder(final Order order) {
+    this.orderList.add(order);
   }
 
   @Override
-  public void replaceOrder(Order newOrder) {
-    int index = getIndex(newOrder.getOriginalID());
+  public void replaceOrder(final Order newOrder) {
+    final int index = getIndex(newOrder.getOriginalID());
     if (index != -1) {
-      orderList.set(index, newOrder);
+      this.orderList.set(index, newOrder);
     }
   }
 
-  public int getIndex(String ID) {
-    for (int i = 0; i < orderList.size(); i++) {
-      Order item = orderList.get(i);
+  public int getIndex(final String ID) {
+    for (int i = 0; i < this.orderList.size(); i++) {
+      final Order item = this.orderList.get(i);
       if (item.getID().equals(ID)) {
         return i;
       }

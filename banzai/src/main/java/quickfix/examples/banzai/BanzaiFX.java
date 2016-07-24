@@ -44,27 +44,27 @@ public class BanzaiFX extends Application {
   public void init() throws Exception {
     super.init();
     this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-    quickfix.Application application = applicationContext.getBean(quickfix.Application.class);
+    final quickfix.Application application = this.applicationContext.getBean(quickfix.Application.class);
 
-    OrderEntryControllerImpl orderEntryController =
-            applicationContext.getBean(OrderEntryControllerImpl.class);
-    BanzaiServiceImpl banzaiApplication = applicationContext.getBean(BanzaiServiceImpl.class);
+    final OrderEntryControllerImpl orderEntryController =
+            this.applicationContext.getBean(OrderEntryControllerImpl.class);
+    final BanzaiServiceImpl banzaiApplication = this.applicationContext.getBean(BanzaiServiceImpl.class);
     banzaiApplication.addLogonObserver(orderEntryController);
 
-    SessionSettings settings = getSessionSettings(parameters);
-    boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));
-    MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
-    LogFactory logFactory = new ScreenLogFactory(true, true, true, logHeartbeats);
-    MessageFactory messageFactory = new DefaultMessageFactory();
+    final SessionSettings settings = getSessionSettings(parameters);
+    final boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));
+    final MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
+    final LogFactory logFactory = new ScreenLogFactory(true, true, true, logHeartbeats);
+    final MessageFactory messageFactory = new DefaultMessageFactory();
 
     this.initiator =
             new SocketInitiator(application, messageStoreFactory, settings, logFactory, messageFactory);
 
-    JmxExporter exporter = new JmxExporter();
-    exporter.register(initiator);
+    final JmxExporter exporter = new JmxExporter();
+    exporter.register(this.initiator);
   }
 
-  private SessionSettings getSessionSettings(String[] args) throws Exception {
+  private SessionSettings getSessionSettings(final String[] args) throws Exception {
     try (InputStream inputStream = args.length == 0
             ? BanzaiFX.class.getResourceAsStream("banzai.cfg")
             : new FileInputStream(args[0])) {
@@ -75,12 +75,12 @@ public class BanzaiFX extends Application {
   }
 
   @Override
-  public void start(Stage primaryStage) throws Exception {
-    Parent root = SpringFXMLLoader.create().applicationContext(applicationContext)
+  public void start(final Stage primaryStage) throws Exception {
+    final Parent root = SpringFXMLLoader.create().applicationContext(this.applicationContext)
             .location(getClass().getResource("ui/banzai.fxml")).load();
 
     primaryStage.setTitle("BanzaiFX");
-    Scene scene = new Scene(root, 800, 400);
+    final Scene scene = new Scene(root, 800, 400);
     primaryStage.setScene(scene);
     primaryStage.show();
 
@@ -90,33 +90,33 @@ public class BanzaiFX extends Application {
   @Override
   public void stop() {
     logout();
-    if (applicationContext != null) {
-      applicationContext.close();
+    if (this.applicationContext != null) {
+      this.applicationContext.close();
     }
   }
 
   private synchronized void logon() {
-    if (!initiatorStarted) {
+    if (!this.initiatorStarted) {
       try {
-        initiator.start();
-        initiatorStarted = true;
-      } catch (Exception e) {
+        this.initiator.start();
+        this.initiatorStarted = true;
+      } catch (final Exception e) {
         logger.error("Logon failed", e);
       }
     } else {
-      for (SessionID sessionId : initiator.getSessions()) {
+      for (final SessionID sessionId : this.initiator.getSessions()) {
         Session.lookupSession(sessionId).logon();
       }
     }
   }
 
   private void logout() {
-    for (SessionID sessionId : initiator.getSessions()) {
+    for (final SessionID sessionId : this.initiator.getSessions()) {
       Session.lookupSession(sessionId).logout("user requested");
     }
   }
 
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
     parameters = args;
     launch(args);
   }

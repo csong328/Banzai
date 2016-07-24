@@ -29,36 +29,36 @@ import javafx.beans.property.StringProperty;
 import quickfix.SessionID;
 
 public class Order implements Cloneable {
-  private ObjectProperty<SessionID> sessionID = new SimpleObjectProperty<>();
-  private StringProperty symbol = new SimpleStringProperty();
-  private IntegerProperty quantity = new SimpleIntegerProperty(0);
-  private IntegerProperty open = new SimpleIntegerProperty(0);
-  private IntegerProperty executed = new SimpleIntegerProperty(0);
-  private ObjectProperty<OrderSide> side = new SimpleObjectProperty<>(OrderSide.BUY);
-  private ObjectProperty<OrderType> type = new SimpleObjectProperty<>(OrderType.MARKET);
-  private ObjectProperty<OrderTIF> tif = new SimpleObjectProperty<>(OrderTIF.DAY);
-  private ObjectProperty<Double> limit = new SimpleObjectProperty<>();
-  private ObjectProperty<Double> stop = new SimpleObjectProperty<>();
-  private DoubleProperty avgPx = new SimpleDoubleProperty(0.0);
-  private BooleanProperty rejected = new SimpleBooleanProperty(false);
-  private BooleanProperty canceled = new SimpleBooleanProperty(false);
-  private BooleanProperty isNew = new SimpleBooleanProperty(true);
-  private StringProperty message = new SimpleStringProperty();
-  private StringProperty orderID = new SimpleStringProperty();
-  private StringProperty ID = new SimpleStringProperty();
-  private StringProperty originalID = new SimpleStringProperty();
+  private final ObjectProperty<SessionID> sessionID = new SimpleObjectProperty<>();
+  private final StringProperty symbol = new SimpleStringProperty();
+  private final IntegerProperty quantity = new SimpleIntegerProperty(0);
+  private final IntegerProperty open = new SimpleIntegerProperty(0);
+  private final IntegerProperty executed = new SimpleIntegerProperty(0);
+  private final ObjectProperty<OrderSide> side = new SimpleObjectProperty<>(OrderSide.BUY);
+  private final ObjectProperty<OrderType> type = new SimpleObjectProperty<>(OrderType.MARKET);
+  private final ObjectProperty<OrderTIF> tif = new SimpleObjectProperty<>(OrderTIF.DAY);
+  private final ObjectProperty<Double> limit = new SimpleObjectProperty<>();
+  private final ObjectProperty<Double> stop = new SimpleObjectProperty<>();
+  private final DoubleProperty avgPx = new SimpleDoubleProperty(0.0);
+  private final BooleanProperty rejected = new SimpleBooleanProperty(false);
+  private final BooleanProperty canceled = new SimpleBooleanProperty(false);
+  private final BooleanProperty isNew = new SimpleBooleanProperty(true);
+  private final StringProperty message = new SimpleStringProperty();
+  private final StringProperty orderID = new SimpleStringProperty();
+  private final StringProperty ID = new SimpleStringProperty();
+  private final StringProperty originalID = new SimpleStringProperty();
   private static int nextID = 1;
 
   public Order() {
-    ID.set(generateID());
+    this.ID.set(generateID());
   }
 
-  public Order(String ID) {
+  public Order(final String ID) {
     this.ID.set(ID);
   }
 
   public Object clone() {
-    Order order = new Order();
+    final Order order = new Order();
     order.setOriginalID(getID());
     order.setSessionID(getSessionID());
     order.setSymbol(getSymbol());
@@ -90,7 +90,7 @@ public class Order implements Cloneable {
     return sessionIDProperty().get();
   }
 
-  public void setSessionID(SessionID sessionID) {
+  public void setSessionID(final SessionID sessionID) {
     sessionIDProperty().set(sessionID);
   }
 
@@ -102,7 +102,7 @@ public class Order implements Cloneable {
     return symbolProperty().get();
   }
 
-  public void setSymbol(String symbol) {
+  public void setSymbol(final String symbol) {
     symbolProperty().set(symbol);
   }
 
@@ -114,7 +114,7 @@ public class Order implements Cloneable {
     return quantityProperty().get();
   }
 
-  public void setQuantity(int quantity) {
+  public void setQuantity(final int quantity) {
     quantityProperty().set(quantity);
   }
 
@@ -126,7 +126,7 @@ public class Order implements Cloneable {
     return openProperty().get();
   }
 
-  public void setOpen(int open) {
+  public void setOpen(final int open) {
     openProperty().set(open);
   }
 
@@ -138,7 +138,7 @@ public class Order implements Cloneable {
     return executedProperty().get();
   }
 
-  public void setExecuted(int executed) {
+  public void setExecuted(final int executed) {
     executedProperty().set(executed);
   }
 
@@ -150,7 +150,7 @@ public class Order implements Cloneable {
     return sideProperty().get();
   }
 
-  public void setSide(OrderSide side) {
+  public void setSide(final OrderSide side) {
     sideProperty().set(side);
   }
 
@@ -162,7 +162,7 @@ public class Order implements Cloneable {
     return typeProperty().get();
   }
 
-  public void setType(OrderType type) {
+  public void setType(final OrderType type) {
     typeProperty().set(type);
   }
 
@@ -174,7 +174,7 @@ public class Order implements Cloneable {
     return tifProperty().get();
   }
 
-  public void setTIF(OrderTIF tif) {
+  public void setTIF(final OrderTIF tif) {
     tifProperty().set(tif);
   }
 
@@ -186,11 +186,11 @@ public class Order implements Cloneable {
     return limitProperty().get();
   }
 
-  public void setLimit(Double limit) {
+  public void setLimit(final Double limit) {
     limitProperty().set(limit);
   }
 
-  public void setLimit(String limit) {
+  public void setLimit(final String limit) {
     if (limit == null || limit.equals("")) {
       limitProperty().set(null);
     } else {
@@ -206,11 +206,11 @@ public class Order implements Cloneable {
     return stopProperty().get();
   }
 
-  public void setStop(Double stop) {
+  public void setStop(final Double stop) {
     stopProperty().set(stop);
   }
 
-  public void setStop(String stop) {
+  public void setStop(final String stop) {
     if (stop == null || stop.equals("")) {
       stopProperty().set(null);
     } else {
@@ -222,7 +222,7 @@ public class Order implements Cloneable {
     return this.avgPx;
   }
 
-  public void setAvgPx(double avgPx) {
+  public void setAvgPx(final double avgPx) {
     avgPxProperty().set(avgPx);
   }
 
@@ -234,7 +234,7 @@ public class Order implements Cloneable {
     return this.rejected;
   }
 
-  public void setRejected(boolean rejected) {
+  public void setRejected(final boolean rejected) {
     rejectedProperty().set(rejected);
   }
 
@@ -246,7 +246,7 @@ public class Order implements Cloneable {
     return this.canceled;
   }
 
-  public void setCanceled(boolean canceled) {
+  public void setCanceled(final boolean canceled) {
     canceledProperty().set(canceled);
   }
 
@@ -258,7 +258,7 @@ public class Order implements Cloneable {
     return this.isNew;
   }
 
-  public void setNew(boolean isNew) {
+  public void setNew(final boolean isNew) {
     isNewProperty().set(isNew);
   }
 
@@ -270,7 +270,7 @@ public class Order implements Cloneable {
     return this.message;
   }
 
-  public void setMessage(String message) {
+  public void setMessage(final String message) {
     messageProperty().set(message);
   }
 
@@ -283,18 +283,18 @@ public class Order implements Cloneable {
   }
 
   public String getOrderID() {
-    return orderID.get();
+    return this.orderID.get();
   }
 
   public StringProperty orderIDProperty() {
-    return orderID;
+    return this.orderID;
   }
 
-  public void setOrderID(String orderID) {
+  public void setOrderID(final String orderID) {
     this.orderID.set(orderID);
   }
 
-  public void setID(String ID) {
+  public void setID(final String ID) {
     idProperty().set(ID);
   }
 
@@ -306,12 +306,12 @@ public class Order implements Cloneable {
     return this.originalID;
   }
 
-  public void setOriginalID(String originalID) {
+  public void setOriginalID(final String originalID) {
     originalIDProperty().set(originalID);
   }
 
   public String getOriginalID() {
-    return originalID.get();
+    return this.originalID.get();
   }
 
 }
