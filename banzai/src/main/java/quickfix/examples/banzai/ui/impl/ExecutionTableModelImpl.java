@@ -12,7 +12,7 @@ import quickfix.examples.banzai.ui.ExecutionTableModel;
 import static javafx.collections.FXCollections.observableArrayList;
 
 @Component("executionTableModel")
-public class ExecutionTableModelImpl implements ExecutionTableModel {
+public class ExecutionTableModelImpl implements ExecutionTableModel<Execution> {
   private final ObservableList<Execution> executionList;
   private final Map<String, Execution> exchangeIdToExecution = new HashMap<>();
 

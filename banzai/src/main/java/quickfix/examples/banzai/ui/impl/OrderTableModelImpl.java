@@ -11,30 +11,27 @@ import quickfix.examples.banzai.ui.OrderTableModel;
 import static javafx.collections.FXCollections.observableArrayList;
 
 @Component("orderTableModel")
-public class OrderTableModelImpl implements OrderTableModel {
-  private final ObservableList<Order> orderList;
+public class OrderTableModelImpl implements OrderTableModel<OrderImpl> {
+  private final ObservableList<OrderImpl> orderList;
 
   public OrderTableModelImpl() {
     this.orderList = observableArrayList(
-            order -> {
-              final OrderImpl o = (OrderImpl) order;
-              return new Observable[]{o.executedProperty(), o.openProperty(), o.avgPxProperty(),
-                      o.messageProperty(), o.canceledProperty(), o.isNewProperty(), o.rejectedProperty()};
-            });
+            o -> new Observable[]{o.executedProperty(), o.openProperty(), o.avgPxProperty(),
+                    o.messageProperty(), o.canceledProperty(), o.isNewProperty(), o.rejectedProperty()});
   }
 
   @Override
-  public ObservableList<Order> getOrderList() {
+  public ObservableList<OrderImpl> getOrderList() {
     return this.orderList;
   }
 
   @Override
-  public void addOrder(final Order order) {
+  public void addOrder(final OrderImpl order) {
     this.orderList.add(order);
   }
 
   @Override
-  public void replaceOrder(final Order newOrder) {
+  public void replaceOrder(final OrderImpl newOrder) {
     final int index = getIndex(newOrder.getOriginalID());
     if (index != -1) {
       this.orderList.set(index, newOrder);

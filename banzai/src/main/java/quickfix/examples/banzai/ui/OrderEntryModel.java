@@ -8,13 +8,13 @@ import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
 
-public interface OrderEntryModel {
+public interface OrderEntryModel<T extends Order> {
 
-  ObjectProperty<Order> selectedOrderProperty();
+  ObjectProperty<T> selectedOrderProperty();
 
-  Order getSelectedOrder();
+  T getSelectedOrder();
 
-  void setSelectedOrder(Order order);
+  void setSelectedOrder(T order);
 
   ObservableList<OrderSide> getSideList();
 

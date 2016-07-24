@@ -3,9 +3,9 @@ package quickfix.examples.banzai.ui;
 import javafx.event.Event;
 import quickfix.examples.banzai.Execution;
 
-public interface ExecutionTableController {
+public interface ExecutionTableController<T extends Execution> {
 
-  void addExecution(Execution execution);
+  void addExecution(T execution);
 
   void clear();
 

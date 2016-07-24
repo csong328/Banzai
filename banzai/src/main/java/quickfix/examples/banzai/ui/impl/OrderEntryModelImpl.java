@@ -17,7 +17,7 @@ import quickfix.examples.banzai.ui.OrderEntryModel;
 import static javafx.collections.FXCollections.observableArrayList;
 
 @Component("orderEntryModel")
-public class OrderEntryModelImpl implements OrderEntryModel {
+public class OrderEntryModelImpl implements OrderEntryModel<Order> {
 
   private final ObjectProperty<Order> selectedOrder = new SimpleObjectProperty<>();
 

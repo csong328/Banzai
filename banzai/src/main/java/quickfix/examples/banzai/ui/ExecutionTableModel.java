@@ -3,13 +3,13 @@ package quickfix.examples.banzai.ui;
 import javafx.collections.ObservableList;
 import quickfix.examples.banzai.Execution;
 
-public interface ExecutionTableModel {
+public interface ExecutionTableModel<T extends Execution> {
 
-  ObservableList<Execution> getExecutionList();
+  ObservableList<T> getExecutionList();
 
-  void addExecution(Execution execution);
+  void addExecution(T execution);
 
-  Execution getExchangeExecution(String exchangeID);
+  T getExchangeExecution(String exchangeID);
 
   void clear();
 }

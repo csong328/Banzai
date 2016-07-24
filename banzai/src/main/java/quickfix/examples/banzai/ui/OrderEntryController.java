@@ -6,9 +6,9 @@ import javafx.event.ActionEvent;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.ui.event.OrderEventSource;
 
-public interface OrderEntryController extends OrderEventSource, Observer {
+public interface OrderEntryController<T extends Order> extends OrderEventSource, Observer {
 
-  void setSelectedOrder(Order order);
+  void setSelectedOrder(T order);
 
   void onNewOrder(ActionEvent actionEvent);
 

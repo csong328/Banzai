@@ -38,7 +38,7 @@ import static quickfix.examples.banzai.utils.FXUtils.integerFieldChangeListener;
 
 @Component("orderEntryController")
 @Lazy
-public class OrderEntryControllerImpl extends SimpleOrderEventSource implements OrderEntryController, Initializable, Observer {
+public class OrderEntryControllerImpl extends SimpleOrderEventSource implements OrderEntryController<Order>, Initializable, Observer {
 
   @FXML
   private TextField symbolTextField;
@@ -74,7 +74,7 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
   private Button replaceButton;
 
   @Autowired
-  private OrderEntryModel orderEntryModel;
+  private OrderEntryModel<Order> orderEntryModel;
 
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {

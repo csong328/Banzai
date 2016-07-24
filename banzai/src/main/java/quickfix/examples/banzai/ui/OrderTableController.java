@@ -4,11 +4,11 @@ import javafx.scene.input.MouseEvent;
 import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.ui.event.OrderEventSource;
 
-public interface OrderTableController extends OrderEventSource {
+public interface OrderTableController<T extends Order> extends OrderEventSource {
 
-  void addOrder(Order order);
+  void addOrder(T order);
 
-  void replaceOrder(Order order);
+  void replaceOrder(T order);
 
   void clear();
 

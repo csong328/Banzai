@@ -3,13 +3,13 @@ package quickfix.examples.banzai.ui;
 import javafx.collections.ObservableList;
 import quickfix.examples.banzai.Order;
 
-public interface OrderTableModel {
+public interface OrderTableModel<T extends Order> {
 
-  ObservableList<Order> getOrderList();
+  ObservableList<T> getOrderList();
 
-  void addOrder(Order order);
+  void addOrder(T order);
 
-  void replaceOrder(Order newOrder);
+  void replaceOrder(T newOrder);
 
   void clear();
 }
