@@ -42,12 +42,12 @@ public class BanzaiFX extends javafx.application.Application {
     super.init();
     this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class, UIControlConfig.class);
 
-    final quickfix.Application application = this.applicationContext.getBean(quickfix.Application.class);
-
     final SessionSettings settings = getSessionSettings(parameters);
-    final boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));
     final MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
+    final boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));
     final LogFactory logFactory = new ScreenLogFactory(true, true, true, logHeartbeats);
+
+    final quickfix.Application application = this.applicationContext.getBean(quickfix.Application.class);
     final MessageFactory messageFactory = this.applicationContext.getBean(MessageFactory.class);
 
     this.initiator =
