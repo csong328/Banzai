@@ -8,11 +8,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import quickfix.DefaultMessageFactory;
 import quickfix.FileStoreFactory;
 import quickfix.Initiator;
 import quickfix.LogFactory;
@@ -24,14 +22,12 @@ import quickfix.SessionID;
 import quickfix.SessionSettings;
 import quickfix.SocketInitiator;
 import quickfix.examples.banzai.application.ApplicationConfig;
-import quickfix.examples.banzai.application.IMarketConnectivity;
 import quickfix.examples.banzai.application.UIControlConfig;
-import quickfix.examples.banzai.ui.impl.OrderEntryControllerImpl;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class BanzaiFX extends Application {
+public class BanzaiFX extends javafx.application.Application {
   private static final Logger logger = LoggerFactory.getLogger(BanzaiFX.class);
 
   private AnnotationConfigApplicationContext applicationContext;
@@ -45,19 +41,14 @@ public class BanzaiFX extends Application {
   public void init() throws Exception {
     super.init();
     this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class, UIControlConfig.class);
+
     final quickfix.Application application = this.applicationContext.getBean(quickfix.Application.class);
-
-    final OrderEntryControllerImpl orderEntryController =
-            this.applicationContext.getBean(OrderEntryControllerImpl.class);
-
-    final IMarketConnectivity marketConnectivity = this.applicationContext.getBean(IMarketConnectivity.class);
-    marketConnectivity.addLogonObserver(orderEntryController);
 
     final SessionSettings settings = getSessionSettings(parameters);
     final boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));
     final MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
     final LogFactory logFactory = new ScreenLogFactory(true, true, true, logHeartbeats);
-    final MessageFactory messageFactory = new DefaultMessageFactory();
+    final MessageFactory messageFactory = this.applicationContext.getBean(MessageFactory.class);
 
     this.initiator =
             new SocketInitiator(application, messageStoreFactory, settings, logFactory, messageFactory);

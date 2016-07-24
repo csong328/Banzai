@@ -31,6 +31,7 @@ public class BanzaiEventAggregator implements OrderEventListener {
   @PostConstruct
   public void init() {
     this.connectivity.addOrderEventListener(this);
+    this.connectivity.addLogonObserver(this.orderEntryController);
     this.orderEntryController.addOrderEventListener(this);
     this.orderTableController.addOrderEventListener(this);
   }
