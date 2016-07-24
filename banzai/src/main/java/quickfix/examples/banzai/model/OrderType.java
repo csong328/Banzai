@@ -1,12 +1,12 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
-public enum OrderTIF {
-  DAY("Day", '0'), IOC("IOC", '3'), OPG("OPG", '2'), GTC("GTC", '1'), GTX("GTX", '5');
+public enum OrderType {
+  MARKET("Market", '1'), LIMIT("Limit", '2'), STOP("Stop", '3'), STOP_LIMIT("Stop Limit", '4');
 
   private final String name;
   private final char value;
 
-  OrderTIF(final String name, final char value) {
+  OrderType(final String name, final char value) {
     this.name = name;
     this.value = value;
   }

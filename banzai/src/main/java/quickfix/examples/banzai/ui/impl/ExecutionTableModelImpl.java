@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.collections.ObservableList;
-import quickfix.examples.banzai.ExecutionImpl;
+import quickfix.examples.banzai.model.ExecutionImpl;
 import quickfix.examples.banzai.ui.ExecutionTableModel;
 
 import static javafx.collections.FXCollections.observableArrayList;

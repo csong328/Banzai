@@ -19,12 +19,11 @@ import javafx.scene.control.TableRow;
 import javafx.stage.Stage;
 import quickfix.FixVersions;
 import quickfix.SessionID;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderImpl;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderTIF;
-import quickfix.examples.banzai.OrderType;
-import quickfix.examples.banzai.application.UIControlConfig;
+import quickfix.examples.banzai.model.Order;
+import quickfix.examples.banzai.model.OrderFactory;
+import quickfix.examples.banzai.model.OrderSide;
+import quickfix.examples.banzai.model.OrderTIF;
+import quickfix.examples.banzai.model.OrderType;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.impl.OrderTableControllerImpl;
@@ -38,12 +37,14 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TableViewMatchers.hasItems;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UIControlConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class OrderTableViewTest extends ApplicationTest {
   @Autowired
   private ApplicationContext applicationContext;
   @Autowired
   private OrderTableControllerImpl orderTableController;
+  @Autowired
+  private OrderFactory orderFactory;
   @Mock
   private OrderEventListener listener;
 
@@ -129,7 +130,7 @@ public class OrderTableViewTest extends ApplicationTest {
   }
 
   private Order newOrder() {
-    final Order order = new OrderImpl();
+    final Order order = this.orderFactory.newOrder();
     order.setSymbol("MSFT");
     order.setQuantity(100);
     order.setSide(OrderSide.BUY);
@@ -140,7 +141,8 @@ public class OrderTableViewTest extends ApplicationTest {
   }
 
   private Order replaceOrder(final Order order) {
-    final Order newOrder = (Order) order.clone();
+    final Order newOrder = this.orderFactory.newOrder();
+    newOrder.copy(order);
     newOrder.setQuantity(order.getQuantity() + 100);
     return newOrder;
   }

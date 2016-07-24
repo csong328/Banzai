@@ -3,7 +3,7 @@ package quickfix.examples.banzai.fix;
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionNotFound;
-import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.model.Order;
 
 public interface FixMessageBuilder {
   Message newOrder(Order order);

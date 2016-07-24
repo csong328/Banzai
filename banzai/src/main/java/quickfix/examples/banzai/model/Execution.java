@@ -1,4 +1,4 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 public interface Execution {
   String getSymbol();

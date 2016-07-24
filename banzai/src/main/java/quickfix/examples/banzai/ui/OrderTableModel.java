@@ -1,7 +1,7 @@
 package quickfix.examples.banzai.ui;
 
 import javafx.collections.ObservableList;
-import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.model.Order;
 
 public interface OrderTableModel<T extends Order> {
 

@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import quickfix.FixVersions;
 import quickfix.Message;
 import quickfix.MessageFactory;
-import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.model.Order;
 import quickfix.field.CxlType;
 import quickfix.field.TransactTime;
 

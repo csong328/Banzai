@@ -10,7 +10,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
-import quickfix.examples.banzai.Execution;
+import quickfix.examples.banzai.model.Execution;
 import quickfix.examples.banzai.ui.ExecutionTableController;
 import quickfix.examples.banzai.ui.ExecutionTableModel;
 

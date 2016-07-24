@@ -18,8 +18,8 @@ import quickfix.SessionSettings;
 import quickfix.examples.fix.builder.execution.ExecutionReportBuilder;
 import quickfix.examples.fix.builder.execution.ExecutionReportBuilderFactory;
 import quickfix.examples.utility.DefaultMessageSender;
+import quickfix.examples.utility.FIXIdGenerator;
 import quickfix.examples.utility.FixApplicationAdapter;
-import quickfix.examples.utility.IdGenerator;
 import quickfix.examples.utility.MessageSender;
 import quickfix.field.OrdStatus;
 import quickfix.field.OrdType;
@@ -40,18 +40,18 @@ public class Application extends FixApplicationAdapter {
   private static final String VALID_ORDER_TYPES_KEY = "ValidOrderTypes";
 
   private final boolean alwaysFillLimitOrders;
-  private final HashSet<String> validOrderTypes = new HashSet<String>();
+  private final HashSet<String> validOrderTypes = new HashSet<>();
   private MarketDataProvider marketDataProvider;
-  private ExecutionReportBuilderFactory builderFactory = new ExecutionReportBuilderFactory();
-  private MessageSender messageSender;
-  private IdGenerator idGenerator = new IdGenerator();
+  private final ExecutionReportBuilderFactory builderFactory = new ExecutionReportBuilderFactory();
+  private final MessageSender messageSender;
+  private final FIXIdGenerator idGenerator = new FIXIdGenerator();
 
-  public Application(SessionSettings settings) throws ConfigError,
+  public Application(final SessionSettings settings) throws ConfigError,
           FieldConvertError {
     this(settings, new DefaultMessageSender());
   }
 
-  public Application(SessionSettings settings, MessageSender messageSender)
+  public Application(final SessionSettings settings, final MessageSender messageSender)
           throws ConfigError, FieldConvertError {
     String validOrderTypesStr = null;
     if (settings.isSetting(VALID_ORDER_TYPES_KEY)) {
@@ -75,9 +75,9 @@ public class Application extends FixApplicationAdapter {
     this.messageSender = messageSender;
   }
 
-  public Application(boolean alwaysFillLimitOrders,
-                     String validOrderTypesStr, double defaultMarketPrice,
-                     MessageSender messageSender) throws ConfigError, FieldConvertError {
+  public Application(final boolean alwaysFillLimitOrders,
+                     final String validOrderTypesStr, final double defaultMarketPrice,
+                     final MessageSender messageSender) throws ConfigError, FieldConvertError {
     initializeValidOrderTypes(validOrderTypesStr);
     initializeMarketDataProvider(defaultMarketPrice);
     this.alwaysFillLimitOrders = alwaysFillLimitOrders;
@@ -87,13 +87,13 @@ public class Application extends FixApplicationAdapter {
   private void initializeMarketDataProvider(final double defaultMarketPrice)
           throws ConfigError, FieldConvertError {
     if (defaultMarketPrice > 0.0) {
-      if (marketDataProvider == null) {
-        marketDataProvider = new MarketDataProvider() {
-          public double getAsk(String symbol) {
+      if (this.marketDataProvider == null) {
+        this.marketDataProvider = new MarketDataProvider() {
+          public double getAsk(final String symbol) {
             return defaultMarketPrice;
           }
 
-          public double getBid(String symbol) {
+          public double getBid(final String symbol) {
             return defaultMarketPrice;
           }
         };
@@ -104,49 +104,49 @@ public class Application extends FixApplicationAdapter {
     }
   }
 
-  private void initializeValidOrderTypes(String validOrderTypesStr)
+  private void initializeValidOrderTypes(final String validOrderTypesStr)
           throws ConfigError, FieldConvertError {
     if (validOrderTypesStr != null) {
-      List<String> orderTypes = Arrays.asList(validOrderTypesStr
+      final List<String> orderTypes = Arrays.asList(validOrderTypesStr
               .split("\\s*,\\s*"));
-      validOrderTypes.addAll(orderTypes);
+      this.validOrderTypes.addAll(orderTypes);
     } else {
-      validOrderTypes.add(OrdType.LIMIT + "");
+      this.validOrderTypes.add(OrdType.LIMIT + "");
     }
   }
 
-  public void onCreate(SessionID sessionID) {
+  public void onCreate(final SessionID sessionID) {
     Session.lookupSession(sessionID).getLog()
-            .onEvent("Valid order types: " + validOrderTypes);
+            .onEvent("Valid order types: " + this.validOrderTypes);
   }
 
   @Override
-  protected void onNewOrder(Message order, SessionID sessionID) throws FieldNotFound {
-    ExecutionReportBuilder builder = builderFactory
+  protected void onNewOrder(final Message order, final SessionID sessionID) throws FieldNotFound {
+    final ExecutionReportBuilder builder = this.builderFactory
             .getExecutionReportBuilder(sessionID.getBeginString());
     checkNotNull(String.format("%s not supported", sessionID.getBeginString()), builder);
 
     try {
       processNewOrder(order, sessionID, builder);
-    } catch (Exception ex) {
+    } catch (final Exception ex) {
       logger.error(String.format("Failed to process %s", order), ex);
-      Message reject = builder.orderRejected(order, genOrderID(), genExecID(), ex.getMessage());
+      final Message reject = builder.orderRejected(order, genOrderID(), genExecID(), ex.getMessage());
       sendMessage(reject, sessionID);
     }
   }
 
-  private void processNewOrder(Message order, SessionID sessionID, ExecutionReportBuilder builder) throws FieldNotFound {
+  private void processNewOrder(final Message order, final SessionID sessionID, final ExecutionReportBuilder builder) throws FieldNotFound {
     validateNewOrder(order);
 
-    Message accept = builder.orderAcked(order, genOrderID(), genExecID());
+    final Message accept = builder.orderAcked(order, genOrderID(), genExecID());
     sendMessage(accept, sessionID);
 
-    double price = getPrice(order);
+    final double price = getPrice(order);
 
     if (isOrderExecutable(order, price)) {
-      double orderQty = order.getDouble(OrderQty.FIELD);
-      double fillQty = orderQty / 2;
-      Message fill = builder.fillOrder(order, accept.getString(OrderID.FIELD),
+      final double orderQty = order.getDouble(OrderQty.FIELD);
+      final double fillQty = orderQty / 2;
+      final Message fill = builder.fillOrder(order, accept.getString(OrderID.FIELD),
               genExecID(), OrdStatus.FILLED,
               fillQty, price, fillQty, price);
 
@@ -154,52 +154,52 @@ public class Application extends FixApplicationAdapter {
     }
   }
 
-  private void validateNewOrder(Message order) throws FieldNotFound {
-    OrdType ordType = new OrdType(order.getChar(OrdType.FIELD));
-    checkArgument(validOrderTypes.contains(Character.toString(ordType.getValue())), "Order type not in supported");
+  private void validateNewOrder(final Message order) throws FieldNotFound {
+    final OrdType ordType = new OrdType(order.getChar(OrdType.FIELD));
+    checkArgument(this.validOrderTypes.contains(Character.toString(ordType.getValue())), "Order type not in supported");
 
     if (ordType.getValue() == OrdType.MARKET) {
-      checkNotNull(marketDataProvider, "DefaultMarketPrice setting not specified for market order");
+      checkNotNull(this.marketDataProvider, "DefaultMarketPrice setting not specified for market order");
     }
 
-    double orderQty = order.getDouble(OrderQty.FIELD);
+    final double orderQty = order.getDouble(OrderQty.FIELD);
     checkArgument(orderQty > 0, "Invalid order qty");
 
     if (order.isSetField(Price.FIELD)) {
-      double price = order.getDouble(Price.FIELD);
+      final double price = order.getDouble(Price.FIELD);
       checkArgument(price > 0, "Invalid order qty");
     }
   }
 
-  private double getPrice(Message message) throws FieldNotFound {
+  private double getPrice(final Message message) throws FieldNotFound {
     if (message.getChar(OrdType.FIELD) == OrdType.LIMIT
-            && alwaysFillLimitOrders) {
+            && this.alwaysFillLimitOrders) {
       return message.getDouble(Price.FIELD);
     } else {
-      checkNotNull(marketDataProvider != null,
+      checkNotNull(this.marketDataProvider != null,
               "No market data provider specified for market order");
-      char side = message.getChar(Side.FIELD);
-      String symbol = message.getString(Symbol.FIELD);
+      final char side = message.getChar(Side.FIELD);
+      final String symbol = message.getString(Symbol.FIELD);
       return quotePrice(side, symbol);
     }
   }
 
-  private double quotePrice(char side, String symbol) throws FieldNotFound {
+  private double quotePrice(final char side, final String symbol) throws FieldNotFound {
     if (side == Side.BUY) {
-      return marketDataProvider.getAsk(symbol);
+      return this.marketDataProvider.getAsk(symbol);
     } else if (side == Side.SELL || side == Side.SELL_SHORT) {
-      return marketDataProvider.getBid(symbol);
+      return this.marketDataProvider.getBid(symbol);
     } else {
       throw new RuntimeException("Invalid order side: " + side);
     }
   }
 
-  private boolean isOrderExecutable(Message order, double price)
+  private boolean isOrderExecutable(final Message order, final double price)
           throws FieldNotFound {
     if (order.getChar(OrdType.FIELD) == OrdType.LIMIT) {
-      BigDecimal limitPrice = new BigDecimal(order.getString(Price.FIELD));
-      char side = order.getChar(Side.FIELD);
-      BigDecimal thePrice = new BigDecimal("" + price);
+      final BigDecimal limitPrice = new BigDecimal(order.getString(Price.FIELD));
+      final char side = order.getChar(Side.FIELD);
+      final BigDecimal thePrice = new BigDecimal("" + price);
 
       return (side == Side.BUY && thePrice.compareTo(limitPrice) <= 0)
               || ((side == Side.SELL || side == Side.SELL_SHORT) && thePrice
@@ -209,80 +209,80 @@ public class Application extends FixApplicationAdapter {
   }
 
   @Override
-  protected void onCanceleOrder(Message order, SessionID sessionID) throws FieldNotFound {
-    ExecutionReportBuilder builder = builderFactory
+  protected void onCanceleOrder(final Message order, final SessionID sessionID) throws FieldNotFound {
+    final ExecutionReportBuilder builder = this.builderFactory
             .getExecutionReportBuilder(sessionID.getBeginString());
     checkNotNull(String.format("%s not supported", sessionID.getBeginString()), builder);
 
     try {
       processCancelOrder(order, sessionID, builder);
-    } catch (Exception ex) {
+    } catch (final Exception ex) {
       logger.error(String.format("Failed to process %s", order), ex);
-      Message reject = builder.cancelRejected(order, order.getString(OrderID.FIELD), '0',
+      final Message reject = builder.cancelRejected(order, order.getString(OrderID.FIELD), '0',
               0, 0, 2);
       sendMessage(reject, sessionID);
     }
   }
 
-  private void processCancelOrder(Message order, SessionID sessionID, ExecutionReportBuilder builder) throws FieldNotFound {
+  private void processCancelOrder(final Message order, final SessionID sessionID, final ExecutionReportBuilder builder) throws FieldNotFound {
     validCancelOrder(order);
 
-    Message canceled = builder.orderCanceled(order, order.getString(OrderID.FIELD), genExecID(),
+    final Message canceled = builder.orderCanceled(order, order.getString(OrderID.FIELD), genExecID(),
             0, 0.0);
     sendMessage(canceled, sessionID);
   }
 
-  private void validCancelOrder(Message order) throws FieldNotFound {
+  private void validCancelOrder(final Message order) throws FieldNotFound {
     // TODO
   }
 
   @Override
-  protected void onReplaceOrder(Message order, SessionID sessionID) throws FieldNotFound {
-    ExecutionReportBuilder builder = builderFactory
+  protected void onReplaceOrder(final Message order, final SessionID sessionID) throws FieldNotFound {
+    final ExecutionReportBuilder builder = this.builderFactory
             .getExecutionReportBuilder(sessionID.getBeginString());
     checkNotNull(String.format("%s not supported", sessionID.getBeginString()), builder);
 
     try {
       processReplaceOrder(order, sessionID, builder);
-    } catch (Exception ex) {
+    } catch (final Exception ex) {
       logger.error(String.format("Failed to process %s", order), ex);
-      Message reject = builder.cancelRejected(order, order.getString(OrderID.FIELD), '0',
+      final Message reject = builder.cancelRejected(order, order.getString(OrderID.FIELD), '0',
               0, 0, 2);
       sendMessage(reject, sessionID);
     }
   }
 
-  private void processReplaceOrder(Message order, SessionID sessionID, ExecutionReportBuilder builder) throws FieldNotFound {
+  private void processReplaceOrder(final Message order, final SessionID sessionID, final ExecutionReportBuilder builder) throws FieldNotFound {
     validReplaceOrder(order);
 
-    Message replaced = builder.orderReplaced(order, order.getString(OrderID.FIELD), genExecID(),
+    final Message replaced = builder.orderReplaced(order, order.getString(OrderID.FIELD), genExecID(),
             0, 0.0);
     sendMessage(replaced, sessionID);
   }
 
-  private void validReplaceOrder(Message order) throws FieldNotFound {
+  private void validReplaceOrder(final Message order) throws FieldNotFound {
     // TODO
   }
 
   @Override
-  protected void onCancelReject(Message message, SessionID sessionId) {
+  protected void onCancelReject(final Message message, final SessionID sessionId) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  protected void onExecutionReport(Message message, SessionID sessionId) {
+  protected void onExecutionReport(final Message message, final SessionID sessionId) {
     throw new UnsupportedOperationException();
   }
 
   private String genExecID() {
-    return idGenerator.genExecID();
+    return this.idGenerator.genExecID();
   }
 
   private String genOrderID() {
-    return idGenerator.genOrderID();
+    return this.idGenerator.genOrderID();
   }
 
-  private void sendMessage(Message reject, SessionID sessionID) {
+  private void sendMessage(final Message reject, final SessionID sessionID) {
     this.messageSender.sendMessage(reject, sessionID);
   }
 }

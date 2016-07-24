@@ -5,7 +5,7 @@ import java.util.Observer;
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionID;
-import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.model.Order;
 import quickfix.examples.banzai.ui.event.OrderEventSource;
 
 public interface IMarketConnectivity extends OrderEventSource {

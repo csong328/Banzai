@@ -3,10 +3,10 @@ package quickfix.examples.banzai.ui;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import quickfix.SessionID;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderTIF;
-import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.model.Order;
+import quickfix.examples.banzai.model.OrderSide;
+import quickfix.examples.banzai.model.OrderTIF;
+import quickfix.examples.banzai.model.OrderType;
 
 public interface OrderEntryModel<T extends Order> {
 

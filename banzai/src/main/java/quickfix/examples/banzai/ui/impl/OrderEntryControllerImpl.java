@@ -20,12 +20,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import quickfix.FixVersions;
 import quickfix.SessionID;
-import quickfix.examples.banzai.LogonEvent;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderImpl;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderTIF;
-import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.model.LogonEvent;
+import quickfix.examples.banzai.model.Order;
+import quickfix.examples.banzai.model.OrderFactory;
+import quickfix.examples.banzai.model.OrderSide;
+import quickfix.examples.banzai.model.OrderTIF;
+import quickfix.examples.banzai.model.OrderType;
 import quickfix.examples.banzai.ui.OrderEntryController;
 import quickfix.examples.banzai.ui.OrderEntryModel;
 import quickfix.examples.banzai.ui.event.OrderEvent;
@@ -75,6 +75,9 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
 
   @Autowired
   private OrderEntryModel<Order> orderEntryModel;
+
+  @Autowired
+  private OrderFactory orderFactory;
 
   @Override
   public void initialize(final URL location, final ResourceBundle resources) {
@@ -163,7 +166,8 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
   @FXML
   public void onCancelOrder(final ActionEvent actionEvent) {
     final Order origOrder = this.orderEntryModel.getSelectedOrder();
-    final Order newOrder = (Order) origOrder.clone();
+    final Order newOrder = this.orderFactory.newOrder();
+    newOrder.copy(origOrder);
     notify(new OrderEvent(newOrder, OrderEventType.Cancel, origOrder));
     this.orderEntryModel.setSelectedOrder(null);
   }
@@ -171,7 +175,8 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
   @FXML
   public void onReplaceOrder(final ActionEvent actionEvent) {
     final Order origOrder = this.orderEntryModel.getSelectedOrder();
-    final Order newOrder = (Order) origOrder.clone();
+    final Order newOrder = this.orderFactory.newOrder();
+    newOrder.copy(origOrder);
     newOrder.setQuantity(Integer.parseInt(this.quantityTextField.getText()));
     if (origOrder.getType() == OrderType.LIMIT || origOrder.getType() == OrderType.STOP_LIMIT) {
       newOrder.setLimit(Double.parseDouble(this.limitPriceTextField.getText()));
@@ -217,7 +222,7 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
   }
 
   private Order orderEntry() {
-    final Order order = new OrderImpl();
+    final Order order = this.orderFactory.newOrder();
     order.setSide(this.sideComboBox.getValue());
     order.setType(this.typeComboBox.getValue());
     order.setTIF(this.tifComboBox.getValue());

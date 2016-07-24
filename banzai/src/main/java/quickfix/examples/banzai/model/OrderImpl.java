@@ -14,7 +14,7 @@
  * Contact ask@quickfixengine.org if any conditions of this licensing are not clear to you.
  ******************************************************************************/
 
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -28,7 +28,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import quickfix.SessionID;
 
-public class OrderImpl implements Order, Cloneable {
+public class OrderImpl implements Order {
   private final ObjectProperty<SessionID> sessionID = new SimpleObjectProperty<>();
   private final StringProperty symbol = new SimpleStringProperty();
   private final IntegerProperty quantity = new SimpleIntegerProperty(0);
@@ -47,39 +47,27 @@ public class OrderImpl implements Order, Cloneable {
   private final StringProperty orderID = new SimpleStringProperty();
   private final StringProperty ID = new SimpleStringProperty();
   private final StringProperty originalID = new SimpleStringProperty();
-  private static int nextID = 1;
 
   public OrderImpl() {
-    this.ID.set(generateID());
   }
 
-  public OrderImpl(final String ID) {
-    this.ID.set(ID);
-  }
-
-  public Object clone() {
-    final OrderImpl order = new OrderImpl();
-    order.setOriginalID(getID());
-    order.setSessionID(getSessionID());
-    order.setSymbol(getSymbol());
-    order.setQuantity(getQuantity());
-    order.setOpen(getOpen());
-    order.setExecuted(getExecuted());
-    order.setSide(getSide());
-    order.setType(getType());
-    order.setTIF(getTIF());
-    order.setLimit(getLimit());
-    order.setStop(getStop());
-    order.setAvgPx(getAvgPx());
-    order.setRejected(getRejected());
-    order.setCanceled(getCanceled());
-    order.setMessage(getMessage());
-    order.setOrderID(getOrderID());
-    return order;
-  }
-
-  public String generateID() {
-    return Long.toString(System.currentTimeMillis() + (nextID++));
+  public void copy(final Order other) {
+    this.setOriginalID(other.getID());
+    this.setSessionID(other.getSessionID());
+    this.setSymbol(other.getSymbol());
+    this.setQuantity(other.getQuantity());
+    this.setOpen(other.getOpen());
+    this.setExecuted(other.getExecuted());
+    this.setSide(other.getSide());
+    this.setType(other.getType());
+    this.setTIF(other.getTIF());
+    this.setLimit(other.getLimit());
+    this.setStop(other.getStop());
+    this.setAvgPx(other.getAvgPx());
+    this.setRejected(other.getRejected());
+    this.setCanceled(other.getCanceled());
+    this.setMessage(other.getMessage());
+    this.setOrderID(other.getOrderID());
   }
 
   public ObjectProperty<SessionID> sessionIDProperty() {

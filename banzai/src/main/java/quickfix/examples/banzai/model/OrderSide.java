@@ -1,4 +1,4 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 public enum OrderSide {
   BUY("Buy", '1'), SELL("Sell", '2'), SHORT_SELL("Short Sell", '5'), SHORT_SELL_EXEMPT(
@@ -11,7 +11,7 @@ public enum OrderSide {
     this.name = name;
     this.value = value;
   }
-  
+
   public char getValue() {
     return this.value;
   }

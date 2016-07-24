@@ -21,13 +21,12 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import quickfix.FixVersions;
 import quickfix.SessionID;
-import quickfix.examples.banzai.LogonEvent;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderImpl;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderTIF;
-import quickfix.examples.banzai.OrderType;
-import quickfix.examples.banzai.application.UIControlConfig;
+import quickfix.examples.banzai.model.LogonEvent;
+import quickfix.examples.banzai.model.Order;
+import quickfix.examples.banzai.model.OrderFactory;
+import quickfix.examples.banzai.model.OrderSide;
+import quickfix.examples.banzai.model.OrderTIF;
+import quickfix.examples.banzai.model.OrderType;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
 import quickfix.examples.banzai.ui.event.OrderEventType;
@@ -44,12 +43,14 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UIControlConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class OrderEntryViewTest extends ApplicationTest {
   @Autowired
   private ApplicationContext applicationContext;
   @Autowired
   private OrderEntryControllerImpl orderEntryController;
+  @Autowired
+  private OrderFactory orderFactory;
 
   @Mock
   private OrderEventListener listener;
@@ -254,7 +255,7 @@ public class OrderEntryViewTest extends ApplicationTest {
   }
 
   private void prepareMarketOrder() {
-    final Order order = new OrderImpl();
+    final Order order = this.orderFactory.newOrder();
     order.setSymbol("MSFT");
     order.setQuantity(100);
     order.setSide(OrderSide.BUY);

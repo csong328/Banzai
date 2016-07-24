@@ -14,7 +14,7 @@
  * Contact ask@quickfixengine.org if any conditions of this licensing are not clear to you.
  ******************************************************************************/
 
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 import quickfix.SessionID;
 
@@ -26,16 +26,16 @@ public class LogonEvent {
    */
   private final boolean loggedOn;
 
-  public LogonEvent(SessionID sessionID, boolean loggedOn) {
+  public LogonEvent(final SessionID sessionID, final boolean loggedOn) {
     this.sessionID = sessionID;
     this.loggedOn = loggedOn;
   }
 
   public SessionID getSessionID() {
-    return sessionID;
+    return this.sessionID;
   }
 
   public boolean isLoggedOn() {
-    return loggedOn;
+    return this.loggedOn;
   }
 }

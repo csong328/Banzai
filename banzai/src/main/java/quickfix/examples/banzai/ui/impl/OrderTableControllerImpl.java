@@ -14,7 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
-import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.model.Order;
 import quickfix.examples.banzai.ui.OrderTableController;
 import quickfix.examples.banzai.ui.OrderTableModel;
 import quickfix.examples.banzai.ui.event.OrderEvent;

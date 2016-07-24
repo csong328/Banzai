@@ -1,6 +1,6 @@
 package quickfix.examples.banzai.ui.event;
 
-import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.model.Order;
 
 public class OrderEvent {
   private final Order order;

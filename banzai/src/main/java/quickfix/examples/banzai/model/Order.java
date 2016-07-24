@@ -1,8 +1,8 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 import quickfix.SessionID;
 
-public interface Order extends Cloneable {
+public interface Order {
   SessionID getSessionID();
 
   void setSessionID(SessionID sessionID);
@@ -77,5 +77,5 @@ public interface Order extends Cloneable {
 
   String getOriginalID();
 
-  Object clone();
+  void copy(Order other);
 }

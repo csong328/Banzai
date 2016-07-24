@@ -1,4 +1,4 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

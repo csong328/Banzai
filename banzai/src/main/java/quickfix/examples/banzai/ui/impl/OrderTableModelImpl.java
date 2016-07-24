@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 
 import javafx.beans.Observable;
 import javafx.collections.ObservableList;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderImpl;
+import quickfix.examples.banzai.model.Order;
+import quickfix.examples.banzai.model.OrderImpl;
 import quickfix.examples.banzai.ui.OrderTableModel;
 
 import static javafx.collections.FXCollections.observableArrayList;

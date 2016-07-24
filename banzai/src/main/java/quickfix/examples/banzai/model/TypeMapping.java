@@ -1,4 +1,4 @@
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 import quickfix.examples.banzai.utils.TwoWayMap;
 import quickfix.field.OrdType;

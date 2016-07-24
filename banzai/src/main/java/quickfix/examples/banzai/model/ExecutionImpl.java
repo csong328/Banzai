@@ -14,7 +14,7 @@
  * Contact ask@quickfixengine.org if any conditions of this licensing are not clear to you.
  ******************************************************************************/
 
-package quickfix.examples.banzai;
+package quickfix.examples.banzai.model;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -32,14 +32,8 @@ public class ExecutionImpl implements Execution {
   private final DoubleProperty price = new SimpleDoubleProperty();
   private final StringProperty ID = new SimpleStringProperty();
   private final StringProperty exchangeID = new SimpleStringProperty();
-  private static int nextID = 1;
 
   public ExecutionImpl() {
-    this(Integer.toString(nextID++));
-  }
-
-  public ExecutionImpl(final String ID) {
-    this.ID.set(ID);
   }
 
   public StringProperty symbolProperty() {

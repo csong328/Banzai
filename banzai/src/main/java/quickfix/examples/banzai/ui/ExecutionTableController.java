@@ -1,7 +1,7 @@
 package quickfix.examples.banzai.ui;
 
 import javafx.event.Event;
-import quickfix.examples.banzai.Execution;
+import quickfix.examples.banzai.model.Execution;
 
 public interface ExecutionTableController<T extends Execution> {
 

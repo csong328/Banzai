@@ -14,10 +14,9 @@ import org.testfx.framework.junit.ApplicationTest;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import quickfix.examples.banzai.Execution;
-import quickfix.examples.banzai.ExecutionImpl;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.application.UIControlConfig;
+import quickfix.examples.banzai.model.Execution;
+import quickfix.examples.banzai.model.ExecutionFactory;
+import quickfix.examples.banzai.model.OrderSide;
 import quickfix.examples.banzai.ui.impl.ExecutionTableControllerImpl;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
@@ -26,12 +25,14 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TableViewMatchers.hasItems;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UIControlConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class ExecutionTableViewTest extends ApplicationTest {
   @Autowired
   private ApplicationContext applicationContext;
   @Autowired
   private ExecutionTableControllerImpl executionTableController;
+  @Autowired
+  private ExecutionFactory executionFactory;
 
   @Before
   public void setUp() {
@@ -65,7 +66,7 @@ public class ExecutionTableViewTest extends ApplicationTest {
   }
 
   private Execution execution() {
-    final Execution execution = new ExecutionImpl();
+    final Execution execution = this.executionFactory.newExecution();
     execution.setQuantity(100);
     execution.setExchangeID("NYSE");
     execution.setPrice(23.01);

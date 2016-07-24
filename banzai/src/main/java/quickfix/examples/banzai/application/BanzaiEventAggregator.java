@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import quickfix.examples.banzai.Execution;
-import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.model.Execution;
+import quickfix.examples.banzai.model.Order;
 import quickfix.examples.banzai.ui.ExecutionTableController;
 import quickfix.examples.banzai.ui.OrderEntryController;
 import quickfix.examples.banzai.ui.OrderTableController;

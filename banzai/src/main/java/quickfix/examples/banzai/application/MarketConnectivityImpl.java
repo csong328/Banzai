@@ -14,12 +14,12 @@ import java.util.Set;
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionID;
-import quickfix.examples.banzai.Execution;
-import quickfix.examples.banzai.ExecutionImpl;
-import quickfix.examples.banzai.LogonEvent;
-import quickfix.examples.banzai.Order;
 import quickfix.examples.banzai.fix.FixMessageBuilder;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
+import quickfix.examples.banzai.model.Execution;
+import quickfix.examples.banzai.model.ExecutionFactory;
+import quickfix.examples.banzai.model.LogonEvent;
+import quickfix.examples.banzai.model.Order;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventType;
 import quickfix.examples.banzai.ui.event.SimpleOrderEventSource;
@@ -38,7 +38,7 @@ import quickfix.field.Symbol;
 import quickfix.field.Text;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static quickfix.examples.banzai.TypeMapping.FIXSideToSide;
+import static quickfix.examples.banzai.model.TypeMapping.FIXSideToSide;
 
 @Component("marketConnectivity")
 public class MarketConnectivityImpl extends SimpleOrderEventSource implements IMarketConnectivity {
@@ -46,6 +46,8 @@ public class MarketConnectivityImpl extends SimpleOrderEventSource implements IM
   private FixMessageBuilderFactory fixMessageBuilderFactory;
   @Autowired
   private MessageSender messageSender;
+  @Autowired
+  private ExecutionFactory executionFactory;
 
   private final ObservableLogon observableLogon = new ObservableLogon();
   private final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
@@ -183,7 +185,7 @@ public class MarketConnectivityImpl extends SimpleOrderEventSource implements IM
     }
 
     if (fillSize.compareTo(BigDecimal.ZERO) > 0) {
-      final Execution execution = new ExecutionImpl();
+      final Execution execution = this.executionFactory.newExecution();
       execution.setExchangeID(sessionID + message.getField(new ExecID()).getValue());
 
       execution.setSymbol(message.getField(new Symbol()).getValue());

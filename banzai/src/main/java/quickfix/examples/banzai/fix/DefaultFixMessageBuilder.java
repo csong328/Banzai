@@ -3,9 +3,9 @@ package quickfix.examples.banzai.fix;
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.MessageFactory;
-import quickfix.examples.banzai.Order;
-import quickfix.examples.banzai.OrderSide;
-import quickfix.examples.banzai.OrderType;
+import quickfix.examples.banzai.model.Order;
+import quickfix.examples.banzai.model.OrderSide;
+import quickfix.examples.banzai.model.OrderType;
 import quickfix.examples.utility.MessageBuilder;
 import quickfix.field.BeginString;
 import quickfix.field.ClOrdID;
@@ -27,9 +27,9 @@ import quickfix.field.TargetCompID;
 import quickfix.field.Text;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static quickfix.examples.banzai.TypeMapping.sideToFIXSide;
-import static quickfix.examples.banzai.TypeMapping.tifToFIXTif;
-import static quickfix.examples.banzai.TypeMapping.typeToFIXType;
+import static quickfix.examples.banzai.model.TypeMapping.sideToFIXSide;
+import static quickfix.examples.banzai.model.TypeMapping.tifToFIXTif;
+import static quickfix.examples.banzai.model.TypeMapping.typeToFIXType;
 
 
 public class DefaultFixMessageBuilder implements FixMessageBuilder {

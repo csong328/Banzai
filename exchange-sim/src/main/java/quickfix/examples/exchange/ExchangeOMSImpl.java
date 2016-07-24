@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import quickfix.FieldNotFound;
 import quickfix.Message;
 import quickfix.SessionID;
 import quickfix.examples.fix.builder.execution.ExecutionReportBuilder;
 import quickfix.examples.fix.builder.execution.ExecutionReportBuilderFactory;
 import quickfix.examples.utility.IdGenerator;
+import quickfix.examples.utility.IdGeneratorFactory;
 import quickfix.examples.utility.MessageSender;
 import quickfix.field.OrdStatus;
 import quickfix.field.OrdType;
@@ -33,12 +36,20 @@ public class ExchangeOMSImpl implements ExchangeOMS {
   @Autowired
   private MessageSender messageSender;
   @Autowired
-  private IdGenerator idGenerator;
+  private IdGeneratorFactory idGeneratorFactory;
   @Autowired
   private MarketDataProvider marketDataProvider;
 
   private Set<String> validOrderTypes;
   private boolean alwaysFillLimitOrders;
+  private IdGenerator orderIdGenerator;
+  private IdGenerator execIdGenerator;
+
+  @PostConstruct
+  public void init() {
+    this.orderIdGenerator = this.idGeneratorFactory.idGenerator();
+    this.execIdGenerator = this.idGeneratorFactory.idGenerator();
+  }
 
   public void setValidOrderTypes(final Set<String> validOrderTypes) {
     this.validOrderTypes = validOrderTypes;
@@ -204,11 +215,11 @@ public class ExchangeOMSImpl implements ExchangeOMS {
   }
 
   private String genExecID() {
-    return this.idGenerator.genExecID();
+    return this.orderIdGenerator.nextID();
   }
 
   private String genOrderID() {
-    return this.idGenerator.genOrderID();
+    return this.orderIdGenerator.nextID();
   }
 
   private void sendMessage(final Message reject, final SessionID sessionID) {

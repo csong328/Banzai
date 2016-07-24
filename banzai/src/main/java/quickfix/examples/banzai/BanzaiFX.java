@@ -22,7 +22,6 @@ import quickfix.SessionID;
 import quickfix.SessionSettings;
 import quickfix.SocketInitiator;
 import quickfix.examples.banzai.application.ApplicationConfig;
-import quickfix.examples.banzai.application.UIControlConfig;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,7 +39,7 @@ public class BanzaiFX extends javafx.application.Application {
   @Override
   public void init() throws Exception {
     super.init();
-    this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class, UIControlConfig.class);
+    this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
 
     final SessionSettings settings = getSessionSettings(parameters);
     final MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
