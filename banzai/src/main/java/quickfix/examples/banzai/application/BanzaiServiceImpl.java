@@ -18,6 +18,7 @@ package quickfix.examples.banzai.application;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -30,7 +31,6 @@ import java.util.Set;
 
 import javafx.application.Platform;
 import quickfix.Application;
-import quickfix.DefaultMessageFactory;
 import quickfix.DoNotSend;
 import quickfix.FieldNotFound;
 import quickfix.IncorrectDataFormat;
@@ -48,7 +48,6 @@ import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventType;
 import quickfix.examples.banzai.ui.event.SimpleOrderEventSource;
-import quickfix.examples.utility.DefaultMessageSender;
 import quickfix.examples.utility.MessageSender;
 import quickfix.field.AvgPx;
 import quickfix.field.BeginString;
@@ -74,14 +73,17 @@ import static quickfix.examples.banzai.TypeMapping.FIXSideToSide;
 public class BanzaiServiceImpl extends SimpleOrderEventSource implements Application, IBanzaiService {
   private static final Logger logger = LoggerFactory.getLogger(BanzaiServiceImpl.class);
 
+  @Autowired
+  private FixMessageBuilderFactory fixMessageBuilderFactory;
+  @Autowired
+  private MessageSender messageSender;
+
   private final ObservableLogon observableLogon = new ObservableLogon();
 
   private boolean isAvailable = true;
   private boolean isMissingField;
-  private final MessageSender messageSender = new DefaultMessageSender();
 
   private static final HashMap<SessionID, Set<ExecID>> execIDs = new HashMap<>();
-  private static final FixMessageBuilderFactory fixMessageBuilderFactory = new FixMessageBuilderFactory(new DefaultMessageFactory());
   private final Map<String, Order> orderMap = new HashMap<>();
 
   public void onCreate(final SessionID sessionID) {
@@ -367,6 +369,6 @@ public class BanzaiServiceImpl extends SimpleOrderEventSource implements Applica
   }
 
   private quickfix.examples.banzai.fix.FixMessageBuilder getFixMessageBuilder(final String beginString) {
-    return fixMessageBuilderFactory.getFixMessageBuilder(beginString);
+    return this.fixMessageBuilderFactory.getFixMessageBuilder(beginString);
   }
 }
