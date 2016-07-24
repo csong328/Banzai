@@ -22,22 +22,26 @@ package quickfix.examples.exchange;
 import org.quickfixj.jmx.JmxExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.management.JMException;
 import javax.management.ObjectName;
 
 import quickfix.ConfigError;
-import quickfix.DefaultMessageFactory;
 import quickfix.FieldConvertError;
 import quickfix.FileStoreFactory;
 import quickfix.LogFactory;
@@ -48,26 +52,61 @@ import quickfix.ScreenLogFactory;
 import quickfix.SessionID;
 import quickfix.SessionSettings;
 import quickfix.SocketAcceptor;
+import quickfix.field.OrdType;
 import quickfix.mina.acceptor.DynamicAcceptorSessionProvider;
 import quickfix.mina.acceptor.DynamicAcceptorSessionProvider.TemplateMapping;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static quickfix.Acceptor.SETTING_ACCEPTOR_TEMPLATE;
 import static quickfix.Acceptor.SETTING_SOCKET_ACCEPT_ADDRESS;
 import static quickfix.Acceptor.SETTING_SOCKET_ACCEPT_PORT;
 
 public class Main {
   private final static Logger log = LoggerFactory.getLogger(Main.class);
+
+  private static final String DEFAULT_MARKET_PRICE_KEY = "DefaultMarketPrice";
+  private static final String ALWAYS_FILL_LIMIT_KEY = "AlwaysFillLimitOrders";
+  private static final String VALID_ORDER_TYPES_KEY = "ValidOrderTypes";
+
   private final SocketAcceptor acceptor;
   private final Map<InetSocketAddress, List<TemplateMapping>> dynamicSessionMappings = new HashMap<>();
 
   private final JmxExporter jmxExporter;
   private final ObjectName connectorObjectName;
 
+  private final AnnotationConfigApplicationContext applicationContext;
+
   public Main(final SessionSettings settings) throws ConfigError, FieldConvertError, JMException {
-    final Application application = new Application(settings);
+    this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+
+    final ExchangeOMSImpl exchangeOMS = this.applicationContext.getBean(ExchangeOMSImpl.class);
+
+    if (settings.isSetting(ALWAYS_FILL_LIMIT_KEY)) {
+      exchangeOMS.setAlwaysFillLimitOrders(settings
+              .getBool(ALWAYS_FILL_LIMIT_KEY));
+    } else {
+      exchangeOMS.setAlwaysFillLimitOrders(false);
+    }
+
+    String validOrderTypesStr = null;
+    if (settings.isSetting(VALID_ORDER_TYPES_KEY)) {
+      validOrderTypesStr = settings.getString(VALID_ORDER_TYPES_KEY)
+              .trim();
+    }
+    exchangeOMS.setValidOrderTypes(getValidOrderTypes(validOrderTypesStr));
+
+    double defaultMarketPrice = 0.0;
+    if (settings.isSetting(DEFAULT_MARKET_PRICE_KEY)) {
+      defaultMarketPrice = settings.getDouble(DEFAULT_MARKET_PRICE_KEY);
+    }
+    exchangeOMS.setMarketDataProvider(getMarketDataProvider(defaultMarketPrice));
+
+    final ExchangeApplication application = this.applicationContext.getBean(ExchangeApplication.class);
+    application.setValidOrderTypes(getValidOrderTypes(validOrderTypesStr));
+
     final MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
     final LogFactory logFactory = new ScreenLogFactory(true, true, true);
-    final MessageFactory messageFactory = new DefaultMessageFactory();
+    final MessageFactory messageFactory = this.applicationContext.getBean(MessageFactory.class);
 
     this.acceptor = new SocketAcceptor(application, messageStoreFactory, settings, logFactory,
             messageFactory);
@@ -80,7 +119,33 @@ public class Main {
     log.info("Acceptor registered with JMX, name=" + this.connectorObjectName);
   }
 
-  private void configureDynamicSessions(final SessionSettings settings, final Application application,
+  private MarketDataProvider getMarketDataProvider(final double defaultMarketPrice)
+          throws ConfigError, FieldConvertError {
+    checkArgument(defaultMarketPrice > 0.0, "Invalid defaultMarketPrice %s", defaultMarketPrice);
+
+    return new MarketDataProvider() {
+      public double getAsk(final String symbol) {
+        return defaultMarketPrice;
+      }
+
+      public double getBid(final String symbol) {
+        return defaultMarketPrice;
+      }
+    };
+  }
+
+  private Set<String> getValidOrderTypes(final String validOrderTypesStr)
+          throws ConfigError, FieldConvertError {
+    if (validOrderTypesStr != null) {
+      final List<String> orderTypes = Arrays.asList(validOrderTypesStr
+              .split("\\s*,\\s*"));
+      return new HashSet<>(orderTypes);
+    } else {
+      return Collections.singleton(Character.toString(OrdType.LIMIT));
+    }
+  }
+
+  private void configureDynamicSessions(final SessionSettings settings, final ExchangeApplication application,
                                         final MessageStoreFactory messageStoreFactory, final LogFactory logFactory,
                                         final MessageFactory messageFactory) throws ConfigError, FieldConvertError {
     //

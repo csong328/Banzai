@@ -3,11 +3,11 @@ package quickfix.examples.exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Set;
-
-import javax.annotation.PostConstruct;
 
 import quickfix.FieldNotFound;
 import quickfix.Message;
@@ -15,7 +15,6 @@ import quickfix.SessionID;
 import quickfix.examples.fix.builder.execution.ExecutionReportBuilder;
 import quickfix.examples.fix.builder.execution.ExecutionReportBuilderFactory;
 import quickfix.examples.utility.IdGenerator;
-import quickfix.examples.utility.IdGeneratorFactory;
 import quickfix.examples.utility.MessageSender;
 import quickfix.field.OrdStatus;
 import quickfix.field.OrdType;
@@ -28,27 +27,27 @@ import quickfix.field.Symbol;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Component("exchangeOMS")
 public class ExchangeOMSImpl implements ExchangeOMS {
-  private final static Logger logger = LoggerFactory.getLogger(Application.class);
+  private final static Logger logger = LoggerFactory.getLogger(ExchangeApplication.class);
 
   @Autowired
   private ExecutionReportBuilderFactory builderFactory;
   @Autowired
   private MessageSender messageSender;
   @Autowired
-  private IdGeneratorFactory idGeneratorFactory;
-  @Autowired
-  private MarketDataProvider marketDataProvider;
-
-  private Set<String> validOrderTypes;
-  private boolean alwaysFillLimitOrders;
+  @Qualifier("orderIdGenerator")
   private IdGenerator orderIdGenerator;
+  @Autowired
+  @Qualifier("execIdGenerator")
   private IdGenerator execIdGenerator;
 
-  @PostConstruct
-  public void init() {
-    this.orderIdGenerator = this.idGeneratorFactory.idGenerator();
-    this.execIdGenerator = this.idGeneratorFactory.idGenerator();
+  private MarketDataProvider marketDataProvider;
+  private Set<String> validOrderTypes;
+  private boolean alwaysFillLimitOrders;
+
+  public void setMarketDataProvider(final MarketDataProvider marketDataProvider) {
+    this.marketDataProvider = marketDataProvider;
   }
 
   public void setValidOrderTypes(final Set<String> validOrderTypes) {
