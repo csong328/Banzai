@@ -28,6 +28,7 @@ import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
 import quickfix.examples.banzai.ui.event.OrderEvent;
 import quickfix.examples.banzai.ui.event.OrderEventListener;
+import quickfix.examples.banzai.ui.event.OrderEventType;
 import quickfix.examples.banzai.ui.impl.OrderEntryControllerImpl;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
 
@@ -226,6 +227,28 @@ public class OrderEntryViewTest extends ApplicationTest {
     final OrderEvent event = captor.getValue();
     final Order replaceOrder = event.getOrder();
     assertThat(replaceOrder, is(notNullValue()));
+  }
+
+  @Test
+  public void testClear() {
+    prepareMarketOrder();
+
+    final ArgumentCaptor<OrderEvent> captor = ArgumentCaptor.forClass(OrderEvent.class);
+    this.orderEntryController.addOrderEventListener(this.listener);
+    clickOn("#clearButton").push(KeyCode.ENTER);
+    verify(this.listener, times(1)).handle(captor.capture());
+
+    final OrderEvent event = captor.getValue();
+    assertThat(event.getEventType(), is(OrderEventType.ClearAll));
+  }
+
+  @Test
+  public void testLogOff() {
+    final LogonEvent logonEvent = new LogonEvent(this.sessionID, false);
+    this.orderEntryController.update(null, logonEvent);
+
+    final ComboBox<SessionID> sessionComboBox = lookup("#sessionComboBox").queryFirst();
+    assertThat(sessionComboBox.getSelectionModel().isEmpty(), is(true));
   }
 
   private void prepareMarketOrder() {
