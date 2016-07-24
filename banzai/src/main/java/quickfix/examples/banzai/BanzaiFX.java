@@ -24,7 +24,7 @@ import quickfix.SessionID;
 import quickfix.SessionSettings;
 import quickfix.SocketInitiator;
 import quickfix.examples.banzai.application.ApplicationConfig;
-import quickfix.examples.banzai.application.BanzaiServiceImpl;
+import quickfix.examples.banzai.application.IMarketConnectivity;
 import quickfix.examples.banzai.application.UIControlConfig;
 import quickfix.examples.banzai.ui.impl.OrderEntryControllerImpl;
 import quickfix.examples.banzai.utils.SpringFXMLLoader;
@@ -49,8 +49,9 @@ public class BanzaiFX extends Application {
 
     final OrderEntryControllerImpl orderEntryController =
             this.applicationContext.getBean(OrderEntryControllerImpl.class);
-    final BanzaiServiceImpl banzaiApplication = this.applicationContext.getBean(BanzaiServiceImpl.class);
-    banzaiApplication.addLogonObserver(orderEntryController);
+
+    final IMarketConnectivity marketConnectivity = this.applicationContext.getBean(IMarketConnectivity.class);
+    marketConnectivity.addLogonObserver(orderEntryController);
 
     final SessionSettings settings = getSessionSettings(parameters);
     final boolean logHeartbeats = Boolean.valueOf(System.getProperty("logHeartbeats", "true"));

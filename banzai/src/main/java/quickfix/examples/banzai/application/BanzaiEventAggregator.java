@@ -26,11 +26,11 @@ public class BanzaiEventAggregator implements OrderEventListener {
   private ExecutionTableController executionTableController;
 
   @Autowired
-  private IBanzaiService service;
+  private IMarketConnectivity connectivity;
 
   @PostConstruct
   public void init() {
-    this.service.addOrderEventListener(this);
+    this.connectivity.addOrderEventListener(this);
     this.orderEntryController.addOrderEventListener(this);
     this.orderTableController.addOrderEventListener(this);
   }
@@ -78,18 +78,18 @@ public class BanzaiEventAggregator implements OrderEventListener {
   private void onNewOrder(final OrderEvent event) {
     final Order order = event.getOrder();
     this.orderTableController.addOrder(order);
-    this.service.send(order);
+    this.connectivity.send(order);
   }
 
   private void onCancelOrder(final OrderEvent event) {
     final Order order = event.getOrder();
-    this.service.cancel(order);
+    this.connectivity.cancel(order);
   }
 
   private void onReplaceOrder(final OrderEvent event) {
     final Order order = event.getOrder();
     final Order origOrder = (Order) event.getArg();
-    this.service.replace(origOrder, order);
+    this.connectivity.replace(origOrder, order);
   }
 
   private void onOrderReplaced(final OrderEvent event) {
