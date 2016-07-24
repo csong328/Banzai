@@ -1,317 +1,81 @@
-/*******************************************************************************
- * Copyright (c) quickfixengine.org All rights reserved.
- * <p>
- * This file is part of the QuickFIX FIX Engine
- * <p>
- * This file may be distributed under the terms of the quickfixengine.org license as defined by
- * quickfixengine.org and appearing in the file LICENSE included in the packaging of this file.
- * <p>
- * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN,
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * <p>
- * See http://www.quickfixengine.org/LICENSE for licensing information.
- * <p>
- * Contact ask@quickfixengine.org if any conditions of this licensing are not clear to you.
- ******************************************************************************/
-
 package quickfix.examples.banzai;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import quickfix.SessionID;
 
-public class Order implements Cloneable {
-  private final ObjectProperty<SessionID> sessionID = new SimpleObjectProperty<>();
-  private final StringProperty symbol = new SimpleStringProperty();
-  private final IntegerProperty quantity = new SimpleIntegerProperty(0);
-  private final IntegerProperty open = new SimpleIntegerProperty(0);
-  private final IntegerProperty executed = new SimpleIntegerProperty(0);
-  private final ObjectProperty<OrderSide> side = new SimpleObjectProperty<>(OrderSide.BUY);
-  private final ObjectProperty<OrderType> type = new SimpleObjectProperty<>(OrderType.MARKET);
-  private final ObjectProperty<OrderTIF> tif = new SimpleObjectProperty<>(OrderTIF.DAY);
-  private final ObjectProperty<Double> limit = new SimpleObjectProperty<>();
-  private final ObjectProperty<Double> stop = new SimpleObjectProperty<>();
-  private final DoubleProperty avgPx = new SimpleDoubleProperty(0.0);
-  private final BooleanProperty rejected = new SimpleBooleanProperty(false);
-  private final BooleanProperty canceled = new SimpleBooleanProperty(false);
-  private final BooleanProperty isNew = new SimpleBooleanProperty(true);
-  private final StringProperty message = new SimpleStringProperty();
-  private final StringProperty orderID = new SimpleStringProperty();
-  private final StringProperty ID = new SimpleStringProperty();
-  private final StringProperty originalID = new SimpleStringProperty();
-  private static int nextID = 1;
+public interface Order extends Cloneable {
+  SessionID getSessionID();
 
-  public Order() {
-    this.ID.set(generateID());
-  }
+  void setSessionID(SessionID sessionID);
 
-  public Order(final String ID) {
-    this.ID.set(ID);
-  }
+  String getSymbol();
 
-  public Object clone() {
-    final Order order = new Order();
-    order.setOriginalID(getID());
-    order.setSessionID(getSessionID());
-    order.setSymbol(getSymbol());
-    order.setQuantity(getQuantity());
-    order.setOpen(getOpen());
-    order.setExecuted(getExecuted());
-    order.setSide(getSide());
-    order.setType(getType());
-    order.setTIF(getTIF());
-    order.setLimit(getLimit());
-    order.setStop(getStop());
-    order.setAvgPx(getAvgPx());
-    order.setRejected(getRejected());
-    order.setCanceled(getCanceled());
-    order.setMessage(getMessage());
-    order.setOrderID(getOrderID());
-    return order;
-  }
+  void setSymbol(String symbol);
 
-  public String generateID() {
-    return Long.toString(System.currentTimeMillis() + (nextID++));
-  }
+  int getQuantity();
 
-  public ObjectProperty<SessionID> sessionIDProperty() {
-    return this.sessionID;
-  }
+  void setQuantity(int quantity);
 
-  public SessionID getSessionID() {
-    return sessionIDProperty().get();
-  }
+  int getOpen();
 
-  public void setSessionID(final SessionID sessionID) {
-    sessionIDProperty().set(sessionID);
-  }
+  void setOpen(int open);
 
-  public StringProperty symbolProperty() {
-    return this.symbol;
-  }
+  int getExecuted();
 
-  public String getSymbol() {
-    return symbolProperty().get();
-  }
+  void setExecuted(int executed);
 
-  public void setSymbol(final String symbol) {
-    symbolProperty().set(symbol);
-  }
+  OrderSide getSide();
 
-  public IntegerProperty quantityProperty() {
-    return this.quantity;
-  }
+  void setSide(OrderSide side);
 
-  public int getQuantity() {
-    return quantityProperty().get();
-  }
+  OrderType getType();
 
-  public void setQuantity(final int quantity) {
-    quantityProperty().set(quantity);
-  }
+  void setType(OrderType type);
 
-  public IntegerProperty openProperty() {
-    return this.open;
-  }
+  OrderTIF getTIF();
 
-  public int getOpen() {
-    return openProperty().get();
-  }
+  void setTIF(OrderTIF tif);
 
-  public void setOpen(final int open) {
-    openProperty().set(open);
-  }
+  Double getLimit();
 
-  public IntegerProperty executedProperty() {
-    return this.executed;
-  }
+  void setLimit(Double limit);
 
-  public int getExecuted() {
-    return executedProperty().get();
-  }
+  void setLimit(String limit);
 
-  public void setExecuted(final int executed) {
-    executedProperty().set(executed);
-  }
+  Double getStop();
 
-  public ObjectProperty<OrderSide> sideProperty() {
-    return this.side;
-  }
+  void setStop(Double stop);
 
-  public OrderSide getSide() {
-    return sideProperty().get();
-  }
+  void setAvgPx(double avgPx);
 
-  public void setSide(final OrderSide side) {
-    sideProperty().set(side);
-  }
+  double getAvgPx();
 
-  public ObjectProperty<OrderType> typeProperty() {
-    return this.type;
-  }
+  void setRejected(boolean rejected);
 
-  public OrderType getType() {
-    return typeProperty().get();
-  }
+  boolean getRejected();
 
-  public void setType(final OrderType type) {
-    typeProperty().set(type);
-  }
+  void setCanceled(boolean canceled);
 
-  public ObjectProperty<OrderTIF> tifProperty() {
-    return this.tif;
-  }
+  boolean getCanceled();
 
-  public OrderTIF getTIF() {
-    return tifProperty().get();
-  }
+  void setNew(boolean isNew);
 
-  public void setTIF(final OrderTIF tif) {
-    tifProperty().set(tif);
-  }
+  boolean isNew();
 
-  public ObjectProperty<Double> limitProperty() {
-    return this.limit;
-  }
+  void setMessage(String message);
 
-  public Double getLimit() {
-    return limitProperty().get();
-  }
+  String getMessage();
 
-  public void setLimit(final Double limit) {
-    limitProperty().set(limit);
-  }
+  String getOrderID();
 
-  public void setLimit(final String limit) {
-    if (limit == null || limit.equals("")) {
-      limitProperty().set(null);
-    } else {
-      setLimit(Double.parseDouble(limit));
-    }
-  }
+  void setOrderID(String orderID);
 
-  public ObjectProperty<Double> stopProperty() {
-    return this.stop;
-  }
+  void setID(String ID);
 
-  public Double getStop() {
-    return stopProperty().get();
-  }
+  String getID();
 
-  public void setStop(final Double stop) {
-    stopProperty().set(stop);
-  }
+  void setOriginalID(String originalID);
 
-  public void setStop(final String stop) {
-    if (stop == null || stop.equals("")) {
-      stopProperty().set(null);
-    } else {
-      setStop(Double.parseDouble(stop));
-    }
-  }
+  String getOriginalID();
 
-  public DoubleProperty avgPxProperty() {
-    return this.avgPx;
-  }
-
-  public void setAvgPx(final double avgPx) {
-    avgPxProperty().set(avgPx);
-  }
-
-  public double getAvgPx() {
-    return avgPxProperty().get();
-  }
-
-  public BooleanProperty rejectedProperty() {
-    return this.rejected;
-  }
-
-  public void setRejected(final boolean rejected) {
-    rejectedProperty().set(rejected);
-  }
-
-  public boolean getRejected() {
-    return rejectedProperty().get();
-  }
-
-  public BooleanProperty canceledProperty() {
-    return this.canceled;
-  }
-
-  public void setCanceled(final boolean canceled) {
-    canceledProperty().set(canceled);
-  }
-
-  public boolean getCanceled() {
-    return canceledProperty().get();
-  }
-
-  public BooleanProperty isNewProperty() {
-    return this.isNew;
-  }
-
-  public void setNew(final boolean isNew) {
-    isNewProperty().set(isNew);
-  }
-
-  public boolean isNew() {
-    return isNewProperty().get();
-  }
-
-  public StringProperty messageProperty() {
-    return this.message;
-  }
-
-  public void setMessage(final String message) {
-    messageProperty().set(message);
-  }
-
-  public String getMessage() {
-    return messageProperty().get();
-  }
-
-  public StringProperty idProperty() {
-    return this.ID;
-  }
-
-  public String getOrderID() {
-    return this.orderID.get();
-  }
-
-  public StringProperty orderIDProperty() {
-    return this.orderID;
-  }
-
-  public void setOrderID(final String orderID) {
-    this.orderID.set(orderID);
-  }
-
-  public void setID(final String ID) {
-    idProperty().set(ID);
-  }
-
-  public String getID() {
-    return idProperty().get();
-  }
-
-  public StringProperty originalIDProperty() {
-    return this.originalID;
-  }
-
-  public void setOriginalID(final String originalID) {
-    originalIDProperty().set(originalID);
-  }
-
-  public String getOriginalID() {
-    return this.originalID.get();
-  }
-
+  Object clone();
 }

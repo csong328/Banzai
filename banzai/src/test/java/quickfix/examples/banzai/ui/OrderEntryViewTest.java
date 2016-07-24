@@ -23,6 +23,7 @@ import quickfix.FixVersions;
 import quickfix.SessionID;
 import quickfix.examples.banzai.LogonEvent;
 import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.OrderImpl;
 import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
@@ -253,7 +254,7 @@ public class OrderEntryViewTest extends ApplicationTest {
   }
 
   private void prepareMarketOrder() {
-    final Order order = new Order();
+    final OrderImpl order = new OrderImpl();
     order.setSymbol("MSFT");
     order.setQuantity(100);
     order.setSide(OrderSide.BUY);

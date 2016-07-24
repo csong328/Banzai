@@ -14,7 +14,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import quickfix.examples.banzai.Execution;
+import quickfix.examples.banzai.ExecutionImpl;
 import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.application.UIControlConfig;
 import quickfix.examples.banzai.ui.impl.ExecutionTableControllerImpl;
@@ -53,7 +53,7 @@ public class ExecutionTableViewTest extends ApplicationTest {
 
   @Test
   public void testClear() {
-    final Execution execution = execution();
+    final ExecutionImpl execution = execution();
 
     this.executionTableController.addExecution(execution);
 
@@ -63,8 +63,8 @@ public class ExecutionTableViewTest extends ApplicationTest {
     verifyThat("#executionTable", hasItems(0));
   }
 
-  private Execution execution() {
-    final Execution execution = new Execution();
+  private ExecutionImpl execution() {
+    final ExecutionImpl execution = new ExecutionImpl();
     execution.setQuantity(100);
     execution.setExchangeID("NYSE");
     execution.setPrice(23.01);

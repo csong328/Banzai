@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import javafx.beans.Observable;
 import javafx.collections.ObservableList;
 import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.OrderImpl;
 import quickfix.examples.banzai.ui.OrderTableModel;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -15,8 +16,11 @@ public class OrderTableModelImpl implements OrderTableModel {
 
   public OrderTableModelImpl() {
     this.orderList = observableArrayList(
-            o -> new Observable[]{o.executedProperty(), o.openProperty(), o.avgPxProperty(),
-                    o.messageProperty(), o.canceledProperty(), o.isNewProperty(), o.rejectedProperty()});
+            order -> {
+              final OrderImpl o = (OrderImpl) order;
+              return new Observable[]{o.executedProperty(), o.openProperty(), o.avgPxProperty(),
+                      o.messageProperty(), o.canceledProperty(), o.isNewProperty(), o.rejectedProperty()};
+            });
   }
 
   @Override

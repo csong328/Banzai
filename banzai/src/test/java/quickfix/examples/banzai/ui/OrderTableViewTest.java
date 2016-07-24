@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import quickfix.FixVersions;
 import quickfix.SessionID;
 import quickfix.examples.banzai.Order;
+import quickfix.examples.banzai.OrderImpl;
 import quickfix.examples.banzai.OrderSide;
 import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
@@ -70,7 +71,7 @@ public class OrderTableViewTest extends ApplicationTest {
 
   @Test
   public void testAddOrder() {
-    final Order order = newOrder();
+    final OrderImpl order = newOrder();
 
     this.orderTableController.addOrder(order);
 
@@ -79,7 +80,7 @@ public class OrderTableViewTest extends ApplicationTest {
 
   @Test
   public void testSelectOrder() {
-    final Order order = newOrder();
+    final OrderImpl order = newOrder();
 
     this.orderTableController.addOrder(order);
 
@@ -127,8 +128,8 @@ public class OrderTableViewTest extends ApplicationTest {
     verifyThat("#orderTable", hasItems(0));
   }
 
-  private Order newOrder() {
-    final Order order = new Order();
+  private OrderImpl newOrder() {
+    final OrderImpl order = new OrderImpl();
     order.setSymbol("MSFT");
     order.setQuantity(100);
     order.setSide(OrderSide.BUY);

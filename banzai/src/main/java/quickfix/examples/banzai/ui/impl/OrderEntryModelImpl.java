@@ -1,10 +1,8 @@
 package quickfix.examples.banzai.ui.impl;
 
-import static javafx.collections.FXCollections.observableArrayList;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-
-import org.springframework.stereotype.Component;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,10 +14,12 @@ import quickfix.examples.banzai.OrderTIF;
 import quickfix.examples.banzai.OrderType;
 import quickfix.examples.banzai.ui.OrderEntryModel;
 
+import static javafx.collections.FXCollections.observableArrayList;
+
 @Component("orderEntryModel")
 public class OrderEntryModelImpl implements OrderEntryModel {
 
-  private ObjectProperty<Order> selectedOrder = new SimpleObjectProperty<>();
+  private final ObjectProperty<Order> selectedOrder = new SimpleObjectProperty<>();
 
   private final ObservableList<OrderSide> sideList;
   private final ObservableList<OrderType> typeList;
@@ -51,7 +51,7 @@ public class OrderEntryModelImpl implements OrderEntryModel {
   }
 
   @Override
-  public void setSelectedOrder(Order order) {
+  public void setSelectedOrder(final Order order) {
     selectedOrderProperty().set(order);
   }
 
@@ -72,6 +72,6 @@ public class OrderEntryModelImpl implements OrderEntryModel {
 
   @Override
   public ObservableList<SessionID> getSessionList() {
-    return sessionList;
+    return this.sessionList;
   }
 }
