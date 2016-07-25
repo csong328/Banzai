@@ -10,10 +10,10 @@
         <fx:include source="/quickfix/examples/banzai/ui/OrderEntryView.fxml"/>
         <TabPane>
             <tabs>
-                <Tab text="Orders">
+                <Tab fx:id="ordersTab" text="Orders">
                     <fx:include source="/quickfix/examples/banzai/ui/OrderTableView.fxml"/>
                 </Tab>
-                <Tab text="Executions">
+                <Tab fx:id="executionsTab" text="Executions">
                     <fx:include source="/quickfix/examples/banzai/ui/ExecutionTableView.fxml"/>
                 </Tab>
             </tabs>

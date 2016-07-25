@@ -174,6 +174,7 @@ public class OrderEntryControllerImpl extends SimpleOrderEventSource implements 
 
   @FXML
   public void onReplaceOrder(final ActionEvent actionEvent) {
+
     final Order origOrder = this.orderEntryModel.getSelectedOrder();
     final Order newOrder = this.orderFactory.newOrder();
     newOrder.copy(origOrder);

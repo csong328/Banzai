@@ -39,16 +39,20 @@ public abstract class AbstractExecutioReportBuilder implements
         ExecutionReportBuilder {
   private final MessageFactory messageFactory = new DefaultMessageFactory();
 
-  protected void reverseRoute(Message message, Message reply)
+  protected void reverseRoute(final Message message, final Message reply)
           throws FieldNotFound {
     reverseRoute(message.getHeader(), reply.getHeader());
   }
 
-  protected static void reverseRoute(Message.Header messageHdr, Message.Header reply) throws FieldNotFound {
-    MessageBuilder<Message.Header> replyBuilder = MessageBuilder.newBuilder(reply);
+  protected static void reverseRoute(final Message.Header messageHdr, final Message.Header reply) throws FieldNotFound {
+    final MessageBuilder<Message.Header> replyBuilder = MessageBuilder.newBuilder(reply);
 
-    replyBuilder.setString(SenderCompID.FIELD, messageHdr.getString(TargetCompID.FIELD))
-            .setString(TargetCompID.FIELD, messageHdr.getString(SenderCompID.FIELD));
+    if (messageHdr.isSetField(TargetCompID.FIELD)) {
+      replyBuilder.setString(SenderCompID.FIELD, messageHdr.getString(TargetCompID.FIELD));
+    }
+    if (messageHdr.isSetField(SenderCompID.FIELD)) {
+      replyBuilder.setString(TargetCompID.FIELD, messageHdr.getString(SenderCompID.FIELD));
+    }
 
     if (messageHdr.isSetField(TargetSubID.FIELD)) {
       replyBuilder.setString(SenderSubID.FIELD,
@@ -76,12 +80,12 @@ public abstract class AbstractExecutioReportBuilder implements
     }
   }
 
-  public Message rejectMessage(Message message, int rejectReason)
+  public Message rejectMessage(final Message message, final int rejectReason)
           throws FieldNotFound {
-    Message reply = createMessage(message, MsgType.REJECT);
+    final Message reply = createMessage(message, MsgType.REJECT);
     reverseRoute(message, reply);
 
-    MessageBuilder<Message> replyBuilder = MessageBuilder.newBuilder(reply);
+    final MessageBuilder<Message> replyBuilder = MessageBuilder.newBuilder(reply);
 
     replyBuilder
             .setString(RefSeqNum.FIELD, message.getHeader().getString(MsgSeqNum.FIELD))
@@ -90,66 +94,66 @@ public abstract class AbstractExecutioReportBuilder implements
     return replyBuilder.build();
   }
 
-  protected Message createMessage(Message message, String msgType)
+  protected Message createMessage(final Message message, final String msgType)
           throws FieldNotFound {
-    return messageFactory.create(
+    return this.messageFactory.create(
             message.getHeader().getString(BeginString.FIELD), msgType);
   }
 
-  public Message pendingAck(Message newOrderSingle, String orderID,
-                            String execID) throws FieldNotFound {
+  public Message pendingAck(final Message newOrderSingle, final String orderID,
+                            final String execID) throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  public Message pendingCancel(Message cancelRequest, String orderID,
-                               String execID, double orderQty, double cumQty, double avgPx) throws FieldNotFound {
+  public Message pendingCancel(final Message cancelRequest, final String orderID,
+                               final String execID, final double orderQty, final double cumQty, final double avgPx) throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  public Message pendingReplace(Message replaceRequest, String orderID,
-                                String execID, double orderQty, double cumQty, double avgPx)
+  public Message pendingReplace(final Message replaceRequest, final String orderID,
+                                final String execID, final double orderQty, final double cumQty, final double avgPx)
           throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  public Message orderAcked(Message newOrderSingle, String orderID,
-                            String execID) throws FieldNotFound {
+  public Message orderAcked(final Message newOrderSingle, final String orderID,
+                            final String execID) throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  public Message orderRejected(Message newOrderSingle, String orderID,
-                               String execID, String text) throws FieldNotFound {
+  public Message orderRejected(final Message newOrderSingle, final String orderID,
+                               final String execID, final String text) throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  public Message fillOrder(Message newOrderSingle, String orderID,
-                           String execID, char ordStatus, double cumQty, double avgPx,
-                           double lastShares, double lastPx) throws FieldNotFound {
+  public Message fillOrder(final Message newOrderSingle, final String orderID,
+                           final String execID, final char ordStatus, final double cumQty, final double avgPx,
+                           final double lastShares, final double lastPx) throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  public Message orderCanceled(Message cancelRequest, String orderID,
-                               String execID, double cumQty, double avgPx) throws FieldNotFound {
+  public Message orderCanceled(final Message cancelRequest, final String orderID,
+                               final String execID, final double cumQty, final double avgPx) throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  public Message orderReplaced(Message replaceRequest, String orderID,
-                               String execID, double cumQty, double avgPx) throws FieldNotFound {
+  public Message orderReplaced(final Message replaceRequest, final String orderID,
+                               final String execID, final double cumQty, final double avgPx) throws FieldNotFound {
     throw new UnsupportedOperationException();
   }
 
-  protected char getFillType(Message message, double cumQty)
+  protected char getFillType(final Message message, final double cumQty)
           throws FieldNotFound {
-    OrderQty orderQty = new OrderQty();
+    final OrderQty orderQty = new OrderQty();
     message.getField(orderQty);
-    char execType = cumQty < orderQty.getValue() ? ExecType.PARTIAL_FILL
+    final char execType = cumQty < orderQty.getValue() ? ExecType.PARTIAL_FILL
             : ExecType.FILL;
     return execType;
   }
 
-  protected void copyToExecution(Message order, Message exec)
+  protected void copyToExecution(final Message order, final Message exec)
           throws FieldNotFound {
-    MessageBuilder<Message> execBuilder = MessageBuilder.newBuilder(exec);
+    final MessageBuilder<Message> execBuilder = MessageBuilder.newBuilder(exec);
 
     if (order.isSetField(OrderID.FIELD)) {
       execBuilder.setField(order.getField(new OrderID()));
@@ -175,9 +179,9 @@ public abstract class AbstractExecutioReportBuilder implements
     }
   }
 
-  protected Message createExecutionReport(Message order, String orderID,
-                                          String execID) throws FieldNotFound {
-    Message exec = createMessage(order, MsgType.EXECUTION_REPORT);
+  protected Message createExecutionReport(final Message order, final String orderID,
+                                          final String execID) throws FieldNotFound {
+    final Message exec = createMessage(order, MsgType.EXECUTION_REPORT);
 
     MessageBuilder.newBuilder(exec)
             .setField(new OrderID(orderID))
@@ -188,10 +192,10 @@ public abstract class AbstractExecutioReportBuilder implements
     return exec;
   }
 
-  public Message cancelRejected(Message order, String orderID,
-                                char ordStatus, double cumQty, double avgPx, int cxlRejReason) throws FieldNotFound {
-    Message exec = createMessage(order, MsgType.ORDER_CANCEL_REJECT);
-    MessageBuilder<Message> execBuilder = MessageBuilder.newBuilder(exec);
+  public Message cancelRejected(final Message order, final String orderID,
+                                final char ordStatus, final double cumQty, final double avgPx, final int cxlRejReason) throws FieldNotFound {
+    final Message exec = createMessage(order, MsgType.ORDER_CANCEL_REJECT);
+    final MessageBuilder<Message> execBuilder = MessageBuilder.newBuilder(exec);
     execBuilder.setField(new OrderID(orderID));
     reverseRoute(order, exec);
 
@@ -204,7 +208,7 @@ public abstract class AbstractExecutioReportBuilder implements
     }
     execBuilder.setField(new OrdStatus(ordStatus));
 
-    String msgType = exec.getHeader().getString(MsgType.FIELD);
+    final String msgType = exec.getHeader().getString(MsgType.FIELD);
     char cxlRejResponseTo = '1';
     if ("G".equals(msgType) || "AC".equals(msgType)) {
       cxlRejResponseTo = '2';
@@ -215,9 +219,9 @@ public abstract class AbstractExecutioReportBuilder implements
     return execBuilder.build();
   }
 
-  public Message cancelRejectedForUnknownOrder(Message order) throws FieldNotFound {
-    Message exec = createMessage(order, MsgType.ORDER_CANCEL_REJECT);
-    MessageBuilder<Message> execBuilder = MessageBuilder.newBuilder(exec);
+  public Message cancelRejectedForUnknownOrder(final Message order) throws FieldNotFound {
+    final Message exec = createMessage(order, MsgType.ORDER_CANCEL_REJECT);
+    final MessageBuilder<Message> execBuilder = MessageBuilder.newBuilder(exec);
     reverseRoute(order, exec);
 
     if (order.isSetField(OrderID.FIELD)) {
@@ -229,7 +233,7 @@ public abstract class AbstractExecutioReportBuilder implements
     }
     execBuilder.setField(new OrdStatus(OrdStatus.REJECTED));
 
-    String msgType = exec.getHeader().getString(MsgType.FIELD);
+    final String msgType = exec.getHeader().getString(MsgType.FIELD);
     char cxlRejResponseTo = '1';
     if ("G".equals(msgType) || "AC".equals(msgType)) {
       cxlRejResponseTo = '2';

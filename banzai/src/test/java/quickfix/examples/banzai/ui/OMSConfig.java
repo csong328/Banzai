@@ -11,7 +11,7 @@ import quickfix.examples.banzai.application.IMarketConnectivity;
 import quickfix.examples.banzai.application.MarketConnectivityImpl;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactoryImpl;
-import quickfix.examples.exchange.simulator.DirectOMSConnector;
+import quickfix.examples.banzai.test.DirectCoupling;
 import quickfix.examples.fix.builder.execution.ExecutionReportBuilderFactory;
 import quickfix.examples.utility.MessageSender;
 
@@ -40,7 +40,7 @@ public class OMSConfig {
 
   @Bean
   public MessageSender messageSender() {
-    return new DirectOMSConnector();
+    return new DirectCoupling();
   }
 
   @Bean

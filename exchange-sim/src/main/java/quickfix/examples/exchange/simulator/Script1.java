@@ -19,6 +19,7 @@ public class Script1 extends OMSAdapter {
   public void onNewOrder(final Message request, final SessionID sessionID) throws FieldNotFound {
     final String clOrdID = request.getString(ClOrdID.FIELD);
     final double orderQty = request.getDouble(OrderQty.FIELD);
+
     this.actionableOMS.ack(clOrdID);
     this.actionableOMS.fill(clOrdID, orderQty / 10, 5.0);
   }
