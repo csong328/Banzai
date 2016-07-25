@@ -56,7 +56,6 @@ import quickfix.field.OrdType;
 import quickfix.mina.acceptor.DynamicAcceptorSessionProvider;
 import quickfix.mina.acceptor.DynamicAcceptorSessionProvider.TemplateMapping;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static quickfix.Acceptor.SETTING_ACCEPTOR_TEMPLATE;
 import static quickfix.Acceptor.SETTING_SOCKET_ACCEPT_ADDRESS;
 import static quickfix.Acceptor.SETTING_SOCKET_ACCEPT_PORT;
@@ -79,27 +78,11 @@ public class Main {
   public Main(final SessionSettings settings) throws ConfigError, FieldConvertError, JMException {
     this.applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
 
-    final ExchangeOMSImpl exchangeOMS = this.applicationContext.getBean(ExchangeOMSImpl.class);
-
-    if (settings.isSetting(ALWAYS_FILL_LIMIT_KEY)) {
-      exchangeOMS.setAlwaysFillLimitOrders(settings
-              .getBool(ALWAYS_FILL_LIMIT_KEY));
-    } else {
-      exchangeOMS.setAlwaysFillLimitOrders(false);
-    }
-
     String validOrderTypesStr = null;
     if (settings.isSetting(VALID_ORDER_TYPES_KEY)) {
       validOrderTypesStr = settings.getString(VALID_ORDER_TYPES_KEY)
               .trim();
     }
-    exchangeOMS.setValidOrderTypes(getValidOrderTypes(validOrderTypesStr));
-
-    double defaultMarketPrice = 0.0;
-    if (settings.isSetting(DEFAULT_MARKET_PRICE_KEY)) {
-      defaultMarketPrice = settings.getDouble(DEFAULT_MARKET_PRICE_KEY);
-    }
-    exchangeOMS.setMarketDataProvider(getMarketDataProvider(defaultMarketPrice));
 
     final ExchangeApplication application = this.applicationContext.getBean(ExchangeApplication.class);
     application.setValidOrderTypes(getValidOrderTypes(validOrderTypesStr));
@@ -117,21 +100,6 @@ public class Main {
     this.jmxExporter = new JmxExporter();
     this.connectorObjectName = this.jmxExporter.register(this.acceptor);
     log.info("Acceptor registered with JMX, name=" + this.connectorObjectName);
-  }
-
-  private MarketDataProvider getMarketDataProvider(final double defaultMarketPrice)
-          throws ConfigError, FieldConvertError {
-    checkArgument(defaultMarketPrice > 0.0, "Invalid defaultMarketPrice %s", defaultMarketPrice);
-
-    return new MarketDataProvider() {
-      public double getAsk(final String symbol) {
-        return defaultMarketPrice;
-      }
-
-      public double getBid(final String symbol) {
-        return defaultMarketPrice;
-      }
-    };
   }
 
   private Set<String> getValidOrderTypes(final String validOrderTypesStr)

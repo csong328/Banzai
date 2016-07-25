@@ -1,8 +1,7 @@
 package quickfix.examples.exchange;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -15,10 +14,10 @@ import quickfix.examples.utility.FixApplicationAdapter;
 
 @Component("exchangeApplication")
 public class ExchangeApplication extends FixApplicationAdapter {
-  private final static Logger logger = LoggerFactory.getLogger(ExchangeApplication.class);
 
   @Autowired
-  private ExchangeOMS exchangeOMS;
+  @Qualifier("actionableOMS")
+  private OMS actionableOMS;
 
   private Set<String> validOrderTypes;
 
@@ -33,27 +32,26 @@ public class ExchangeApplication extends FixApplicationAdapter {
 
   @Override
   protected void onNewOrder(final Message order, final SessionID sessionID) throws FieldNotFound {
-    this.exchangeOMS.onNewOrder(order, sessionID);
+    this.actionableOMS.onNewOrder(order, sessionID);
   }
 
   @Override
   protected void onCanceleOrder(final Message order, final SessionID sessionID) throws FieldNotFound {
-    this.exchangeOMS.onCanceleOrder(order, sessionID);
+    this.actionableOMS.onCanceleOrder(order, sessionID);
   }
 
   @Override
   protected void onReplaceOrder(final Message order, final SessionID sessionID) throws FieldNotFound {
-    this.exchangeOMS.onReplaceOrder(order, sessionID);
+    this.actionableOMS.onReplaceOrder(order, sessionID);
   }
-
-
+  
   @Override
   protected void onCancelReject(final Message message, final SessionID sessionId) throws FieldNotFound {
-    this.exchangeOMS.onCancelReject(message, sessionId);
+    this.actionableOMS.onCancelReject(message, sessionId);
   }
 
   @Override
-  protected void onExecutionReport(final Message message, final SessionID sessionId) {
-    this.exchangeOMS.onExecutionReport(message, sessionId);
+  protected void onExecutionReport(final Message message, final SessionID sessionId) throws FieldNotFound {
+    this.actionableOMS.onExecutionReport(message, sessionId);
   }
 }
