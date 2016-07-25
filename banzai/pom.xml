@@ -18,5 +18,11 @@
             <artifactId>fix-utils</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>chen.song</groupId>
+            <artifactId>exchange-sim</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

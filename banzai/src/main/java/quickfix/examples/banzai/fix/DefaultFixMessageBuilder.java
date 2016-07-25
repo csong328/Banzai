@@ -31,7 +31,6 @@ import static quickfix.examples.banzai.model.TypeMapping.sideToFIXSide;
 import static quickfix.examples.banzai.model.TypeMapping.tifToFIXTif;
 import static quickfix.examples.banzai.model.TypeMapping.typeToFIXType;
 
-
 public class DefaultFixMessageBuilder implements FixMessageBuilder {
   private final MessageFactory messageFactory;
   private final String beginString;

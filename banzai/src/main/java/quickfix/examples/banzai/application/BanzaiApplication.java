@@ -27,12 +27,12 @@ import quickfix.FieldNotFound;
 import quickfix.IncorrectDataFormat;
 import quickfix.IncorrectTagValue;
 import quickfix.Message;
-import quickfix.Session;
 import quickfix.SessionID;
 import quickfix.SessionNotFound;
 import quickfix.UnsupportedMessageType;
 import quickfix.examples.banzai.fix.FixMessageBuilder;
 import quickfix.examples.banzai.fix.FixMessageBuilderFactory;
+import quickfix.examples.utility.MessageSender;
 import quickfix.field.BeginString;
 import quickfix.field.BusinessRejectReason;
 import quickfix.field.DeliverToCompID;
@@ -47,6 +47,8 @@ public class BanzaiApplication extends ApplicationAdapter {
   private IMarketConnectivity marketConnectivity;
   @Autowired
   private FixMessageBuilderFactory fixMessageBuilderFactory;
+  @Autowired
+  private MessageSender messageSender;
 
   private boolean isAvailable = true;
   private boolean isMissingField;
@@ -106,7 +108,7 @@ public class BanzaiApplication extends ApplicationAdapter {
           throws FieldNotFound, SessionNotFound {
     final String beginString = message.getHeader().getString(BeginString.FIELD);
     final Message reply = getFixMessageBuilder(beginString).sessionReject(message, rejectReason);
-    Session.sendToTarget(reply);
+    this.messageSender.sendMessage(reply, null);
     logger.error("Reject: {}", reply.toString());
   }
 
@@ -115,7 +117,7 @@ public class BanzaiApplication extends ApplicationAdapter {
     final String beginString = message.getHeader().getString(BeginString.FIELD);
     final Message reply = getFixMessageBuilder(beginString).businessReject(message, rejectReason,
             rejectText);
-    Session.sendToTarget(reply);
+    this.messageSender.sendMessage(reply, null);
     logger.error("Reject: {}", reply.toString());
   }
 
