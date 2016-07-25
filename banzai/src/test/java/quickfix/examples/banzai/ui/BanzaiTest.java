@@ -64,6 +64,12 @@ public class BanzaiTest extends ApplicationTest {
     verifyThat("#orderTable", hasItems(1));
     verifyThat("#executionTable", hasItems(1));
 
+    Order order = lookupRow("#orderTable", 0);
+    assertThat(order.getQuantity(), is(100));
+    assertThat(order.getOpen(), is(90));
+    assertThat(order.getExecuted(), is(10));
+    assertThat(order.getAvgPx(), is(5.0));
+
     final Predicate<TableRow> firstRow = t -> t.getIndex() == 0;
     clickOn("#orderTable");
     clickOn(firstRow);
@@ -71,19 +77,24 @@ public class BanzaiTest extends ApplicationTest {
     clickOn("#quantityTextField").eraseText(3).write("120");
     clickOn("#replaceButton").push(KeyCode.ENTER);
 
-    TableView node = lookup("#orderTable").queryFirst();
-    Order order = (Order) node.getItems().get(0);
+    order = lookupRow("#orderTable", 0);
     assertThat(order.getQuantity(), is(120));
     assertThat(order.getOpen(), is(110));
     assertThat(order.getExecuted(), is(10));
+    assertThat(order.getAvgPx(), is(5.0));
 
     clickOn(firstRow);
     clickOn("#cancelButton").push(KeyCode.ENTER);
 
-    node = lookup("#orderTable").queryFirst();
-    order = (Order) node.getItems().get(0);
+    order = lookupRow("#orderTable", 0);
     assertThat(order.getQuantity(), is(120));
     assertThat(order.getOpen(), is(0));
     assertThat(order.getExecuted(), is(10));
+    assertThat(order.getAvgPx(), is(5.0));
+  }
+
+  private <T> T lookupRow(final String queryString, final int index) {
+    final TableView table = lookup(queryString).queryFirst();
+    return (T) table.getItems().get(index);
   }
 }
